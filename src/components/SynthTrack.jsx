@@ -4,7 +4,7 @@ import SynthLine from './SynthLine';
 import SynthTrackControls from './SynthTrackControls';
 import { Scale } from "tonal"; 
 
-function SynthTrack({id, scale, count}){
+function SynthTrack({id, scale, count, num}){
 
 	
 	const [visible, setVisible] = useState(false);
@@ -23,12 +23,12 @@ function SynthTrack({id, scale, count}){
 	}
 
 	return(
-		<> <h3>Track {id}</h3>
+		<> <h3>Track {num+1}</h3>
 		<button onClick={handleClick}>Expand</button>
 			{controls.current ?
 			
 				<div><SynthTrackControls controls={controls.current} setOctave={setOctave}/>
-					{visible ? notes.map((note, i) => { return <SynthLine key={i} note={`${note}${octave}`} count={count} controls={controls.current}/> }) : null}
+					{visible ? notes.map((note) => { return <SynthLine key={id} note={`${note}${octave}`} count={count} controls={controls.current}/> }) : null}
 					</div>  : "Loading..."}
 		</>
 	)

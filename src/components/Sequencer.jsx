@@ -18,13 +18,13 @@ function Sequencer(){
 	useEffect(() => {
 		const defaultAudioTracks = [
 			{
-				id: uniqid(),
-				audio: tracks[0].src,
+				id: tracks[0].id,
+				source: tracks[0].src,
 				title: tracks[0].title
 			},
 			{
-				id: uniqid(),
-				audio: tracks[1].src,
+				id: tracks[1].id,
+				source: tracks[1].src,
 				title: tracks[1].title
 			}
 		]
@@ -59,7 +59,7 @@ function Sequencer(){
 		<GlobalControls />
 			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button>
 		{audioTracks ? audioTracks.map(track => (
-				<AudioTrack key={track.id} id={track.id} audio={track.audio} title={track.title}/>
+				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title}/>
 		)): "Loading..."}
 		
 		<select value={selectedCount} onChange={(e) => setSelectedCount(parseInt(e.target.value))}>
@@ -71,8 +71,8 @@ function Sequencer(){
 
 		
 		<button onClick={newSynthTrack}>+</button>
-		{synthTracks ? synthTracks.map(track => (
-				<SynthTrack key={track.id} id={track.id} scale={track.scale} count={track.count}/>
+		{synthTracks ? synthTracks.map((track, i) => (
+				<SynthTrack key={track.id} id={track.id} scale={track.scale} count={track.count} num={i}/>
 		)) : "Loading..."}
 		</>
 
