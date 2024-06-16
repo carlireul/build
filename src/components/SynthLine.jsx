@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import * as Tone from "tone";
 
 function SynthLine({note, count, controls}){
-	const synth = new Tone.Synth().connect(controls);
+	
 	const [steps, setSteps] = useState(new Array(count).fill(false));
 
 	const handleClick = (index) => {
@@ -10,6 +10,13 @@ function SynthLine({note, count, controls}){
 		newSteps[index] = !newSteps[index]
 		setSteps(newSteps)
 	}
+
+	const synth = useRef();
+
+	useEffect(() => {
+		synth.current = new Tone.Synth().connect(controls);
+	}, [])
+
 	const prevId = useRef();
 
 	useEffect(() => {
@@ -21,14 +28,14 @@ function SynthLine({note, count, controls}){
 
 			let step = steps[beat];
 			if (step) {
-				synth.triggerAttackRelease(note, "8n", time);
+				synth.current.triggerAttackRelease(note, `${count}n`, time);
 			}
 
 			beat = (beat + 1) % count;
 		}
 		
-		prevId.current = Tone.getTransport().scheduleRepeat(schedule, "8n");
-	}, [steps])
+		prevId.current = Tone.getTransport().scheduleRepeat(schedule, `${count}n`);
+	}, [steps, note])
 
 
 	return(

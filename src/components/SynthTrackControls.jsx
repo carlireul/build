@@ -1,35 +1,59 @@
 import { useState, useEffect, useRef } from 'react';
 import * as Tone from "tone";
 
-const SynthTrackControls = ({controls}) => {
-	const [muted, setMuted] = useState(true);
+const SynthTrackControls = ({controls, setOctave}) => {
+	const [muted, setMuted] = useState(false);
 	const [vol, setVol] = useState(-8);
 	const [pan, setPan] = useState(0);
+	const [solod, setSolod] = useState(false);
 
 	const mute = () => {
-		setMuted(!muted);
-		controls.mute = muted;
+		setMuted(prev => !prev);
 	}
 
 	const changeVol = (value) => {
 		setVol(value)
-		controls.volume.value = value;
 	}
 
 	const changePan = (value) => {
 		setPan(value)
-		controls.pan.value = value;
 	}
 
 	const centrePan = () => {
 		setPan(0)
-		controls.pan.value = 0;
 	}
 
+	const toggleSolo = () => {
+		setSolod(prev => !prev);
+	}
+
+	const increaseOctave = () => {
+		setOctave(prev => {
+			if (prev < 7){
+				return prev+1}
+			})
+	}
+
+	const decreaseOctave = () => {
+		setOctave(prev => {
+			if(prev>1){
+				return prev-1
+			}
+		})
+	}
+	
+	controls.solo = solod;
+	controls.volume.value = vol;
+	controls.pan.value = pan;
+	controls.mute = muted;
+
 	return <>
-	<div>
-			<button onClick={mute}>Mute</button>
+	<div>	
+			<button onClick={toggleSolo}>Solo</button>
+			<button onClick={mute}>{muted ? "Unmute" : "Mute"}</button>
 			Vol: <input type="range" id="vol" name="vol" min="-20" max="20" value={vol} onChange={(e) => changeVol(e.target.value)}></input>
+			<button onClick={increaseOctave}>+</button>
+			<button onClick={decreaseOctave}>-</button>
 			<button onClick={() => centrePan()}>Pan</button> <input type="range" id="vol" name="vol" min="-1" max="1" step="0.1" value={pan} onChange={(e) => changePan(e.target.value)}></input>
 	</div>
 	</>

@@ -1,28 +1,37 @@
 import { useState, useEffect, useRef } from 'react';
+import uniqid from 'uniqid';
 import * as Tone from "tone";
 import { tracks } from '../data/tracks';
 import AudioTrack from './AudioTrack';
 import SynthTrack from './SynthTrack';
-import Controls from './Controls';
+import GlobalControls from './GlobalControls';
 
 function Sequencer(){
 
 	const [playing, setPlaying] = useState(false);
-	const [audioTracks, setAudioTracks] = useState([]);
-	const [synthTracks, setSynthTracks] = useState([]);
+	const [audioTracks, setAudioTracks] = useState(null);
+	const [synthTracks, setSynthTracks] = useState(null);
+
+	const [selectedCount, setSelectedCount] = useState(8);
+	const [selectedScale, setSelectedScale] = useState("C major")
 
 	useEffect(() => {
 		const defaultAudioTracks = [
 			{
-				id: 1,
-				audio: tracks[0].src
+				id: uniqid(),
+				audio: tracks[0].src,
+				title: tracks[0].title
 			},
 			{
-				id: 2,
-				audio: tracks[1].src
+				id: uniqid(),
+				audio: tracks[1].src,
+				title: tracks[1].title
 			}
 		]
 		setAudioTracks(defaultAudioTracks)
+
+		const defaultSynthTracks = [{ id: uniqid(), scale: "C major", count: 8, octave: 4}];
+		setSynthTracks(defaultSynthTracks);
 	}, [])
 
 	const handlePlay = () =>{
@@ -39,15 +48,32 @@ function Sequencer(){
 		}
 
 	}
-	
+
+	const newSynthTrack = () => {
+		const newTrack = { id: uniqid(), scale: "D minor", count: selectedCount, octave: 4 }
+		setSynthTracks(prev => [...prev, newTrack]);
+	}
+
 	return(
 		<>
-		<Controls />
+		<GlobalControls />
 			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button>
-		{audioTracks.map(track => (
-				<AudioTrack key={track.id} source={track.audio}/>
-		))}
-		<SynthTrack />
+		{audioTracks ? audioTracks.map(track => (
+				<AudioTrack key={track.id} id={track.id} audio={track.audio} title={track.title}/>
+		)): "Loading..."}
+		
+		<select value={selectedCount} onChange={(e) => setSelectedCount(parseInt(e.target.value))}>
+			<option value={2}>2</option>
+			<option value={4}>4</option>
+			<option value={8}>8</option>
+			<option value={16}>16</option>
+		</select>
+
+		
+		<button onClick={newSynthTrack}>+</button>
+		{synthTracks ? synthTracks.map(track => (
+				<SynthTrack key={track.id} id={track.id} scale={track.scale} count={track.count}/>
+		)) : "Loading..."}
 		</>
 
 	)
