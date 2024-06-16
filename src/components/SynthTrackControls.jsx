@@ -13,20 +13,17 @@ const SynthTrackControls = ({controls}) => {
 
 	const changeVol = (value) => {
 		setVol(value)
-		console.log(vol)
-		controls.volume.value = vol;
+		controls.volume.value = value;
 	}
 
 	const changePan = (value) => {
 		setPan(value)
-		console.log(pan)
-		controls.pan.value = pan;
+		controls.pan.value = value;
 	}
 
 	const centrePan = () => {
 		setPan(0)
-		console.log(pan)
-		controls.pan.value = pan;
+		controls.pan.value = 0;
 	}
 
 	return <>
