@@ -3,6 +3,7 @@ import * as Tone from "tone";
 import { tracks } from '../data/tracks';
 import AudioTrack from './AudioTrack';
 import SynthTrack from './SynthTrack';
+import Controls from './Controls';
 
 function Sequencer(){
 
@@ -39,9 +40,9 @@ function Sequencer(){
 
 	}
 	
-	console.log(audioTracks)
 	return(
 		<>
+		<Controls />
 			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button>
 		{audioTracks.map(track => (
 				<AudioTrack key={track.id} source={track.audio}/>

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import * as Tone from "tone";
 
-function SynthLine({note, count}){
-	const synth = new Tone.Synth().toDestination();
+function SynthLine({note, count, controls}){
+	const synth = new Tone.Synth().connect(controls);
 	const [steps, setSteps] = useState(new Array(count).fill(false));
 
 	const handleClick = (index) => {
