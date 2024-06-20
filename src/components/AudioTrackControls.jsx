@@ -27,8 +27,6 @@ const AudioTrackControls = ({ controls }) => {
 		setSolod(prev => !prev);
 	}
 
-	console.log(controls)
-
 	if(controls){
 
 		controls.solo = solod;

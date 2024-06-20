@@ -49,6 +49,11 @@ function Sequencer(){
 
 	}
 
+	const handleStop = () => {
+		Tone.getTransport().stop();
+		setPlaying(false);
+	}
+
 	const newSynthTrack = () => {
 		const newTrack = { id: uniqid(), scale: "D minor", count: selectedCount, octave: 4 }
 		setSynthTracks(prev => [...prev, newTrack]);
@@ -57,7 +62,7 @@ function Sequencer(){
 	return(
 		<>
 		<GlobalControls />
-			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button>
+			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button> <button onClick={handleStop}>Stop</button>
 		{audioTracks ? audioTracks.map(track => (
 				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title}/>
 		)): "Loading..."}
