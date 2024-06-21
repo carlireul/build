@@ -21,8 +21,8 @@ function AudioTrack({id, source, title}){
 
 	return (
     <>
-	<AudioTrackControls controls={controls.current}/>
 	<div>{loaded ? title : "Loading Audio.."}</div>
+	<AudioTrackControls controls={controls.current}/>
 	</>
 	)
 
