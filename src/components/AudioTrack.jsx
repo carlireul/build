@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import * as Tone from "tone";
 import AudioTrackControls from './AudioTrackControls';
-import Waveform from './Waveform';
 
 function AudioTrack({id, source, title}){
 	const [loaded, setLoaded] = useState(false);
@@ -15,7 +14,7 @@ function AudioTrack({id, source, title}){
 		player.current = new Tone.Player(source, () => {
 			player.current.sync().start(0); // puts in transport
 			setLoaded(true)
-		}).connect(controls.current);
+		}).chain(controls.current);
 
 	}, [])
 

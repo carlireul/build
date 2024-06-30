@@ -35,6 +35,7 @@ const AudioTrackControls = ({ controls }) => {
 		controls.mute = muted;
 	}
 
+
 	return <>
 		<div>
 			<button onClick={toggleSolo}>Solo</button>
