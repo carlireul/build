@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import uniqid from 'uniqid';
 import * as Tone from "tone";
 import { tracks } from '../data/tracks';
+import { synths } from '../data/synths'
 import AudioTrack from './AudioTrack';
 import SynthTrack from './SynthTrack';
 import GlobalControls from './GlobalControls';
@@ -30,8 +31,9 @@ function Sequencer(){
 		]
 		setAudioTracks(defaultAudioTracks)
 
-		const defaultSynthTracks = [{ id: uniqid(), scale: "C major", count: 8, octave: 4}];
-		setSynthTracks(defaultSynthTracks);
+		const defaultSynth = {id: uniqid(), ...synths[0]}
+
+		setSynthTracks([defaultSynth]);
 	}, [])
 
 	const handlePlay = () =>{
@@ -49,15 +51,20 @@ function Sequencer(){
 
 	}
 
+	const handleStop = () => {
+		Tone.getTransport().stop();
+		setPlaying(false);
+	}
+
 	const newSynthTrack = () => {
-		const newTrack = { id: uniqid(), scale: "D minor", count: selectedCount, octave: 4 }
+		const newTrack = { id: uniqid(), ...synths[0] }
 		setSynthTracks(prev => [...prev, newTrack]);
 	}
 
 	return(
 		<>
 		<GlobalControls />
-			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button>
+			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button> <button onClick={handleStop}>Stop</button>
 		{audioTracks ? audioTracks.map(track => (
 				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title}/>
 		)): "Loading..."}
@@ -72,7 +79,7 @@ function Sequencer(){
 		
 		<button onClick={newSynthTrack}>+</button>
 		{synthTracks ? synthTracks.map((track, i) => (
-				<SynthTrack key={track.id} id={track.id} scale={track.scale} count={track.count} num={i}/>
+				<SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i}/>
 		)) : "Loading..."}
 		</>
 

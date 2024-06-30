@@ -28,12 +28,12 @@ const AudioTrackControls = ({ controls }) => {
 	}
 
 	if(controls){
-
 		controls.solo = solod;
 		controls.volume.value = vol;
 		controls.pan.value = pan;
 		controls.mute = muted;
 	}
+
 
 	return <>
 		<div>
