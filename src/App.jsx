@@ -9,8 +9,8 @@ function App() {
 
   return (
     <>
-      {/* <Sequencer /> */}
-      <SynthEditor />
+      <Sequencer />
+      {/* <SynthEditor /> */}
       <PWABadge />
     </>
   )

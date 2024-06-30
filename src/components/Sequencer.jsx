@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import uniqid from 'uniqid';
 import * as Tone from "tone";
 import { tracks } from '../data/tracks';
+import { synths } from '../data/synths'
 import AudioTrack from './AudioTrack';
 import SynthTrack from './SynthTrack';
 import GlobalControls from './GlobalControls';
@@ -30,8 +31,8 @@ function Sequencer(){
 		]
 		setAudioTracks(defaultAudioTracks)
 
-		const defaultSynthTracks = [{ id: uniqid(), scale: "C major", count: 8, octave: 4}];
-		setSynthTracks(defaultSynthTracks);
+		// const defaultSynthTracks = [{ id: uniqid(), scale: "C major", count: 8, octave: 4}];
+		setSynthTracks(synths);
 	}, [])
 
 	const handlePlay = () =>{
@@ -77,7 +78,7 @@ function Sequencer(){
 		
 		<button onClick={newSynthTrack}>+</button>
 		{synthTracks ? synthTracks.map((track, i) => (
-				<SynthTrack key={track.id} id={track.id} scale={track.scale} count={track.count} num={i}/>
+				<SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i}/>
 		)) : "Loading..."}
 		</>
 

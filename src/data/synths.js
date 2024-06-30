@@ -17,6 +17,11 @@ export const synths = [
           type: "sine",
         },
       },
+      notes: {
+        scale: "C major",
+        count: 8,
+        octave: 4,
+      },
     },
   },
 ];
