@@ -4,7 +4,6 @@ import uniqid from "uniqid";
 export const synths = [
   {
     name: "Basic Sine Wave",
-    id: uniqid(),
     properties: {
       synth: {
         envelope: {
@@ -16,6 +15,10 @@ export const synths = [
         oscillator: {
           type: "sine",
         },
+        filter: {
+          cutoff: 0,
+          type: "highpass"
+        }
       },
       notes: {
         scale: "C major",

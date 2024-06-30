@@ -31,8 +31,9 @@ function Sequencer(){
 		]
 		setAudioTracks(defaultAudioTracks)
 
-		// const defaultSynthTracks = [{ id: uniqid(), scale: "C major", count: 8, octave: 4}];
-		setSynthTracks(synths);
+		const defaultSynth = {id: uniqid(), ...synths[0]}
+
+		setSynthTracks([defaultSynth]);
 	}, [])
 
 	const handlePlay = () =>{
@@ -56,7 +57,7 @@ function Sequencer(){
 	}
 
 	const newSynthTrack = () => {
-		const newTrack = { id: uniqid(), scale: "D minor", count: selectedCount, octave: 4 }
+		const newTrack = { id: uniqid(), ...synths[0] }
 		setSynthTracks(prev => [...prev, newTrack]);
 	}
 
