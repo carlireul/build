@@ -12,9 +12,7 @@ function App() {
   const [load, setLoad] = useState(false)
 
   const handleClick = () => {
-    if (Tone.getContext().state === "suspended") {
-      Tone.start()
-    }
+    Tone.start()
     setLoad(true)
   }
 

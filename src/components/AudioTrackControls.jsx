@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import * as Tone from "tone";
 
 const AudioTrackControls = ({ controls }) => {
-	const [muted, setMuted] = useState(false);
+	const [muted, setMuted] = useState(true);
 	const [vol, setVol] = useState(-8);
 	const [pan, setPan] = useState(0);
 	const [solod, setSolod] = useState(false);
@@ -28,7 +28,6 @@ const AudioTrackControls = ({ controls }) => {
 	}
 
 	if(controls){
-
 		controls.solo = solod;
 		controls.volume.value = vol;
 		controls.pan.value = pan;

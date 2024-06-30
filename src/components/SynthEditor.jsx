@@ -8,8 +8,9 @@ function SynthEditor({synth, filter}){
 	const [sustain, setSustain] = useState(synth.get().envelope.sustain);
 	const [release, setRelease] = useState(synth.get().envelope.release);
 	const [waveType, setWaveType] = useState(synth.get().oscillator.type);
-	const [cutoff, setCutoff] = useState(filter.get().frequency);
-	const [filterType, setFilterType] = useState(filter.get().type);
+	const [cutoff, setCutoff] = useState(filter.get().baseFrequency);
+	const [filterType, setFilterType] = useState(filter.get().filter.type);
+	const [filterEnabled, setFilterEnabled] = useState(false)
 
 	const updateSynth = () => {
 		synth.set({
@@ -24,16 +25,18 @@ function SynthEditor({synth, filter}){
 			},
 		})
 
+		const wet = filterEnabled ? 1 : 0
+		
 		filter.set({
-			frequency: cutoff,
-			type: filterType,
+			wet: wet,
+			baseFrequency: cutoff,
+			filter: {
+				type: filterType,
+			},
 		})
-
-		console.log(synth.get())
-		console.log(filter.get())
 	}
 
-	useEffect(updateSynth, [attack, decay, sustain, release, waveType, cutoff, filterType])
+	useEffect(updateSynth, [attack, decay, sustain, release, waveType, cutoff, filterType, filterEnabled])
 
 	const changeAttack = (value) => {
 		setAttack(parseFloat(value))
@@ -55,8 +58,8 @@ function SynthEditor({synth, filter}){
 		setCutoff(parseInt(value))
 	}
 
-	const play = () => {
-		synth.triggerAttackRelease(["C4", "C5"], 1);
+	const toggleFilter = () => {
+		setFilterEnabled(prev => !prev)
 	}
 
 	const save = () => {
@@ -99,6 +102,7 @@ function SynthEditor({synth, filter}){
 			</select>
 			</p>
 
+			<button onClick={toggleFilter}>{filterEnabled ? "Disable" : "Enable"} Filter</button>
 			<select value={filterType} onChange={(e) => setFilterType(e.target.value)}>
 				<option value="highpass">Highpass</option>
 				<option value="lowpass">Lowpass</option>

@@ -23,7 +23,7 @@ function SynthTrack({id, noteProperties, synthProperties, num}){
 
 	useEffect(() => {
 		controls.current = new Tone.Channel(-8, 0).toDestination();
-		filter.current = new Tone.Filter(synthProperties.filter.cutoff, synthProperties.filter.type).connect(controls.current)
+		filter.current = new Tone.AutoFilter({wet: 0}).connect(controls.current)
 		synth.current = new Tone.PolySynth().connect(filter.current);
 
 		synth.current.set({
@@ -50,13 +50,10 @@ function SynthTrack({id, noteProperties, synthProperties, num}){
 		const schedule = (time) => {
 
 			const notesArray = []
-			console.log(notesArray)
 
 			steps.forEach((line, i) => {
 				if(line[beat]){notesArray.push(`${notes[i]}${octave}`)}
 			})
-
-			console.log(notesArray)
 
 			synth.current.triggerAttackRelease(notesArray, `${noteProperties.count}n`, time)
 
