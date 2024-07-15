@@ -11,7 +11,8 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 	
 	const [visible, setVisible] = useState(false);
 
-	const [notes, setNotes] = useState(Scale.get(noteProperties.scale).notes)
+	const [scale, setScale] = useState(noteProperties.scale)
+	const [notes, setNotes] = useState(Scale.get(scale).notes)
 	const [octave, setOctave] = useState(noteProperties.octave)
 	
 	const [steps, setSteps] = useState(new Array(notes.length).fill(null).map(() => new Array(noteProperties.count).fill(false)));
@@ -41,12 +42,12 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 
 		const schedule = (time) => { // useRef if need to edit (note length etc)
 
+			console.log(num, globalBeat.current, globalBeat.current % noteProperties.count, notesArray.current[globalBeat.current % noteProperties.count], time, Tone.getTransport().position)
+
 			synth.current.triggerAttackRelease(
 				notesArray.current[globalBeat.current % noteProperties.count], // plays notes in notesArray at the current beat index
 				`${noteProperties.count}n`, // duration of note
 				time) // callback function keeps time
-
-			// console.log(num, globalBeat.current % noteProperties.count, notesArray.current[globalBeat.current % noteProperties.count], time, Tone.getTransport().position)
 
 		}
 
@@ -69,7 +70,7 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 			})
 		})
 		
-	}, [steps, octave])
+	}, [steps, octave, notes])
 
 	
 	const handleClick = () => {
@@ -87,6 +88,18 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 		<> 
 		<h3>Loop {num+1}</h3>
 		{controls.current ? <SynthTrackControls controls={controls.current} setOctave={setOctave} /> : null}
+		<span>
+			<select value={scale} onChange={(e) => {
+				setScale(e.target.value)
+				setNotes(Scale.get(e.target.value).notes)
+			}}>
+				<option value="C major">C Major</option>
+				<option value="D major">D Major</option>
+				<option value="E minor">E Minor</option>
+				<option value="F# minor">F# Minor</option>
+			</select>
+
+		</span>
 		<Tabs>
 			<TabList>
 				<Tab>Sequencer</Tab>
