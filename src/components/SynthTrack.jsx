@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import * as Tone from "tone";
 import uniqid from 'uniqid';
+import * as Tone from "tone";
 import SynthTrackControls from './SynthTrackControls';
 import SynthEditor from './SynthEditor';
 import { Scale } from "tonal"; 
@@ -8,7 +8,6 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css'
 
 function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
-
 	
 	const [visible, setVisible] = useState(false);
 
@@ -22,7 +21,7 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 	const controls = useRef();
 	const notesArray = useRef(new Array(noteProperties.count).fill(null).map(() => []))
 
-	useEffect(() => {
+	useEffect(() => { // set up: controls, filter, polysynth, transport schedule
 
 		controls.current = new Tone.Channel(-8, 0).toDestination();
 		filter.current = new Tone.AutoFilter({wet: 0}).connect(controls.current)
@@ -40,13 +39,28 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 			},
 		})
 
+		const schedule = (time) => { // useRef if need to edit (note length etc)
+
+			synth.current.triggerAttackRelease(
+				notesArray.current[globalBeat.current % noteProperties.count], // plays notes in notesArray at the current beat index
+				`${noteProperties.count}n`, // duration of note
+				time) // callback function keeps time
+
+			// console.log(num, globalBeat.current % noteProperties.count, notesArray.current[globalBeat.current % noteProperties.count], time, Tone.getTransport().position)
+
+		}
+
+		Tone.getTransport().scheduleRepeat(schedule,
+			`${noteProperties.count}n`, // repetition interval
+			"0:0:0") // start time
+
 		}, [])
 
-	const prevId = useRef();
 
-	useEffect(() => {
+	useEffect(() => { // update the array of notes to play when octave or active pads are changed
 
-		notesArray.current = new Array(noteProperties.count).fill(null).map(() => [])
+		notesArray.current = new Array(noteProperties.count).fill(null).map(() => []) // reset the notes array
+
 		steps.forEach((line, i) => {
 			line.forEach((pad, j) => {
 				if(pad){
@@ -57,25 +71,12 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 		
 	}, [steps, octave])
 
-	useEffect(() => {
-		const schedule = (time) => {
-			
-			synth.current.triggerAttackRelease(notesArray.current[globalBeat.current % noteProperties.count], `${noteProperties.count}n`, time)
-
-			console.log(num, globalBeat.current % noteProperties.count, notesArray.current[globalBeat.current % noteProperties.count], time, Tone.getTransport().position)
-			
-		}
-		
-		Tone.getTransport().clear(prevId.current);		
-		prevId.current = Tone.getTransport().scheduleRepeat(schedule, `${noteProperties.count}n`, "0:0:0");
-
-	}, [notesArray])
-		
+	
 	const handleClick = () => {
 		setVisible(!visible)
 	}
 
-	const toggleNote = (noteIndex, stepIndex) => {
+	const toggleNote = (noteIndex, stepIndex) => { // update steps 2d array when toggling buttons
 		const newSteps = steps.slice()
 		newSteps[noteIndex][stepIndex] = !newSteps[noteIndex][stepIndex]
 		setSteps(newSteps)
@@ -85,15 +86,14 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 	return(
 		<> 
 		<h3>Loop {num+1}</h3>
-			{controls.current ? <SynthTrackControls controls={controls.current} setOctave={setOctave} /> : null}
+		{controls.current ? <SynthTrackControls controls={controls.current} setOctave={setOctave} /> : null}
 		<Tabs>
-				<TabList>
-					<Tab>Sequencer</Tab>
-					<Tab>Editor</Tab>
-				</TabList>
+			<TabList>
+				<Tab>Sequencer</Tab>
+				<Tab>Editor</Tab>
+			</TabList>
 
-				<TabPanel forceRender={true}>
-				
+			<TabPanel forceRender={true}>
 				<button onClick={handleClick}>Expand</button>
 				{visible ? notes.map((note, noteIndex) => {
 					return <div key={uniqid()}> <span>{`${note}${octave}`}</span>
@@ -102,13 +102,12 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 							
 						})}
 					</div>
-				}) : null}
-							
-				</TabPanel>
+				}) : null}		
+			</TabPanel>
 
-				<TabPanel>
+			<TabPanel>
 				<SynthEditor synth={synth.current} filter={filter.current} />
-				</TabPanel>
+			</TabPanel>
 		</Tabs>
 		</>
 	)

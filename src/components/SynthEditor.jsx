@@ -24,11 +24,9 @@ function SynthEditor({synth, filter}){
 				type: waveType
 			},
 		})
-
-		const wet = filterEnabled ? 1 : 0
 		
 		filter.set({
-			wet: wet,
+			wet: filterEnabled ? 1 : 0,
 			baseFrequency: cutoff,
 			filter: {
 				type: filterType,
@@ -36,6 +34,7 @@ function SynthEditor({synth, filter}){
 		})
 	}
 
+	// update the synth's properties when changed in UI
 	useEffect(updateSynth, [attack, decay, sustain, release, waveType, cutoff, filterType, filterEnabled])
 
 	const changeAttack = (value) => {
@@ -81,11 +80,9 @@ function SynthEditor({synth, filter}){
 			}
 		}
 
-		// save logic. hook up to controls
+		// TODO: save logic. hook up to controls
 
 	}
-	
-
 
 	return(
 		<>

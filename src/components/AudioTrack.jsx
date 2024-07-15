@@ -8,7 +8,7 @@ function AudioTrack({id, source, title}){
 	const controls = useRef();
 
 
-	useEffect(() => {
+	useEffect(() => { // setup: load controls and player
 		controls.current = new Tone.Channel(-8, 0).toDestination();
 
 		player.current = new Tone.Player(source, () => {

@@ -1,23 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
-import uniqid from 'uniqid';
-import * as Tone from "tone";
+
 import { tracks } from '../data/tracks';
-import { synths } from '../data/synths'
+import { synths } from '../data/synths';
+
+import * as Tone from "tone";
+import uniqid from 'uniqid';
+
 import AudioTrack from './AudioTrack';
 import SynthTrack from './SynthTrack';
 import GlobalControls from './GlobalControls';
 
 function Sequencer(){
 
+	const globalBeat = useRef(0);
 	const [playing, setPlaying] = useState(false);
+
 	const [audioTracks, setAudioTracks] = useState(null);
 	const [synthTracks, setSynthTracks] = useState(null);
 
 	const [selectedScale, setSelectedScale] = useState("C major")
-	const globalBeat = useRef(0);
 
-
-	useEffect(() => {
+	useEffect(() => { // set up: create audio + synth tracks, start global beat
 		const defaultAudioTracks = [
 			{
 				id: tracks[0].id,
@@ -33,19 +36,11 @@ function Sequencer(){
 		setAudioTracks(defaultAudioTracks)
 
 		const defaultSynth = {id: uniqid(), ...synths[0]}
-
 		setSynthTracks([defaultSynth]);
 
-		
-
 		Tone.getTransport().scheduleRepeat(time => {
-			// const position = Tone.getTransport().position.split(":")
-
 			globalBeat.current = globalBeat.current + 0.5
-
 		}, "8n", "0:0:0");
-
-
 	}, [])
 
 	const handlePlay = () =>{
@@ -60,7 +55,6 @@ function Sequencer(){
 			Tone.getTransport().pause();
 			setPlaying(false);
 		}
-
 	}
 
 	const handleStop = () => {
@@ -76,14 +70,16 @@ function Sequencer(){
 	return(
 		<>
 		<GlobalControls />
-			<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button> <button onClick={handleStop}>Stop</button>
+
+		<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button> <button onClick={handleStop}>Stop</button>
+
 		{audioTracks ? audioTracks.map(track => (
 				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title}/>
 		)): "Loading..."}
 
-		
 		<button onClick={newSynthTrack}>+</button>
-			{synthTracks ? synthTracks.map((track, i) => { return <SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i} globalBeat={globalBeat} /> }) : "Loading"}
+		
+		{synthTracks ? synthTracks.map((track, i) => { return <SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i} globalBeat={globalBeat} /> }) : "Loading"}
 		</>
 
 	)
