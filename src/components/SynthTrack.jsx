@@ -7,7 +7,7 @@ import { Scale } from "tonal";
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css'
 
-function SynthTrack({id, noteProperties, synthProperties, num}){
+function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 
 	
 	const [visible, setVisible] = useState(false);
@@ -20,8 +20,10 @@ function SynthTrack({id, noteProperties, synthProperties, num}){
 	const synth = useRef();
 	const filter = useRef();
 	const controls = useRef();
+	const notesArray = useRef(new Array(noteProperties.count).fill(null).map(() => []))
 
 	useEffect(() => {
+
 		controls.current = new Tone.Channel(-8, 0).toDestination();
 		filter.current = new Tone.AutoFilter({wet: 0}).connect(controls.current)
 		synth.current = new Tone.PolySynth().connect(filter.current);
@@ -43,25 +45,31 @@ function SynthTrack({id, noteProperties, synthProperties, num}){
 	const prevId = useRef();
 
 	useEffect(() => {
-		Tone.getTransport().clear(prevId.current);
 
-		let beat = 0;
-
-		const schedule = (time) => {
-
-			const notesArray = []
-
-			steps.forEach((line, i) => {
-				if(line[beat]){notesArray.push(`${notes[i]}${octave}`)}
+		notesArray.current = new Array(noteProperties.count).fill(null).map(() => [])
+		steps.forEach((line, i) => {
+			line.forEach((pad, j) => {
+				if(pad){
+					notesArray.current[j].push(`${notes[i]}${octave}`)
+				}
 			})
-
-			synth.current.triggerAttackRelease(notesArray, `${noteProperties.count}n`, time)
-
-			beat = (beat + 1) % noteProperties.count;
-		}
-
-		prevId.current = Tone.getTransport().scheduleRepeat(schedule, `${noteProperties.count}n`);
+		})
+		
 	}, [steps, octave])
+
+	useEffect(() => {
+		const schedule = (time) => {
+			
+			synth.current.triggerAttackRelease(notesArray.current[globalBeat.current % noteProperties.count], `${noteProperties.count}n`, time)
+
+			console.log(num, globalBeat.current % noteProperties.count, notesArray.current[globalBeat.current % noteProperties.count], time, Tone.getTransport().position)
+			
+		}
+		
+		Tone.getTransport().clear(prevId.current);		
+		prevId.current = Tone.getTransport().scheduleRepeat(schedule, `${noteProperties.count}n`, "0:0:0");
+
+	}, [notesArray])
 		
 	const handleClick = () => {
 		setVisible(!visible)
@@ -88,9 +96,10 @@ function SynthTrack({id, noteProperties, synthProperties, num}){
 				
 				<button onClick={handleClick}>Expand</button>
 				{visible ? notes.map((note, noteIndex) => {
-					return <div key={uniqid()}>
+					return <div key={uniqid()}> <span>{`${note}${octave}`}</span>
 						{steps[noteIndex].map((step, stepIndex) => {
-							return <button key={uniqid()} onClick={() => toggleNote(noteIndex, stepIndex)}>{step ? "on" : "off"}</button>
+							return <button style={step ? { color: "blue" } : null} key={uniqid()} onClick={() => toggleNote(noteIndex, stepIndex)}>{step ? "on" : "off"}</button>
+							
 						})}
 					</div>
 				}) : null}

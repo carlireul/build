@@ -13,6 +13,9 @@ function App() {
 
   const handleClick = () => {
     Tone.start()
+    Tone.getTransport().loop = true;
+    Tone.getTransport().loopStart = 0;
+    Tone.getTransport().loopEnd = "1:0:0";
     setLoad(true)
   }
 

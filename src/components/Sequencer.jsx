@@ -13,8 +13,9 @@ function Sequencer(){
 	const [audioTracks, setAudioTracks] = useState(null);
 	const [synthTracks, setSynthTracks] = useState(null);
 
-	const [selectedCount, setSelectedCount] = useState(8);
 	const [selectedScale, setSelectedScale] = useState("C major")
+	const globalBeat = useRef(0);
+
 
 	useEffect(() => {
 		const defaultAudioTracks = [
@@ -34,6 +35,17 @@ function Sequencer(){
 		const defaultSynth = {id: uniqid(), ...synths[0]}
 
 		setSynthTracks([defaultSynth]);
+
+		
+
+		Tone.getTransport().scheduleRepeat(time => {
+			// const position = Tone.getTransport().position.split(":")
+
+			globalBeat.current = globalBeat.current + 0.5
+
+		}, "8n", "0:0:0");
+
+
 	}, [])
 
 	const handlePlay = () =>{
@@ -57,7 +69,7 @@ function Sequencer(){
 	}
 
 	const newSynthTrack = () => {
-		const newTrack = { id: uniqid(), ...synths[0] }
+		const newTrack = { id: uniqid(), ...synths[1] }
 		setSynthTracks(prev => [...prev, newTrack]);
 	}
 
@@ -68,19 +80,10 @@ function Sequencer(){
 		{audioTracks ? audioTracks.map(track => (
 				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title}/>
 		)): "Loading..."}
-		
-		<select value={selectedCount} onChange={(e) => setSelectedCount(parseInt(e.target.value))}>
-			<option value={2}>2</option>
-			<option value={4}>4</option>
-			<option value={8}>8</option>
-			<option value={16}>16</option>
-		</select>
 
 		
 		<button onClick={newSynthTrack}>+</button>
-		{synthTracks ? synthTracks.map((track, i) => (
-				<SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i}/>
-		)) : "Loading..."}
+			{synthTracks ? synthTracks.map((track, i) => { return <SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i} globalBeat={globalBeat} /> }) : "Loading"}
 		</>
 
 	)
