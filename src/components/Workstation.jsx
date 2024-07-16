@@ -15,7 +15,6 @@ import GlobalControls from './GlobalControls';
 function Workstation({addTab}){
 
 	const globalBeat = useRef(0);
-	const [playing, setPlaying] = useState(false);
 
 	const [audioTracks, setAudioTracks] = useState(null);
 	const [synthTracks, setSynthTracks] = useState(null);
@@ -43,25 +42,6 @@ function Workstation({addTab}){
 		}, "8n", "0:0:0");
 	}, [])
 
-	const handlePlay = () =>{
-		if (Tone.getContext().state === "suspended"){
-			Tone.start()
-		}
-
-		if(!playing){
-			Tone.getTransport().start();
-			setPlaying(true);
-		} else {
-			Tone.getTransport().pause();
-			setPlaying(false);
-		}
-	}
-
-	const handleStop = () => {
-		Tone.getTransport().stop();
-		setPlaying(false);
-	}
-
 	const newSynthTrack = () => {
 		const newTrack = {...synths[1] }
 		setSynthTracks(prev => [...prev, newTrack]);
@@ -69,8 +49,7 @@ function Workstation({addTab}){
 
 	return(
 		<div className="#sequencer">
-		<GlobalControls />
-		<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button> <button onClick={handleStop}>Stop</button>
+		
 		
 		{audioTracks ? audioTracks.map(track => (
 				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title} addTab={addTab}/>

@@ -77,41 +77,43 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat, addTa
 		
 	}, [steps, octave, notes])
 
-	const content = (
+	const tabContent = (
 		<>
-			<span>
-				<select value={scale} onChange={(e) => {
-					setScale(e.target.value)
-					setNotes(Scale.get(e.target.value).notes)
-				}}>
-					<option value="C major">C Major</option>
-					<option value="D major">D Major</option>
-					<option value="E minor">E Minor</option>
-					<option value="F# minor">F# Minor</option>
-				</select>
-
-			</span>
-			<Tabs>
-				<TabList>
-					<Tab>Editor</Tab>
-					<Tab>Sequencer</Tab>
-				</TabList>
-
-				<TabPanel>
+			<div id="synth-container">
+				<div id="editor-container">
 					<SynthEditor synth={synth.current} filter={filter.current} />
-				</TabPanel>
-				<TabPanel>
+				</div>
+				<div id="sequencer-container">
+					<SynthTrackControls controls={controls.current} setOctave={setOctave} />
+					<span>
+						<select value={scale} onChange={(e) => {
+							setScale(e.target.value)
+							setNotes(Scale.get(e.target.value).notes)
+						}}>
+							<option value="C major">C Major</option>
+							<option value="D major">D Major</option>
+							<option value="E minor">E Minor</option>
+							<option value="F# minor">F# Minor</option>
+						</select>
+
+					</span>
+
 					<Sequencer notes={notes} steps={steps} octave={octave} setSteps={setSteps} />
-				</TabPanel>
-			</Tabs>
+					
+				</div>
+			</div>
+			<div id="synth-bottom-container">
+				<div>effects</div>
+				<div>clips</div>
+			</div>
+				
 		</>
 	)
 
 
 	return(
 		<> 
-			<h3><span className="track-title" onClick={() => addTab({id: id, title: `Loop ${num + 1}`, content:  content})}>Loop {num + 1}</span></h3>
-			{loaded ? <SynthTrackControls controls={controls.current} setOctave={setOctave} /> : null}
+			<h3><span className="track-title" onClick={() => addTab({id: id, title: `Loop ${num + 1}`, content:  tabContent})}>Loop {num + 1}</span></h3>
 			
 		</>
 	)

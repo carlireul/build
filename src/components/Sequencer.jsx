@@ -13,22 +13,23 @@ const Sequencer = ({notes, steps, octave, setSteps}) => {
 
   return notes.map((note, noteIndex) => {
     return (
-		<div key={`${note}${octave}`}>
-        <span>{`${note}${octave}`}</span>
-        {steps[noteIndex].map((step, stepIndex) => {
-          return (
-            <button
-              style={step ? { color: "blue" } : null}
-			key={`${noteIndex}${stepIndex}`}
-              onClick={() => toggleNote(noteIndex, stepIndex)}
-            >
-              {step ? "on" : "off"}
-            </button>
-          );
-        })}
-      </div>
+    <div key={`${note}${octave}`}>
+      <span>{`${note}${octave}`}</span>
+      {steps[noteIndex].map((step, stepIndex) => {
+        return (
+          <button
+            style={step ? { color: "blue" } : null}
+            key={`${noteIndex}${stepIndex}`}
+            onClick={() => toggleNote(noteIndex, stepIndex)}
+          >
+            {step ? "on" : "off"}
+          </button>
+        );
+      })}
+    </div>
     );
   });
+ 
 };
 
 export default Sequencer;

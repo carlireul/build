@@ -19,10 +19,13 @@ function AudioTrack({id, source, title, addTab}){
 		}).chain(controls.current);
 
 	}, [])
-
+	
+	const tabContent = (
+		<AudioTrackControls controls={controls.current} /> 
+	)
 	return (
     <>
-			<div>{loaded ? <span className="track-title" onClick={() => addTab({ id: id, title: title, content: <AudioTrackControls controls={controls.current} /> })}>{title}</span> : "Loading Audio.."}</div>
+			<div>{loaded ? <span className="track-title" onClick={() => addTab({ id: id, title: title, content: tabContent})}>{title}</span> : "Loading Audio.."}</div>
 	
 	</>
 	)

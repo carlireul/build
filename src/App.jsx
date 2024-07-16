@@ -5,21 +5,22 @@ import uniqid from 'uniqid';
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import './App.css'
-import './Style.css'
 import 'react-tabs/style/react-tabs.css'
 
 import Workstation from './components/Workstation.jsx'
+import GlobalControls from './components/GlobalControls.jsx';
 
 function App() {
 
   const [visible, setVisible] = useState(false)
   const [activeTabs, setActiveTabs] = useState([])
+  const [trackLength, setTrackLength] = useState("1:0:0")
 
   const handleClick = () => {
     Tone.start()
     Tone.getTransport().loop = true;
     Tone.getTransport().loopStart = 0;
-    Tone.getTransport().loopEnd = "1:0:0";
+    Tone.getTransport().loopEnd = trackLength;
     setVisible(true)
   }
 
@@ -33,7 +34,7 @@ function App() {
         <TabPanel forceRender={true}>
           <Workstation addTab={addTab} />
         </TabPanel>
-        {activeTabs.map(tab => <TabPanel key={`panel${tab.id}`}>{tab.content}</TabPanel>)}
+        {activeTabs.map(tab => <TabPanel key={`panel${tab.id}`} forceRender={true}>{tab.content}</TabPanel>)}
       </Tabs>
     )
   }
@@ -49,15 +50,26 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-     
-      <button className="start-button"style={visible ? {display: 'none'} : null} onClick={handleClick}>Start</button>
+    <>
+    <button id="start-button"style={visible ? {display: 'none'} : null} onClick={handleClick}>Start</button>
 
-      <div style={visible ? null : { display: 'none' }}>
-          {generateTabs()}
+    <div id="app-container" style={visible ? null : { display: 'none' }}>
+      <div id="top-container">
+        {generateTabs()}
       </div>
-
+      <div id="bottom-container">
+        <div>
+            <GlobalControls />
+        </div>
+        <div>
+          tips
+        </div>
+        <div>
+          settings
+        </div>
+      </div>
     </div>
+    </>
   )
 }
 
