@@ -1,19 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
+
 import uniqid from 'uniqid';
 import * as Tone from "tone";
-import SynthTrackControls from './SynthTrackControls';
-import SynthEditor from './SynthEditor';
 import { Scale } from "tonal"; 
+
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css'
 
-function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
-	
-	const [visible, setVisible] = useState(false);
+import SynthTrackControls from './SynthTrackControls';
+import SynthEditor from './SynthEditor';
+import Sequencer from './Sequencer';
+
+function SynthTrack({id, noteProperties, synthProperties, num, globalBeat, addTab}){
 
 	const [scale, setScale] = useState(noteProperties.scale)
 	const [notes, setNotes] = useState(Scale.get(scale).notes)
 	const [octave, setOctave] = useState(noteProperties.octave)
+	const [loaded, setLoaded] = useState(false)
 	
 	const [steps, setSteps] = useState(new Array(notes.length).fill(null).map(() => new Array(noteProperties.count).fill(false)));
 
@@ -55,6 +58,8 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 			`${noteProperties.count}n`, // repetition interval
 			"0:0:0") // start time
 
+		setLoaded(true)
+
 		}, [])
 
 
@@ -72,56 +77,42 @@ function SynthTrack({id, noteProperties, synthProperties, num, globalBeat}){
 		
 	}, [steps, octave, notes])
 
-	
-	const handleClick = () => {
-		setVisible(!visible)
-	}
+	const content = (
+		<>
+			<span>
+				<select value={scale} onChange={(e) => {
+					setScale(e.target.value)
+					setNotes(Scale.get(e.target.value).notes)
+				}}>
+					<option value="C major">C Major</option>
+					<option value="D major">D Major</option>
+					<option value="E minor">E Minor</option>
+					<option value="F# minor">F# Minor</option>
+				</select>
 
-	const toggleNote = (noteIndex, stepIndex) => { // update steps 2d array when toggling buttons
-		const newSteps = steps.slice()
-		newSteps[noteIndex][stepIndex] = !newSteps[noteIndex][stepIndex]
-		setSteps(newSteps)
-	}
+			</span>
+			<Tabs>
+				<TabList>
+					<Tab>Editor</Tab>
+					<Tab>Sequencer</Tab>
+				</TabList>
+
+				<TabPanel>
+					<SynthEditor synth={synth.current} filter={filter.current} />
+				</TabPanel>
+				<TabPanel>
+					<Sequencer notes={notes} steps={steps} octave={octave} setSteps={setSteps} />
+				</TabPanel>
+			</Tabs>
+		</>
+	)
 
 
 	return(
 		<> 
-		<h3>Loop {num+1}</h3>
-		{controls.current ? <SynthTrackControls controls={controls.current} setOctave={setOctave} /> : null}
-		<span>
-			<select value={scale} onChange={(e) => {
-				setScale(e.target.value)
-				setNotes(Scale.get(e.target.value).notes)
-			}}>
-				<option value="C major">C Major</option>
-				<option value="D major">D Major</option>
-				<option value="E minor">E Minor</option>
-				<option value="F# minor">F# Minor</option>
-			</select>
-
-		</span>
-		<Tabs>
-			<TabList>
-				<Tab>Sequencer</Tab>
-				<Tab>Editor</Tab>
-			</TabList>
-
-			<TabPanel forceRender={true}>
-				<button onClick={handleClick}>Expand</button>
-				{visible ? notes.map((note, noteIndex) => {
-					return <div key={uniqid()}> <span>{`${note}${octave}`}</span>
-						{steps[noteIndex].map((step, stepIndex) => {
-							return <button style={step ? { color: "blue" } : null} key={uniqid()} onClick={() => toggleNote(noteIndex, stepIndex)}>{step ? "on" : "off"}</button>
-							
-						})}
-					</div>
-				}) : null}		
-			</TabPanel>
-
-			<TabPanel>
-				<SynthEditor synth={synth.current} filter={filter.current} />
-			</TabPanel>
-		</Tabs>
+			<h3><span className="track-title" onClick={() => addTab({id: id, title: `Loop ${num + 1}`, content:  content})}>Loop {num + 1}</span></h3>
+			{loaded ? <SynthTrackControls controls={controls.current} setOctave={setOctave} /> : null}
+			
 		</>
 	)
 

@@ -1,88 +1,34 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useReducer } from "react";
 
-import { tracks } from '../data/tracks';
-import { synths } from '../data/synths';
+const Sequencer = ({notes, steps, octave, setSteps}) => {
 
-import * as Tone from "tone";
-import uniqid from 'uniqid';
+	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
-import AudioTrack from './AudioTrack';
-import SynthTrack from './SynthTrack';
-import GlobalControls from './GlobalControls';
-
-function Sequencer(){
-
-	const globalBeat = useRef(0);
-	const [playing, setPlaying] = useState(false);
-
-	const [audioTracks, setAudioTracks] = useState(null);
-	const [synthTracks, setSynthTracks] = useState(null);
-
-	const [selectedScale, setSelectedScale] = useState("C major")
-
-	useEffect(() => { // set up: create audio + synth tracks, start global beat
-		const defaultAudioTracks = [
-			{
-				id: tracks[0].id,
-				source: tracks[0].src,
-				title: tracks[0].title
-			},
-			{
-				id: tracks[1].id,
-				source: tracks[1].src,
-				title: tracks[1].title
-			}
-		]
-		setAudioTracks(defaultAudioTracks)
-
-		const defaultSynth = {id: uniqid(), ...synths[0]}
-		setSynthTracks([defaultSynth]);
-
-		Tone.getTransport().scheduleRepeat(time => {
-			globalBeat.current = globalBeat.current + 0.5
-		}, "8n", "0:0:0");
-	}, [])
-
-	const handlePlay = () =>{
-		if (Tone.getContext().state === "suspended"){
-			Tone.start()
-		}
-
-		if(!playing){
-			Tone.getTransport().start();
-			setPlaying(true);
-		} else {
-			Tone.getTransport().pause();
-			setPlaying(false);
-		}
+	const toggleNote = (noteIndex, stepIndex) => { // update steps 2d array when toggling buttons
+		const newSteps = steps.slice()
+		newSteps[noteIndex][stepIndex] = !newSteps[noteIndex][stepIndex]
+		setSteps(newSteps)
+		forceUpdate()
 	}
 
-	const handleStop = () => {
-		Tone.getTransport().stop();
-		setPlaying(false);
-	}
+  return notes.map((note, noteIndex) => {
+    return (
+		<div key={`${note}${octave}`}>
+        <span>{`${note}${octave}`}</span>
+        {steps[noteIndex].map((step, stepIndex) => {
+          return (
+            <button
+              style={step ? { color: "blue" } : null}
+			key={`${noteIndex}${stepIndex}`}
+              onClick={() => toggleNote(noteIndex, stepIndex)}
+            >
+              {step ? "on" : "off"}
+            </button>
+          );
+        })}
+      </div>
+    );
+  });
+};
 
-	const newSynthTrack = () => {
-		const newTrack = { id: uniqid(), ...synths[1] }
-		setSynthTracks(prev => [...prev, newTrack]);
-	}
-
-	return(
-		<>
-		<GlobalControls />
-
-		<button onClick={() => {handlePlay()}}>{playing ? "Pause" : "Play"}</button> <button onClick={handleStop}>Stop</button>
-
-		{audioTracks ? audioTracks.map(track => (
-				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title}/>
-		)): "Loading..."}
-
-		<button onClick={newSynthTrack}>+</button>
-		
-		{synthTracks ? synthTracks.map((track, i) => { return <SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i} globalBeat={globalBeat} /> }) : "Loading"}
-		</>
-
-	)
-}
-
-export default Sequencer
+export default Sequencer;

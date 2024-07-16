@@ -3,6 +3,7 @@ import uniqid from "uniqid";
 
 export const synths = [
   {
+    id: uniqid(),
     name: "Basic Sine Wave",
     properties: {
       synth: {
@@ -28,6 +29,7 @@ export const synths = [
     },
   },
   {
+    id: uniqid(),
     name: "16th Triangle Wave",
     properties: {
       synth: {

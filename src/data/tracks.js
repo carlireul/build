@@ -9,7 +9,8 @@ export const tracks = [
     src: julia,
     id: uniqid()
   },
-  {title: "Audio 2",
+  {
+    title: "Audio 2",
     src: idk,
     id: uniqid()
   }
