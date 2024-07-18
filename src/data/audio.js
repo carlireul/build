@@ -3,7 +3,7 @@ import uniqid from 'uniqid';
 import julia from "./julia.mp3";
 import idk from "./idk.mp3";
 
-export const tracks = [
+export const audio = [
   {
     title: "Audio 1",
     src: julia,

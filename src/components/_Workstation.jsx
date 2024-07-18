@@ -1,16 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
-import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import 'react-tabs/style/react-tabs.css'
 
-import { tracks } from '../data/tracks';
+import { tracks } from '../data/audio';
 import { synths } from '../data/synths';
 
 import * as Tone from "tone";
-import uniqid from 'uniqid';
 
+import { TrackProvider } from './TrackContext';
 import AudioTrack from './AudioTrack';
 import SynthTrack from './SynthTrack';
-import GlobalControls from './GlobalControls';
 
 function Workstation({addTab}){
 
@@ -33,9 +30,7 @@ function Workstation({addTab}){
 			}
 		]
 		setAudioTracks(defaultAudioTracks)
-
-		const defaultSynth = {id: uniqid(), ...synths[0]}
-		setSynthTracks([defaultSynth]);
+		setSynthTracks([...synths[0]]);
 
 		Tone.getTransport().scheduleRepeat(time => {
 			globalBeat.current = globalBeat.current + 0.5
@@ -48,21 +43,24 @@ function Workstation({addTab}){
 	}
 
 	return(
-		<div className="#sequencer">
-		
-		
+	<div className="sequencer">
+	
 		{audioTracks ? audioTracks.map(track => (
-				<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title} addTab={addTab}/>
-		)): "Loading..."}
+			<AudioTrack key={track.id} id={track.id} source={track.source} title={track.title} addTab={addTab}/>
+			))
+		: "Loading..."}
 
 		
 		<button onClick={newSynthTrack}>+ Add Synth</button>
 		
-		{synthTracks ? synthTracks.map((track, i) => { return <SynthTrack key={track.id} id={track.id} noteProperties={track.properties.notes} synthProperties={track.properties.synth} num={i} globalBeat={globalBeat} addTab={addTab}/> }) : "Loading"}
-			
+		{synthTracks ? synthTracks.map((track, i) => (
+			<TrackProvider key={`provider${track.id}`}>
+				<SynthTrack key={track.id} id={track.id} noteProperties={track.notes} num={i} globalBeat={globalBeat} addTab={addTab}/>
+			</TrackProvider>
+			))
+		: "Loading"}
 
-		</ div>
-
+	</div>
 	)
 }
 

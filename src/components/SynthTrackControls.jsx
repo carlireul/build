@@ -1,60 +1,17 @@
-import { useState, useEffect, useRef } from 'react';
-import * as Tone from "tone";
+import useTrack from './useTrack';
 
-const SynthTrackControls = ({controls, setOctave}) => {
-	const [muted, setMuted] = useState(false);
-	const [vol, setVol] = useState(-8);
-	const [pan, setPan] = useState(0);
-	const [solod, setSolod] = useState(false);
+const SynthTrackControls = ({id}) => {
 
-	const mute = () => {
-		setMuted(prev => !prev);
-	}
-
-	const changeVol = (value) => {
-		setVol(value)
-	}
-
-	const changePan = (value) => {
-		setPan(value)
-	}
-
-	const centrePan = () => {
-		setPan(0)
-	}
-
-	const toggleSolo = () => {
-		setSolod(prev => !prev);
-	}
-
-	const increaseOctave = () => {
-		setOctave(prev => {
-			if (prev < 7){
-				return prev+1}
-			})
-	}
-
-	const decreaseOctave = () => {
-		setOctave(prev => {
-			if(prev>1){
-				return prev-1
-			}
-		})
-	}
+	const trackContext = useTrack(id);
 	
-	controls.solo = solod;
-	controls.volume.value = vol;
-	controls.pan.value = pan;
-	controls.mute = muted;
-
 	return <>
 	<div>	
-			<button onClick={toggleSolo}>Solo</button>
-			<button onClick={mute}>{muted ? "Unmute" : "Mute"}</button>
-			Vol: <input type="range" id="vol" name="vol" min="-20" max="20" value={vol} onChange={(e) => changeVol(e.target.value)}></input>
-			<button onClick={increaseOctave}>+</button>
-			<button onClick={decreaseOctave}>-</button>
-			<button onClick={() => centrePan()}>Pan</button> <input type="range" id="vol" name="vol" min="-1" max="1" step="0.1" value={pan} onChange={(e) => changePan(e.target.value)}></input>
+			<button onClick={trackContext.toggleSolo}>Solo</button>
+			<button onClick={trackContext.mute}>{trackContext.muted ? "Unmute" : "Mute"}</button>
+			Vol: <input type="range" id="vol" name="vol" min="-20" max="20" value={trackContext.vol} onChange={(e) => trackContext.changeVol(e.target.value)}></input>
+			<button onClick={trackContext.increaseOctave}>+</button>
+			<button onClick={trackContext.decreaseOctave}>-</button>
+			<button onClick={trackContext.centrePan}>Pan</button> <input type="range" id="vol" name="vol" min="-1" max="1" step="0.1" value={trackContext.pan} onChange={(e) => trackContext.changePan(e.target.value)}></input>
 	</div>
 	</>
 }

@@ -1,6 +1,9 @@
-import { useState, useEffect, useRef, useReducer } from "react";
+import { useReducer } from "react";
+import useTrack from './useTrack';
 
-const Sequencer = ({notes, steps, octave, setSteps}) => {
+const Sequencer = ({id, steps, setSteps}) => {
+
+  const trackContext = useTrack(id);
 
 	const [, forceUpdate] = useReducer(x => x + 1, 0);
 
@@ -11,10 +14,10 @@ const Sequencer = ({notes, steps, octave, setSteps}) => {
 		forceUpdate()
 	}
 
-  return notes.map((note, noteIndex) => {
+  return trackContext.notes.map((note, noteIndex) => {
     return (
-    <div key={`${note}${octave}`}>
-      <span>{`${note}${octave}`}</span>
+    <div key={note}>
+      <span>{note}</span>
       {steps[noteIndex].map((step, stepIndex) => {
         return (
           <button
