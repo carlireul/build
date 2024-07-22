@@ -23,7 +23,7 @@ const useTrack = (id, type) => {
 	}
 
 	const centrePan = () => {
-		const newState = { ...state, [id]: { ...state[id], controls: { ...state[id].controls, vol: 0 } } }
+		const newState = { ...state, [id]: { ...state[id], controls: { ...state[id].controls, pan: 0 } } }
 		setState(newState);
 	}
 
