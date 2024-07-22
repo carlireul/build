@@ -5,13 +5,13 @@ import idk from "./idk.mp3";
 
 export const audio = [
   {
-    title: "Audio 1",
-    src: julia,
-    id: uniqid()
+    id: uniqid(),
+    name: "Audio 1",
+    source: julia,
   },
   {
-    title: "Audio 2",
-    src: idk,
-    id: uniqid()
+    id: uniqid(),
+    name: "Audio 2",
+    source: idk,
   }
 ];

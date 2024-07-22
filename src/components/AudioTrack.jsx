@@ -1,31 +1,54 @@
 import { useState, useEffect, useRef } from 'react';
+
 import * as Tone from "tone";
-import uniqid from "uniqid";
+
 import AudioTrackControls from './AudioTrackControls';
 
-function AudioTrack({id, source, title, addTab}){
+import useTrack from './useTrack';
+
+function AudioTrack({id, addTab}){
+	const trackContext = useTrack(id, "audio")
+
 	const [loaded, setLoaded] = useState(false);
+
 	const player = useRef();
 	const controls = useRef();
 
 	useEffect(() => { // setup: load controls and player
 		controls.current = new Tone.Channel(-8, 0).toDestination();
 
-		controls.current.mute = true; // for testing
+		trackContext.mute()
 
-		player.current = new Tone.Player(source, () => {
+		player.current = new Tone.Player(trackContext.source, () => {
 			player.current.sync().start(0); // puts in transport
 			setLoaded(true)
 		}).chain(controls.current);
 
 	}, [])
-	
+
 	const tabContent = (
-		<AudioTrackControls controls={controls.current} /> 
+		<AudioTrackControls id={id} />
 	)
+
+	if (controls.current) {
+		controls.current.solo = trackContext.solod;
+		controls.current.volume.value = trackContext.vol;
+		controls.current.pan.value = trackContext.pan;
+		controls.current.mute = trackContext.muted;
+	}
+
 	return (
     <>
-			<div>{loaded ? <span className="track-title" onClick={() => addTab({ id: id, title: title, content: tabContent})}>{title}</span> : "Loading Audio.."}</div>
+			<div className="track">
+				{ loaded ? <>
+					<span className="track-title" onClick={() => addTab({ id: id, title: trackContext.name, content: tabContent})}>
+						{trackContext.name}
+					</span>
+
+					<AudioTrackControls id={id} />
+				</>
+				: "Loading Audio.." }
+			</div>
 	
 	</>
 	)

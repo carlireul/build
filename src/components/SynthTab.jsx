@@ -4,14 +4,14 @@ import Sequencer from './Sequencer'
 
 import useTrack from './useTrack';
 
-const SynthTab = ({id, synth, filter, steps, setSteps}) => {
+const SynthTab = ({id, steps, setSteps, globalBeat}) => {
 
-	const trackContext = useTrack(id)
+	const trackContext = useTrack(id, "synth")
 
 	return <>
 		<div id="synth-container">
 			<div id="editor-container">
-				<SynthEditor id={id} synth={synth} filter={filter} />
+				<SynthEditor id={id} />
 			</div>
 			<div id="sequencer-container">
 				<SynthTrackControls id={id} />
@@ -24,10 +24,11 @@ const SynthTab = ({id, synth, filter, steps, setSteps}) => {
 						<option value="E minor">E Minor</option>
 						<option value="F# minor">F# Minor</option>
 					</select>
-
 				</span>
+				Octave: <button className="octave-button" onClick={trackContext.increaseOctave}>+</button>
+				<button className="octave-button" onClick={trackContext.decreaseOctave}>-</button>
 
-				<Sequencer id={id} steps={steps} setSteps={setSteps} />
+				<Sequencer id={id} steps={steps} setSteps={setSteps} globalBeat={globalBeat} />
 
 			</div>
 		</div>

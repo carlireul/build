@@ -44,3 +44,96 @@
 .track-title {
 	text-decoration: underline;
 }
+
+.tab-button {
+	padding: 0px 5px;
+	background: transparent;
+
+}
+
+.tab-button:hover {
+	border-color: transparent;
+}
+
+.sequencer-button {
+	background:#fff;
+	padding: 20px;
+	margin: 2px;
+	border: transparent;
+}
+
+.sequencer-active {
+	background: #74C0FC;
+}
+
+.sequencer-playing {
+	filter: brightness(75%);
+
+}
+
+.note-row {
+	display: flex;
+	align-items: center;
+}
+
+.note-name { 
+	width: 35px;
+}
+
+.react-tabs {
+	-webkit-tap-highlight-color: transparent;
+}
+
+.react-tabs__tab-list {
+	border-bottom: 2px solid #74C0FC;
+	margin: 0 0 10px;
+	padding: 0;
+}
+
+.react-tabs__tab {
+	display: inline-block;
+	background: #1a1a1a;
+	border: 1px solid transparent;
+	border-bottom: none;
+	border-radius: 5px 5px 0 0;
+	bottom: -1px;
+	position: relative;
+	list-style: none;
+	padding: 6px 12px;
+	cursor: pointer;
+}
+
+.react-tabs__tab--selected {
+	background: #74C0FC;
+	border-color: #74C0FC;
+	color: black;
+}
+
+.react-tabs__tab--disabled {
+	background: #74C0FC;
+	border-color: #74C0FC;
+	color: white;
+	color: GrayText;
+	cursor: default;
+}
+
+.react-tabs__tab:focus {
+	outline: none;
+}
+
+.react-tabs__tab:focus:after {
+	content: '';
+	position: absolute;
+	height: 5px;
+	left: -4px;
+	right: -4px;
+	bottom: -5px;
+}
+
+.react-tabs__tab-panel {
+	display: none;
+}
+
+.react-tabs__tab-panel--selected {
+	display: block;
+}

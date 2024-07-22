@@ -1,37 +1,9 @@
-import { useEffect } from 'react';
 import useTrack from './useTrack';
 
-function SynthEditor({id, synth, filter}){
+function SynthEditor({id}){
 
-	const trackContext = useTrack(id)
-
-	const updateSynth = () => {
-		// console.log(trackContext.envelope, trackContext.oscillator, trackContext.filter)
-		synth.set({
-			envelope: {
-				attack: trackContext.envelope.attack,
-				decay: trackContext.envelope.decay,
-				sustain: trackContext.envelope.sustain,
-				release: trackContext.envelope.release,
-			},
-			oscillator: {
-				type: trackContext.oscillator.type
-			},
-		})
-		
-		filter.set({
-			wet: trackContext.filter.wet,
-			baseFrequency: trackContext.filter.cutoff,
-			filter: {
-				type: trackContext.filter.type,
-			},
-		})
-	}
-
-	// update the synth's properties when changed in UI
-	useEffect(updateSynth, [trackContext.envelope, trackContext.filter, trackContext.oscillator])
+	const trackContext = useTrack(id, "synth")
 	
-
 	// const save = () => {
 	// 	const params = {
 	// 		synth: {

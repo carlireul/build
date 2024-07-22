@@ -1,30 +1,37 @@
-import { useState, createContext } from 'react';
+import { useState, createContext, useEffect } from 'react';
 import { synths } from '../data/synths';
+import { audio } from '../data/audio';
 
-const TrackContext = createContext([{
-  muted: false,
-  vol: -8,
-  solod: false,
-  pan: 0
-}, () => {}]);
+const TrackContext = createContext([{}, () => {}]);
 
 const TrackProvider = (props) => {
 
   const tracks = {}
 
-  const defaultControls = {
-    muted: false,
-    vol: -8,
-    solod: false,
-    pan: 0
-  }
+  useEffect(() => {
+    const globalBeat = 0
 
-  for(const track of synths){
-    tracks[track.id] = {
-      ...track,
-      controls: {...defaultControls}
+    const defaultControls = {
+      muted: false,
+      vol: -8,
+      solod: false,
+      pan: 0
     }
-  }
+
+    for (const track of synths) {
+      tracks[track.id] = {
+        ...track,
+        controls: { ...defaultControls }
+      }
+    }
+
+    for (const track of audio) {
+      tracks[track.id] = {
+        ...track,
+        controls: { ...defaultControls }
+      }
+    }
+  }, [])
 
   const [state, setState] = useState(tracks);
 
@@ -35,4 +42,4 @@ const TrackProvider = (props) => {
   );
 }
 
-export { TrackContext, TrackProvider };
+export { TrackContext, TrackProvider, };
