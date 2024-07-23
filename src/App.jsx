@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import './App.css'
@@ -22,13 +22,11 @@ function App() {
   
   // Tone setup
   
-  const [globalBeat, setGlobalBeat] = useState(0)
-  
   const [trackLength, setTrackLength] = useState("1:0:0")
   const [audioTracks, setAudioTracks] = useState(null);
   const [synthTracks, setSynthTracks] = useState(null);
 
-  useEffect(() => { // set up: create audio + synth tracks, start global beat
+  useEffect(() => { // set up: create audio + synth tracks
     const defaultAudioTracks = [{
         id: audio[0].id,
         source: audio[0].src,
@@ -38,9 +36,6 @@ function App() {
     
     setSynthTracks([synths[0]]);
 
-    Tone.getTransport().scheduleRepeat(time => {
-      setGlobalBeat(prev => prev + 0.5)
-    }, "8n", "0:0:0");
   }, [])
 
   // Handlers
@@ -56,14 +51,23 @@ function App() {
   const newSynthTrack = () => {
     const newTrack = newSynth()
     setSynthTracks(prev => [...prev, newTrack])
+  }
 
+  const deleteSynthTrack = (id) => {
+    setSynthTracks(synthTracks.filter(item => item.id !== id))
+    closeTab(id)
   }
 
   // Tab management
 
   const generateTabs = () => {
     return (
-      <Tabs>
+      <Tabs onSelect={(index, lastIndex, event) => {
+        if(event.target.className === "fa-solid fa-xmark"){
+          console.log(index, lastIndex, event.target)
+          return false
+        }
+      }}>
         <TabList>
           <Tab>Timeline</Tab>
           { activeTabs.map(tab =>
@@ -86,7 +90,7 @@ function App() {
               
 
               { synthTracks ? synthTracks.map((track, i) => 
-                  <SynthTrack key={track.id} id={track.id} num={i} globalBeat={globalBeat} addTab={addTab} />
+                  <SynthTrack key={track.id} id={track.id} num={i} addTab={addTab} deleteTrack={deleteSynthTrack} />
               )
               : "Loading" }
 
@@ -125,7 +129,7 @@ function App() {
       </div>
       <div id="bottom-container">
         <div>
-            <GlobalControls setGlobalBeat={setGlobalBeat} />
+            <GlobalControls />
         </div>
         <div>
           tips

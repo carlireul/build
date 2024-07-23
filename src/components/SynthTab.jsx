@@ -4,7 +4,7 @@ import Sequencer from './Sequencer'
 
 import useTrack from './useTrack';
 
-const SynthTab = ({id, steps, setSteps, globalBeat}) => {
+const SynthTab = ({id}) => {
 
 	const trackContext = useTrack(id, "synth")
 
@@ -16,6 +16,11 @@ const SynthTab = ({id, steps, setSteps, globalBeat}) => {
 			<div id="sequencer-container">
 				<SynthTrackControls id={id} />
 				<span>
+					<select value={trackContext.subdivision} onChange={(e) => trackContext.changeSubdivision(e.target.value)}>
+						<option value="4">4</option>
+						<option value="8">8</option>
+						<option value="16">16</option>
+					</select>
 					<select value={trackContext.scale} onChange={(e) => {
 						trackContext.changeScale(e.target.value)
 					}}>
@@ -28,7 +33,7 @@ const SynthTab = ({id, steps, setSteps, globalBeat}) => {
 				Octave: <button className="octave-button" onClick={trackContext.increaseOctave}>+</button>
 				<button className="octave-button" onClick={trackContext.decreaseOctave}>-</button>
 
-				<Sequencer id={id} steps={steps} setSteps={setSteps} globalBeat={globalBeat} />
+				<Sequencer id={id}/>
 
 			</div>
 		</div>

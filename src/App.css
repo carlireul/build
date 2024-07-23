@@ -55,6 +55,11 @@
 	border-color: transparent;
 }
 
+.close-track-button{
+	padding: 0px 5px;
+	background: transparent;
+}
+
 .sequencer-button {
 	background:#fff;
 	padding: 20px;

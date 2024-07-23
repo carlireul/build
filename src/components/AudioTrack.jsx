@@ -24,6 +24,14 @@ function AudioTrack({id, addTab}){
 			setLoaded(true)
 		}).chain(controls.current);
 
+		return () => { //cleanup
+			controls.current.disconnect()
+			player.current.disconnect()
+			controls.current.dispose()
+			player.current.dispose()
+
+		}
+
 	}, [])
 
 	const tabContent = (

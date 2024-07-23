@@ -1,6 +1,7 @@
 import { useState, createContext, useEffect } from 'react';
 import { synths } from '../data/synths';
 import { audio } from '../data/audio';
+import { Scale } from 'tonal';
 
 const TrackContext = createContext([{}, () => {}]);
 
@@ -9,7 +10,6 @@ const TrackProvider = (props) => {
   const tracks = {}
 
   useEffect(() => {
-    const globalBeat = 0
 
     const defaultControls = {
       muted: false,
@@ -19,9 +19,13 @@ const TrackProvider = (props) => {
     }
 
     for (const track of synths) {
+      const notes = Scale.get(track.notes.scale).notes
+      const steps = new Array(notes.length).fill(null).map(() => new Array(track.notes.subdivision).fill(false));
+
       tracks[track.id] = {
         ...track,
-        controls: { ...defaultControls }
+        controls: { ...defaultControls },
+        steps: steps,
       }
     }
 

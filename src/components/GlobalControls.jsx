@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import * as Tone from "tone";
 
-const GlobalControls = ({setGlobalBeat}) => {
+const GlobalControls = () => {
 
 	const [playing, setPlaying] = useState(false);
 	const [bpm, setBpm] = useState(120)
@@ -43,7 +43,6 @@ const GlobalControls = ({setGlobalBeat}) => {
 	const handleStop = () => {
 		Tone.getTransport().stop();
 		Tone.getTransport().position = "0:0:0"
-		setGlobalBeat(0)
 		setPlaying(false);
 	}
 

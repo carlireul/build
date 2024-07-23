@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { getBeat } from '../services/helpers'
 
 import * as Tone from "tone";
 
@@ -7,24 +8,21 @@ import SynthTab from './SynthTab';
 
 import useTrack from './useTrack'
 
-const SynthTrack = ({id, num, globalBeat, addTab}) => {
+const SynthTrack = ({id, num, addTab, deleteTrack}) => {
 	
 	const trackContext = useTrack(id, "synth");
 
 	const [loaded, setLoaded] = useState(false)
 
-	const beat = useRef(globalBeat)
-	
-	const [steps, setSteps] = useState(new Array(trackContext.notes.length).fill(null).map(() => new Array(trackContext.subdivision).fill(false)));
-
 	const synth = useRef();
 	const filter = useRef();
 	const controls = useRef();
 	const notesArray = useRef(new Array(trackContext.subdivision).fill(null).map(() => []))
+	const playSchedule = useRef(0)
 
 	useEffect(() => { // set up: controls, filter, polysynth, transport schedule
 
-		controls.current = new Tone.Channel(-8, 0).toDestination();
+		controls.current = new Tone.Channel(trackContext.vol, trackContext.pan).toDestination();
 		filter.current = new Tone.AutoFilter({wet: trackContext.filter.wet}).connect(controls.current)
 		synth.current = new Tone.PolySynth().connect(filter.current);
 
@@ -39,41 +37,47 @@ const SynthTrack = ({id, num, globalBeat, addTab}) => {
 				type: trackContext.oscillator.type
 			},
 		})
-
-		Tone.getTransport().scheduleRepeat(time => {
-			beat.current = beat.current + 0.5
-		}, "8n", "0:0:0");
-
-		const schedule = (time) => { // useRef if need to edit (note length etc)
-
-			console.log(num, beat.current, beat.current % trackContext.subdivision, notesArray.current[beat.current % trackContext.subdivision], time, Tone.getTransport().position)
-
-			synth.current.triggerAttackRelease(
-				notesArray.current[beat.current % trackContext.subdivision], // plays notes in notesArray at the current beat index
-				`${trackContext.subdivision}n`, // duration of note
-				time) // callback function keeps time
-
-		}
-
-		Tone.getTransport().scheduleRepeat(schedule,
-			`${trackContext.subdivision}n`, // repetition interval
-			"0:0:0") // start time
-
+	
+		
 		setLoaded(true)
+
+		return () => { // cleanup
+			controls.current.disconnect()
+			filter.current.disconnect()
+			synth.current.disconnect()
+			controls.current.dispose()
+			filter.current.dispose()
+			synth.current.dispose()
+		}
 
 		}, [])
 
 	useEffect(() => {
-		beat.current = globalBeat
-		console.log("hiiiii")
-	}, [globalBeat])
+		const schedule = (time) => { // useRef if need to edit (note length etc)
 
+			console.log(getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
+
+			synth.current.triggerAttackRelease(
+				notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)], // plays notes in notesArray at the current beat index
+				`${trackContext.subdivision}n`, // duration of note
+				time) // callback function keeps time
+		}
+
+		playSchedule.current = Tone.getTransport().scheduleRepeat(schedule,
+			`${trackContext.subdivision}n`, // repetition interval
+			"0:0:0") // start time
+
+		return () => {
+			Tone.getTransport().clear(playSchedule.current)
+		}
+
+	}, [trackContext.subdivision])
 
 	useEffect(() => { // update the array of notes to play when octave or active pads are changed
 
 		notesArray.current = new Array(trackContext.subdivision).fill(null).map(() => []) // reset the notes array
 
-		steps.forEach((line, i) => {
+		trackContext.steps.forEach((line, i) => {
 			line.forEach((pad, j) => {
 				if(pad){
 					notesArray.current[j].push(trackContext.notes[i])
@@ -81,7 +85,7 @@ const SynthTrack = ({id, num, globalBeat, addTab}) => {
 			})
 		})
 		
-	}, [steps, trackContext.octave, trackContext.notes])
+	}, [trackContext.steps, trackContext.octave, trackContext.notes, trackContext.subdivision])
 
 	useEffect(() => {
 		controls.current.solo = trackContext.solod;
@@ -122,10 +126,11 @@ const SynthTrack = ({id, num, globalBeat, addTab}) => {
 			<span className="track-title" onClick={() => addTab({
 				id: id,
 				title: `Loop ${num+1}`,
-				content: <SynthTab globalBeat={globalBeat} id={id} steps={steps} setSteps={setSteps}/>})
+				content: <SynthTab id={id} />})
 			}>
-				Loop {num + 1}
+				Loop {num + 1} 
 			</span>
+			<button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
 			{ loaded ? <SynthTrackControls id={id} /> : null }
 		</div>
 	)
