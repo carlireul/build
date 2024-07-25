@@ -3,7 +3,7 @@ import uniqid from "uniqid";
 const newSynth = () => {
   const newSynth = {
     id: uniqid(),
-    name: "New Synth",
+    name: "Untitled",
     synth: {
     envelope: {
       attack: 0.1,
@@ -31,10 +31,10 @@ const newSynth = () => {
   return newSynth
 }
 
-const synths = [
+const presets = [
   {
-    id: uniqid(),
-    name: "Basic Sine Wave",
+    name: "Basic Sine",
+    type: "synth",
     synth: {
       envelope: {
         attack: 0.1,
@@ -58,7 +58,6 @@ const synths = [
     },
   },
   {
-    id: uniqid(),
     name: "16th Triangle Wave",
     synth: {
       envelope: {
@@ -78,10 +77,10 @@ const synths = [
     },
     notes: {
       scale: "D major",
-      subdivision: 8,
+      subdivision: 16,
       octave: 4,
     },
   },
 ];
 
-export {synths, newSynth}
+export {presets, newSynth}

@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { TrackContext } from "./TrackContext";
 import { Scale } from "tonal"; 
-import { synths } from '../data/synths';
 import { audio } from '../data/audio';
+import db from '../data/db';
 
 const useTrack = (id, type) => {
 	const [state, setState] = useContext(TrackContext);
@@ -99,54 +99,12 @@ const useTrack = (id, type) => {
 		setState({...state, [id]: {...state[id], steps: newSteps}})
 	}
 
-	if (!([id] in state) && type == "synth") {
-		const newSynth = synths.find(obj => obj.id == id)
-
-		const newState = {
-			...state, [id]: {
-				...newSynth, controls: {
-					muted: false,
-					vol: -8,
-					solod: false,
-					pan: 0,
-				},
-				steps: new Array(7).fill(null).map(() => new Array(newSynth.notes.subdivision).fill(false)),
-			}
-		}
-
+	const rename = (value) => {
+		const newState = {... state, [id]: {...state[id], name: value}}
 		setState(newState)
-
-		// placeholder data before state refresh (hacky...)
-		return {
-			name: "Placeholder",
-			muted: true,
-			vol: -8,
-			pan: 0,
-			solod: false,
-			octave: 4,
-			scale: "C major",
-			notes: Scale.get("C major").notes.map(note => `${note}4`),
-			subdivision: 8,
-			envelope: {
-				attack: 0.1,
-				decay: 0.2,
-				sustain: 1.0,
-				release: 0.8,
-			},
-			oscillator: {
-				type: "sine",
-			},
-			filter: {
-				wet: 0,
-				cutoff: 0,
-				type: "highpass",
-			},
-			steps: []
-		}
 	}
-	
 
-	// console.log(state)
+	console.log("track", state)
 
 	if (type === "synth") {
 		return {
@@ -168,6 +126,7 @@ const useTrack = (id, type) => {
 			changeWaveType,
 			toggleNote,
 			changeSubdivision,
+			rename,
 			name: state[id].name,
 			muted: state[id].controls.muted,
 			vol: state[id].controls.vol,
@@ -189,6 +148,7 @@ const useTrack = (id, type) => {
 			changePan,
 			centrePan,
 			toggleSolo,
+			rename,
 			name: state[id].name,
 			source: state[id].source,
 			muted: state[id].controls.muted,

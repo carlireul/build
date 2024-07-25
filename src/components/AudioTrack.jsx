@@ -6,10 +6,11 @@ import AudioTrackControls from './AudioTrackControls';
 
 import useTrack from './useTrack';
 
-function AudioTrack({id, addTab}){
+function AudioTrack({id, addTab, deleteTrack}){
 	const trackContext = useTrack(id, "audio")
 
 	const [loaded, setLoaded] = useState(false);
+	const [title, setTitle] = useState(trackContext.name)
 
 	const player = useRef();
 	const controls = useRef();
@@ -49,9 +50,12 @@ function AudioTrack({id, addTab}){
     <>
 			<div className="track">
 				{ loaded ? <>
-					<span className="track-title" onClick={() => addTab({ id: id, title: trackContext.name, content: tabContent})}>
-						{trackContext.name}
-					</span>
+					<button className="track-title" onClick={() => addTab({ id: id, title: title, content: tabContent})}>
+						<i className="fa-solid fa-file-audio"></i>
+					</button> <input type="text" value={title} onChange={(e) => {
+						trackContext.rename(e.target.value)
+						setTitle(e.target.value)
+					}} /> <button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
 
 					<AudioTrackControls id={id} />
 				</>

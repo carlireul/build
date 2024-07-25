@@ -6,12 +6,12 @@ import idk from "./idk.mp3";
 export const audio = [
   {
     id: uniqid(),
-    name: "Audio 1",
+    name: "Test Audio 1",
     source: julia,
   },
   {
     id: uniqid(),
-    name: "Audio 2",
+    name: "Test Audio 2",
     source: idk,
   }
 ];

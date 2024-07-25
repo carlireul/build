@@ -1,7 +1,5 @@
 import { useState, createContext, useEffect } from 'react';
-import { synths } from '../data/synths';
-import { audio } from '../data/audio';
-import { Scale } from 'tonal';
+import db from '../data/db';
 
 const TrackContext = createContext([{}, () => {}]);
 
@@ -11,30 +9,17 @@ const TrackProvider = (props) => {
 
   useEffect(() => {
 
-    const defaultControls = {
-      muted: false,
-      vol: -8,
-      solod: false,
-      pan: 0
-    }
+    const fetchData = async () => {
+      const data = await db.tracks.toArray()
+      // audio
 
-    for (const track of synths) {
-      const notes = Scale.get(track.notes.scale).notes
-      const steps = new Array(notes.length).fill(null).map(() => new Array(track.notes.subdivision).fill(false));
-
-      tracks[track.id] = {
-        ...track,
-        controls: { ...defaultControls },
-        steps: steps,
+      for (const track of data) {
+        tracks[track.id] = {...track}
       }
+
     }
 
-    for (const track of audio) {
-      tracks[track.id] = {
-        ...track,
-        controls: { ...defaultControls }
-      }
-    }
+    fetchData().catch(console.error)
   }, [])
 
   const [state, setState] = useState(tracks);

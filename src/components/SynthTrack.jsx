@@ -7,12 +7,15 @@ import SynthTrackControls from './SynthTrackControls';
 import SynthTab from './SynthTab';
 
 import useTrack from './useTrack'
+import { useLiveQuery } from 'dexie-react-hooks';
+import db from '../data/db';
 
-const SynthTrack = ({id, num, addTab, deleteTrack}) => {
+const SynthTrack = ({id, addTab, deleteTrack}) => {
 	
 	const trackContext = useTrack(id, "synth");
 
 	const [loaded, setLoaded] = useState(false)
+	const [title, setTitle] = useState(trackContext.name ? trackContext.name : "Untitled")
 
 	const synth = useRef();
 	const filter = useRef();
@@ -38,7 +41,6 @@ const SynthTrack = ({id, num, addTab, deleteTrack}) => {
 			},
 		})
 	
-		
 		setLoaded(true)
 
 		return () => { // cleanup
@@ -123,13 +125,16 @@ const SynthTrack = ({id, num, addTab, deleteTrack}) => {
 
 	return(
 		<div className="track"> 
-			<span className="track-title" onClick={() => addTab({
+			<button className="track-tab-button" onClick={() => addTab({
 				id: id,
-				title: `Loop ${num+1}`,
+				title: title,
 				content: <SynthTab id={id} />})
 			}>
-				Loop {num + 1} 
-			</span>
+			<i className="fa-solid fa-wave-square"></i>
+			</button> <input type="text" value={title} onChange={(e) => {
+				trackContext.rename(e.target.value)
+				setTitle(e.target.value)
+			}} />
 			<button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
 			{ loaded ? <SynthTrackControls id={id} /> : null }
 		</div>
