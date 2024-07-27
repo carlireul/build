@@ -3,7 +3,7 @@ import uniqid from "uniqid";
 // import julia from "./julia.mp3";
 
 const db = new Dexie("database");
-db.version(9).stores({
+db.version(10).stores({
   tracks: "id, name", 
   states: "id"
 })
@@ -52,11 +52,9 @@ db.on("populate", (transaction) => {
     id: uniqid(),
     bpm: 120,
     vol: -8,
-    position: "0:0:0",
-    trackEnd: "9:0:0",
+    trackEnd: "1:0:0",
     name: "New Project",
     tracks: [synthID],
-    tabs: [],
   });
 
 })

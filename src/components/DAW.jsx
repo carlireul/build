@@ -17,17 +17,16 @@ import FileUpload from './FileUpload.jsx';
 import AudioTrackControls from './AudioTrackControls.jsx';
 import SynthTab from './SynthTab.jsx';
 
-const DAW = ({savedState}) => {
+const DAW = ({ savedState, deleteProject, changeProject }) => {
 	// DB
 
 	const trackDB = useTrackDB()
-	console.log(savedState)
+	// console.log(savedState)
 
 	// UI state
 
 	const [visible, setVisible] = useState(false)
 	const [activeTabs, setActiveTabs] = useState([])
-	console.log(activeTabs)
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [name, setName] = useState(savedState.name)
 
@@ -41,8 +40,7 @@ const DAW = ({savedState}) => {
 		Tone.start()
 		Tone.getTransport().loop = true;
 		Tone.getTransport().loopStart = 0;
-		Tone.getTransport().loopEnd = trackLength;
-		Tone.getTransport().position = savedState.position
+		Tone.getTransport().loopEnd = trackLength
 		setVisible(true)
 	}
 
@@ -51,13 +49,20 @@ const DAW = ({savedState}) => {
 			return
 		}
 
-		trackDB.addNewAudio(selectedFile, savedState.id)
+		if(Tone.getTransport().state == "started"){
+			Tone.getTransport().pause()
+			trackDB.addNewAudio(selectedFile, savedState.id)
+		} else {
+			trackDB.addNewAudio(selectedFile, savedState.id)
+		}
+
 	}
 
 	const deleteTrack = (id) => {
 		trackDB.deleteTrack(id, savedState.id)
 		closeTab(id)
 	}
+
 
 	// Tab management
 
@@ -83,18 +88,18 @@ const DAW = ({savedState}) => {
 						<div className="sequencer">
 
 							{trackDB.audios ? trackDB.audios.map((id, i) =>
-								<>
+								<span key={i}>
 									{i + 1} <AudioTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
-								</>
+								</span>
 							)
 								: "Loading..."}
 
 
 
 							{trackDB.synths ? trackDB.synths.map((id, i) =>
-							<>
+							<span key={i}>
 								{i + 1 + trackDB.audios.length}  <SynthTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
-								</>
+								</span>
 							)
 								: "Loading"}
 
@@ -111,10 +116,7 @@ const DAW = ({savedState}) => {
 					</TabPanel>
 					{activeTabs.map(tab =>
 						<TabPanel key={`panel${tab.id}`} forceRender={true}>
-							{ tab.type == "synth" ?
-							<SynthTab id={tab.id} />
-							: <AudioTrackControls id={tab.id} />
-							}
+							{tab.content}
 						</TabPanel>
 					)}
 			</Tabs>
@@ -142,24 +144,28 @@ const DAW = ({savedState}) => {
 				<div id="bottom-container">
 					<div>
 						<GlobalControls savedState={savedState} />
-						<button onClick={() => {
-							const newState = {
-								id: savedState.id,
-								bpm: parseInt(Tone.getTransport().bpm.value),
-								vol: parseInt(Tone.getDestination().volume.value),
-								position: Tone.getTransport().position,
-								trackEnd: trackLength,
-								name: name,
-								tabs: [...activeTabs],
-							}
-
-							trackDB.save(newState)}}>Save</button>
+						
 					</div>
 					<div>
 						tips
 					</div>
 					<div>
 						settings
+						<input type="text" value={name} onChange={e => setName(e.target.value)}/>
+						<span>Projects</span>
+						<button onClick={changeProject}>Open...</button>
+						<button onClick={() => {
+							const newState = {
+								id: savedState.id,
+								bpm: parseInt(Tone.getTransport().bpm.value),
+								vol: parseInt(Tone.getDestination().volume.value),
+								trackEnd: trackLength,
+								name: name,
+							}
+
+							trackDB.save(newState)
+						}}>Save</button>
+						<button onClick={deleteProject}>Delete</button>
 					</div>
 				</div>
 			</div>

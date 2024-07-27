@@ -7,9 +7,6 @@ import SynthTrackControls from './SynthTrackControls';
 import SynthTab from './SynthTab';
 
 import useTrack from './useTrack'
-import { useLiveQuery } from 'dexie-react-hooks';
-import db from '../data/db';
-
 const SynthTrack = ({id, addTab, deleteTrack}) => {
 	
 	const trackContext = useTrack(id, "synth");
@@ -94,6 +91,13 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		controls.current.volume.value = trackContext.vol;
 		controls.current.pan.value = trackContext.pan;
 		controls.current.mute = trackContext.muted;
+
+		return () => {
+			if(controls.current){
+				controls.current.disconnect()
+				controls.current.dispose()
+			}
+		}
 	}, [trackContext.solod, trackContext.vol, trackContext.pan, trackContext.muted])
 
 	// update the synth's properties when changed in UI
@@ -128,7 +132,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			<button className="track-tab-button" onClick={() => addTab({
 				id: id,
 				title: title,
-			type: "synth" })
+				content: <SynthTab id={id} />})
 			}>
 			<i className="fa-solid fa-wave-square"></i>
 			</button> <input type="text" value={title} onChange={(e) => {

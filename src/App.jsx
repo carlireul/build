@@ -12,6 +12,7 @@ function App() {
   // db.delete({ disableAutoOpen: false });
 
   const projects = useLiveQuery(() => db.states.toArray())
+
   const [selectedProject, setSelectedProject] = useState(null)
 
   const newProject = async () => {
@@ -32,16 +33,27 @@ function App() {
       bpm: 120,
       vol: -8,
       position: "0:0:0",
-      trackEnd: "9:0:0",
-      name: "New Project",
+      trackEnd: "1:0:0",
+      name: `Untitled Project ${projects.length + 1}`,
       tracks: [trackID]
     }
 
-    await db.tracks.add(synth)
-    await db.states.add(newProject)
+    await db.transaction('rw', db.states, db.tracks, () => {
+      db.tracks.add(synth)
+      db.states.add(newProject)
+    })
 
     setSelectedProject(newProject.id)
 
+  }
+
+  const deleteProject = async (id) => {
+    setSelectedProject(null)
+    await db.states.delete(id)
+  }
+
+  const changeProject = () => {
+    setSelectedProject(null)
   }
 
   if(!projects) return null;
@@ -49,7 +61,7 @@ function App() {
   return (<>
       { selectedProject ?
       <TrackProvider id={selectedProject}>
-        <DAW savedState={projects.find(project => project.id == selectedProject)} />
+        <DAW savedState={projects.find(project => project.id == selectedProject)} deleteProject={() => deleteProject(selectedProject)} changeProject={changeProject}/>
       </TrackProvider> 
       : 
       <>

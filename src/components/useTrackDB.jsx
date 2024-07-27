@@ -43,8 +43,10 @@ const useTrackDB = () => {
 
 		setState(newState)
 
-		await db.tracks.add(newSynth)
-		await db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
+		await db.transaction('rw', db.tracks, db.states, () => {
+			db.tracks.add(newSynth)
+			db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
+		})
 		console.log("success!")
 
 	}
@@ -73,8 +75,10 @@ const useTrackDB = () => {
 
 		setState(newState)
 
-		await db.tracks.add(newAudio)
-		await db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
+		await db.transaction('rw', db.tracks, db.states, () => {
+			db.tracks.add(newAudio)
+			db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
+		})
 		console.log("success!")
 	}
 
@@ -83,20 +87,27 @@ const useTrackDB = () => {
 		delete newState[id]
 		setState(newState)
 
-		await db.tracks.where("id").equals(id).delete()
-		await db.states.where("id").equals(stateID).modify(x => x.tracks.filter(item => item !== id))
+		await db.transaction('rw', db.tracks, db.states, async () => {
+			db.tracks.where("id").equals(id).delete()
+
+			const oldTracks = await db.states.where("id").equals(stateID).first()
+			const newTracks = oldTracks.tracks.filter(item => item !== id)
+
+			db.states.update(stateID, { tracks: newTracks })
+		})
+
+		console.log("delete success")
 	}
 
 	const save = async (newState) => {
-		await db.states.update(newState.id, {
-			bpm: newState.bpm,
-			vol: newState.vol,
-			position: newState.position,
-			trackEnd: newState.trackLength,
-			name: newState.name,
-			tabs: newState.tabs,
+		await db.transaction('rw', db.tracks, db.states, () => {
+			db.states.update(newState.id, {
+				bpm: newState.bpm,
+				vol: newState.vol,
+				name: newState.name,
+			})
+			db.tracks.bulkPut(Object.values(state))
 		})
-		await db.tracks.bulkPut(Object.values(state))
 		console.log("saved")
 
 	}

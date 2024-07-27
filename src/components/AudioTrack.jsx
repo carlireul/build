@@ -18,7 +18,7 @@ function AudioTrack({id, addTab, deleteTrack}){
 	useEffect(() => { // setup: load controls and player
 		controls.current = new Tone.Channel(-8, 0).toDestination();
 
-		trackContext.mute()
+		trackContext.mute() // for testing
 
 		player.current = new Tone.Player(trackContext.source, () => {
 			player.current.sync().start(0); // puts in transport
@@ -46,7 +46,7 @@ function AudioTrack({id, addTab, deleteTrack}){
     <>
 			<div className="track">
 				{ loaded ? <>
-					<button className="track-title" onClick={() => addTab({ id: id, title: title, type: "audio"})}>
+					<button className="track-title" onClick={() => addTab({ id: id, title: title, content: <AudioTrackControls id={id} /> })}>
 						<i className="fa-solid fa-file-audio"></i>
 					</button> <input type="text" value={title} onChange={(e) => {
 						trackContext.rename(e.target.value)

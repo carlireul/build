@@ -104,7 +104,7 @@ const useTrack = (id, type) => {
 		setState(newState)
 	}
 
-	console.log("track", state)
+	// console.log("track", state)
 
 	if (type === "synth") {
 		return {
