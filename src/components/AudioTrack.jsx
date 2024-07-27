@@ -35,10 +35,6 @@ function AudioTrack({id, addTab, deleteTrack}){
 
 	}, [])
 
-	const tabContent = (
-		<AudioTrackControls id={id} />
-	)
-
 	if (controls.current) {
 		controls.current.solo = trackContext.solod;
 		controls.current.volume.value = trackContext.vol;
@@ -50,7 +46,7 @@ function AudioTrack({id, addTab, deleteTrack}){
     <>
 			<div className="track">
 				{ loaded ? <>
-					<button className="track-title" onClick={() => addTab({ id: id, title: title, content: tabContent})}>
+					<button className="track-title" onClick={() => addTab({ id: id, title: title, type: "audio"})}>
 						<i className="fa-solid fa-file-audio"></i>
 					</button> <input type="text" value={title} onChange={(e) => {
 						trackContext.rename(e.target.value)

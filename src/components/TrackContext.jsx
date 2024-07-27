@@ -3,18 +3,25 @@ import db from '../data/db';
 
 const TrackContext = createContext([{}, () => {}]);
 
-const TrackProvider = (props) => {
+const TrackProvider = ({id, children}) => {
 
   const tracks = {}
 
   useEffect(() => {
 
     const fetchData = async () => {
+      const idData = await db.states.where("id").equals(id).first()
+      console.log(idData.tracks)
+
       const data = await db.tracks.toArray()
-      // audio
 
       for (const track of data) {
-        tracks[track.id] = {...track}
+        if(idData.tracks.includes(track.id)){
+          if(track.type == "synth") tracks[track.id] = {...track}
+          else if (track.type == "audio") tracks[track.id] = { ...track, source: URL.createObjectURL(track.file) }
+        } else{
+          console.log("not included", track)
+        }
       }
 
     }
@@ -26,7 +33,7 @@ const TrackProvider = (props) => {
 
   return (
     <TrackContext.Provider value={[state, setState]}>
-      {props.children}
+      {children}
     </TrackContext.Provider>
   );
 }

@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import * as Tone from "tone";
 
-const GlobalControls = () => {
-
+const GlobalControls = ({savedState}) => {
+	
 	const [playing, setPlaying] = useState(false);
-	const [bpm, setBpm] = useState(120)
-	const [vol, setVol] = useState(-8)
+	const [bpm, setBpm] = useState(savedState.bpm)
+	const [vol, setVol] = useState(savedState.vol)
 	const [volStyle, setVolStyle] = useState("fa-solid fa-volume-low")
 
 	Tone.getTransport().bpm.value = bpm;

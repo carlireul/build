@@ -128,7 +128,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			<button className="track-tab-button" onClick={() => addTab({
 				id: id,
 				title: title,
-				content: <SynthTab id={id} />})
+			type: "synth" })
 			}>
 			<i className="fa-solid fa-wave-square"></i>
 			</button> <input type="text" value={title} onChange={(e) => {

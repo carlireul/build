@@ -31,6 +31,12 @@ const newSynth = () => {
   return newSynth
 }
 
+const defaultControls = { muted: false, vol: -8, solod: false, pan: 0 };
+
+const defaultSteps = new Array(7)
+  .fill(null)
+  .map(() => new Array(8).fill(false));
+
 const presets = [
   {
     name: "Basic Sine",
@@ -83,4 +89,4 @@ const presets = [
   },
 ];
 
-export {presets, newSynth}
+export {defaultControls, defaultSteps, presets, newSynth}

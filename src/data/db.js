@@ -1,16 +1,19 @@
 import Dexie from "dexie";
 import uniqid from "uniqid";
-import julia from "./julia.mp3";
+// import julia from "./julia.mp3";
 
 const db = new Dexie("database");
-db.version(8).stores({
+db.version(9).stores({
   tracks: "id, name", 
+  states: "id"
 })
 
 db.on("populate", (transaction) => {
+
+  const synthID = uniqid()
   
 	transaction.tracks.add({
-    id: uniqid(),
+    id: synthID,
     type: "synth",
     name: "Basic Sine",
     synth: {
@@ -45,24 +48,24 @@ db.on("populate", (transaction) => {
       .map(() => new Array(8).fill(false)),
   });
 
-  transaction.tracks.add({
+  transaction.states.add({
     id: uniqid(),
-    type: "audio",
-    name: "Test Audio 1",
-    source: julia,
-    controls: {
-      muted: false,
-      vol: -8,
-      solod: false,
-      pan: 0,
-    },
+    bpm: 120,
+    vol: -8,
+    position: "0:0:0",
+    trackEnd: "9:0:0",
+    name: "New Project",
+    tracks: [synthID],
+    tabs: [],
   });
+
 })
 
 db.open()
   .then(function (db) {
-    console.log("Opened database succesfully")
+    console.log("Opened database successfully")
 	console.log(db.tracks.toArray())
+  console.log(db.states.toArray())
   })
   .catch(function (err) {
     console.log("Error", err)

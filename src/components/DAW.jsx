@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import db from '../data/db.js';
 import { presets } from '../data/synths.js';
-import uniqid from "uniqid";
+
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
@@ -13,47 +13,27 @@ import useTrackDB from './useTrackDB.jsx';
 import GlobalControls from './GlobalControls'
 import SynthTrack from './SynthTrack'
 import AudioTrack from './AudioTrack'
+import FileUpload from './FileUpload.jsx';
+import AudioTrackControls from './AudioTrackControls.jsx';
+import SynthTab from './SynthTab.jsx';
 
-const DAW = () => {
+const DAW = ({savedState}) => {
 	// DB
 
-	// db.delete({ disableAutoOpen: false });
 	const trackDB = useTrackDB()
+	console.log(savedState)
 
 	// UI state
 
 	const [visible, setVisible] = useState(false)
 	const [activeTabs, setActiveTabs] = useState([])
+	console.log(activeTabs)
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [name, setName] = useState(savedState.name)
 
 	// Tone setup
 
-	const [trackLength, setTrackLength] = useState("1:0:0")
-	const [audioTracks, setAudioTracks] = useState(null);
-	// const [synthTracks, setSynthTracks] = useState(trackDB.tracks);
-
-	useEffect(() => { // set up: create audio + synth tracks
-		const defaultAudioTracks = [{
-			id: audio[0].id,
-			source: audio[0].src,
-			title: audio[0].title
-		}]
-		setAudioTracks(defaultAudioTracks)
-
-		// setSynthTracks()
-
-		// const fetchSynths = async () => {
-		// 	const synths = await db.tracks.toArray()
-
-		// 	if (synths.length === 0) {
-		// 		setSynthTracks([{ ...presets[0], id: uniqid() }])
-		// 	} else {
-		// 		setSynthTracks(synths);
-		// 	}
-		// }
-
-		// fetchSynths().catch(console.error)
-
-	}, [])
+	const [trackLength, setTrackLength] = useState(savedState.trackEnd)	
 
 	// Handlers
 
@@ -62,23 +42,20 @@ const DAW = () => {
 		Tone.getTransport().loop = true;
 		Tone.getTransport().loopStart = 0;
 		Tone.getTransport().loopEnd = trackLength;
+		Tone.getTransport().position = savedState.position
 		setVisible(true)
 	}
 
-	const newSynthTrack = async () => {
-		const newTrack = {
-			...presets[0],
-			id: uniqid(),
-			name: "Untitled",
+	const uploadAudio = () => {
+		if(!selectedFile){
+			return
 		}
 
-		await db.tracks.add(newTrack)
-
-		// setSynthTracks(prev => [...prev, newTrack])
+		trackDB.addNewAudio(selectedFile, savedState.id)
 	}
 
 	const deleteTrack = (id) => {
-		trackDB.deleteTrack(id)
+		trackDB.deleteTrack(id, savedState.id)
 		closeTab(id)
 	}
 
@@ -116,19 +93,28 @@ const DAW = () => {
 
 							{trackDB.synths ? trackDB.synths.map((id, i) =>
 							<>
-								{i + 1 + audioTracks.length}  <SynthTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
+								{i + 1 + trackDB.audios.length}  <SynthTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
 								</>
 							)
 								: "Loading"}
 
-							<button onClick={trackDB.addNewSynth}>+ Add Synth</button>
+							<button onClick={() => trackDB.addNewSynth(savedState.id)}>+ Synth</button>
+							
+						<FileUpload
+							onFileSelectSuccess={(file) => setSelectedFile(file)}
+							onFileSelectError={({ error }) => alert(error)}
+						/>
+						<button onClick={uploadAudio}>+ Audio</button>
 
 
 						</ div>
 					</TabPanel>
 					{activeTabs.map(tab =>
 						<TabPanel key={`panel${tab.id}`} forceRender={true}>
-							{tab.content}
+							{ tab.type == "synth" ?
+							<SynthTab id={tab.id} />
+							: <AudioTrackControls id={tab.id} />
+							}
 						</TabPanel>
 					)}
 			</Tabs>
@@ -155,8 +141,19 @@ const DAW = () => {
 				</div>
 				<div id="bottom-container">
 					<div>
-						<GlobalControls />
-						<button onClick={trackDB.save}>Save</button>
+						<GlobalControls savedState={savedState} />
+						<button onClick={() => {
+							const newState = {
+								id: savedState.id,
+								bpm: parseInt(Tone.getTransport().bpm.value),
+								vol: parseInt(Tone.getDestination().volume.value),
+								position: Tone.getTransport().position,
+								trackEnd: trackLength,
+								name: name,
+								tabs: [...activeTabs],
+							}
+
+							trackDB.save(newState)}}>Save</button>
 					</div>
 					<div>
 						tips
