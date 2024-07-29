@@ -30,6 +30,18 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [name, setName] = useState(savedState.name)
 
+	useEffect(() => {
+		document.querySelector("#progress").style = `left: 0%`;
+		const interval = setInterval(() => {
+			const progress = (Tone.getTransport().progress);
+			document.querySelector("#progress").style = `left: ${progress}%`;
+		}, 16);
+
+		return () => {
+			clearInterval(interval)
+		}
+	})
+
 	// Tone setup
 
 	const [trackLength, setTrackLength] = useState(savedState.trackEnd)	
@@ -68,6 +80,8 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 
 	const generateTabs = () => {
 		return (
+			<>
+			
 			<Tabs onSelect={(index, lastIndex, event) => {
 				if (event.target.className === "fa-solid fa-xmark") {
 					console.log(index, lastIndex, event.target)
@@ -85,7 +99,8 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 					)}
 				</TabList>
 					<TabPanel forceRender={true}>
-						<div className="sequencer">
+						<div id="tracks">
+						<div id="progress" />
 
 							{trackDB.audios ? trackDB.audios.map((id, i) =>
 								<span key={i}>
@@ -120,6 +135,7 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 						</TabPanel>
 					)}
 			</Tabs>
+			</>
 		)
 	}
 

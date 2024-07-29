@@ -10,16 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@wavesurfer/react": "^1.0.6",
     "dexie": "^4.0.8",
     "dexie-react-hooks": "^1.1.7",
+    "konva": "^9.3.14",
+    "peaks.js": "^3.4.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-tabs": "^6.0.2",
     "tonal": "^6.0.1",
     "tone": "^15.0.4",
     "uniqid": "^5.4.0",
-    "wavesurfer.js": "^7.7.15"
+    "waveform-data": "^4.5.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.1",

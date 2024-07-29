@@ -128,19 +128,51 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	useEffect(updateSynth, [trackContext.envelope, trackContext.filter, trackContext.oscillator])
 
 	return(
-		<div className="track"> 
-			<button className="track-tab-button" onClick={() => addTab({
-				id: id,
-				title: title,
-				content: <SynthTab id={id} />})
-			}>
-			<i className="fa-solid fa-wave-square"></i>
-			</button> <input type="text" value={title} onChange={(e) => {
-				trackContext.rename(e.target.value)
-				setTitle(e.target.value)
-			}} />
-			<button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
-			{ loaded ? <SynthTrackControls id={id} /> : null }
+		<div className="track-container"> 
+			<div className="track-timeline-synth">
+			<div className="clip-container">
+					{trackContext.notes.map((note, noteIndex) => {
+						return (
+							<div className="timeline-note-row" key={note}>
+								{trackContext.steps[noteIndex].map((step, stepIndex) => {
+									let nodeClass = "timeline-note"
+									if (step) {
+										nodeClass += " timeline-note-active"
+									}
+									// if (drawIndex == stepIndex) {
+									// 	nodeClass += " sequencer-playing"
+									// }
+
+									return (
+										<div
+											className={nodeClass}
+											key={`${noteIndex}${stepIndex}`}
+										>
+										</div>
+									);
+								})}
+							</div>
+						);
+					})}
+			</div>
+			
+
+			</div>
+			<div className="track-controls">
+				<button className="track-tab-button" onClick={() => addTab({
+					id: id,
+					title: title,
+					content: <SynthTab id={id} />
+				})
+				}>
+					<i className="fa-solid fa-wave-square"></i>
+				</button> <input type="text" value={title} onChange={(e) => {
+					trackContext.rename(e.target.value)
+					setTitle(e.target.value)
+				}} />
+				<button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+				{loaded ? <SynthTrackControls id={id} /> : null}
+			</div>
 		</div>
 	)
 

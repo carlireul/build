@@ -48,7 +48,10 @@ const GlobalControls = ({savedState}) => {
 
 	return (
 		<>
-		<div>
+		<div className="playhead">
+
+		</div>
+		<div className="global-controls">
 				<button onClick={() => { handlePlay() }}>{playing ? <i className="fa-solid fa-pause"></i> : <i className="fa-solid fa-play"></i>}</button> <button onClick={handleStop}><i className="fa-solid fa-stop"></i></button>
 				<i className={volStyle}></i> <input type="range" id="vol" name="vol" min="-20" max="20" value={vol} onChange={changeVol}></input>
 		BPM: {bpm} <input type="range" id="bpm" name="bpm" min="40" max="200" value={bpm} onChange={changeBpm}></input>
