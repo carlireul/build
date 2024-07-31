@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import useTrack from './useTrack';
 
-const AudioTrackControls = ({ id }) => {
-	const trackContext = useTrack(id, "audio")
+const TrackControls = ({ id }) => {
+	const trackContext = useTrack(id, "controls")
+	// console.log(trackContext)
 
 	const [volStyle, setVolStyle] = useState("fa-solid fa-volume-low");
 
@@ -26,4 +27,4 @@ const AudioTrackControls = ({ id }) => {
 	</>
 }
 
-export default AudioTrackControls
+export default TrackControls

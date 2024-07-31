@@ -17,6 +17,10 @@ const useTrackDB = () => {
 		return Object.keys(state).filter(key => state[key].type == "audio")
 	}
 
+	const getSamplerIDs = () => {
+		return Object.keys(state).filter(key => state[key].type == "sampler")
+	}
+
 	const defaultControls = {
 		muted: false,
 		vol: -8,
@@ -49,6 +53,45 @@ const useTrackDB = () => {
 		})
 		console.log("success!")
 
+	}
+
+	const addNewSampler = async (stateID, pack) => {
+		const id = uniqid()
+		const sample_data = await db.samples.where("pack").equals(pack).toArray()
+		console.log("usetrackdb sampledata", sample_data)
+
+		const newSampler = {
+			id: id,
+			type: "sampler",
+			name: pack,
+			controls: {
+				...defaultControls
+			},
+			subdivision: 8,
+			steps: new Array(sample_data.length).fill(null).map(() => new Array(8).fill(false))
+		}
+
+		const instruments = {}
+
+		for (const sample of sample_data) {
+			instruments[sample.sample_type] = sample.source
+		}
+
+		newSampler.instruments = instruments
+		console.log("usetrackdb newsampler", newSampler)
+
+		const newState = {
+			...state, [id]: { ...newSampler, }
+		}
+
+		setState(newState)
+
+		await db.transaction('rw', db.tracks, db.states, () => {
+			db.tracks.add(newSampler)
+			db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
+		}).catch(console.error)
+
+		console.log("success!")
 	}
 
 	const addNewAudio = async (file, stateID) => {
@@ -115,8 +158,10 @@ const useTrackDB = () => {
 	return {
 		synths: getSynthIDs(),
 		audios: getAudioIDs(),
+		samplers: getSamplerIDs(),
 		addNewSynth,
 		addNewAudio,
+		addNewSampler,
 		deleteTrack,
 		save,
 	}

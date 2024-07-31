@@ -7,15 +7,13 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 
 import * as Tone from "tone"
 
-import { audio } from '../data/audio.js';
 import useTrackDB from './useTrackDB.jsx';
 
 import GlobalControls from './GlobalControls'
 import SynthTrack from './SynthTrack'
 import AudioTrack from './AudioTrack'
+import SamplerTrack from './SamplerTrack.jsx'
 import FileUpload from './FileUpload.jsx';
-import AudioTrackControls from './AudioTrackControls.jsx';
-import SynthTab from './SynthTab.jsx';
 
 const DAW = ({ savedState, deleteProject, changeProject }) => {
 	// DB
@@ -104,7 +102,7 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 
 							{trackDB.audios ? trackDB.audios.map((id, i) =>
 								<span key={i}>
-									{i + 1} <AudioTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
+									<AudioTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
 								</span>
 							)
 								: "Loading..."}
@@ -112,13 +110,21 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 
 
 							{trackDB.synths ? trackDB.synths.map((id, i) =>
-							<span key={i}>
-								{i + 1 + trackDB.audios.length}  <SynthTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
+								<span key={i}>
+									<SynthTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
 								</span>
 							)
 								: "Loading"}
 
-							<button onClick={() => trackDB.addNewSynth(savedState.id)}>+ Synth</button>
+							{trackDB.samplers ? trackDB.samplers.map((id, i) =>
+								<span key={i}>
+									<SamplerTrack key={id} id={id} addTab={addTab} deleteTrack={deleteTrack} />
+								</span>
+							)
+								: "Loading"}
+
+						<button onClick={() => trackDB.addNewSynth(savedState.id)}>+ Synth</button>
+						<button onClick={() => trackDB.addNewSampler(savedState.id, "808")}>+ Drums</button>
 							
 						<FileUpload
 							onFileSelectSuccess={(file) => setSelectedFile(file)}

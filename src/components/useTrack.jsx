@@ -9,6 +9,8 @@ const useTrack = (id, type) => {
 
 	const mute = () => {
 		const newState = { ...state, [id]: { ...state[id], controls: { ...state[id].controls, muted: !state[id].controls.muted } } }
+		console.log("muted")
+		console.log(newState)
 		setState(newState);
 	}
 
@@ -156,7 +158,39 @@ const useTrack = (id, type) => {
 			pan: state[id].controls.pan,
 			solod: state[id].controls.solod,
 		}
-	}
+	} else if (type === "sampler"){
+		return {
+				mute,
+				changeVol,
+				changePan,
+				centrePan,
+				toggleSolo,
+				changeSubdivision,
+				rename,
+				toggleNote,
+				name: state[id].name,
+				muted: state[id].controls.muted,
+				vol: state[id].controls.vol,
+				pan: state[id].controls.pan,
+				solod: state[id].controls.solod,
+				subdivision: state[id].subdivision,
+				steps: state[id].steps,
+				instruments: state[id].instruments,
+				notes: Object.keys(state[id].instruments),
+			}
+		} else if (type == "controls"){
+			return {
+				mute,
+				changeVol,
+				changePan,
+				centrePan,
+				toggleSolo,
+				muted: state[id].controls.muted,
+				vol: state[id].controls.vol,
+				pan: state[id].controls.pan,
+				solod: state[id].controls.solod,
+			}
+		}
 
 	
 

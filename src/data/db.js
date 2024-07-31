@@ -1,12 +1,13 @@
 import Dexie from "dexie";
 import uniqid from "uniqid";
-// import julia from "./julia.mp3";
+import * as sample_files from './samples/samples.js'
 
 const db = new Dexie("database");
-db.version(10).stores({
-  tracks: "id, name", 
-  states: "id"
-})
+db.version(12).stores({
+  tracks: "id, name",
+  states: "id",
+  samples: "id, pack, sample_type",
+});
 
 db.on("populate", (transaction) => {
 
@@ -57,6 +58,25 @@ db.on("populate", (transaction) => {
     tracks: [synthID],
   });
 
+  const s = []
+
+  for(const [key, value] of Object.entries(sample_files)){
+
+    console.log(value)
+
+    const newSample = {
+      id: uniqid(),
+      sample_type: key.split("_")[0],
+      pack: key.split("_")[1],
+      name: key, // strip extension
+      source: value,
+    };
+
+    s.push(newSample)
+  }
+
+  transaction.samples.bulkAdd(s)
+
 })
 
 db.open()
@@ -64,6 +84,7 @@ db.open()
     console.log("Opened database successfully")
 	console.log(db.tracks.toArray())
   console.log(db.states.toArray())
+  console.log(db.samples.toArray());
   })
   .catch(function (err) {
     console.log("Error", err)

@@ -1,5 +1,5 @@
 import SynthEditor from './SynthEditor'
-import SynthTrackControls from './SynthTrackControls'
+import TrackControls from './TrackControls'
 import Sequencer from './Sequencer'
 
 import useTrack from './useTrack';
@@ -14,7 +14,7 @@ const SynthTab = ({id}) => {
 				<SynthEditor id={id} />
 			</div>
 			<div id="sequencer-container">
-				<SynthTrackControls id={id} />
+				<TrackControls id={id} />
 				<span>
 					<select value={trackContext.subdivision} onChange={(e) => trackContext.changeSubdivision(e.target.value)}>
 						<option value="4">4</option>
@@ -33,7 +33,7 @@ const SynthTab = ({id}) => {
 				Octave: <button className="octave-button" onClick={trackContext.increaseOctave}>+</button>
 				<button className="octave-button" onClick={trackContext.decreaseOctave}>-</button>
 
-				<Sequencer id={id}/>
+				<Sequencer id={id} type="synth"/>
 
 			</div>
 		</div>

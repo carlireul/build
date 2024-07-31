@@ -3,7 +3,7 @@ import { getBeat } from '../services/helpers'
 
 import * as Tone from "tone";
 
-import SynthTrackControls from './SynthTrackControls';
+import TrackControls from './TrackControls';
 import SynthTab from './SynthTab';
 
 import useTrack from './useTrack'
@@ -91,13 +91,8 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		controls.current.volume.value = trackContext.vol;
 		controls.current.pan.value = trackContext.pan;
 		controls.current.mute = trackContext.muted;
+		console.log(trackContext.vol, controls.current, synth.current)
 
-		return () => {
-			if(controls.current){
-				controls.current.disconnect()
-				controls.current.dispose()
-			}
-		}
 	}, [trackContext.solod, trackContext.vol, trackContext.pan, trackContext.muted])
 
 	// update the synth's properties when changed in UI
@@ -171,7 +166,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 					setTitle(e.target.value)
 				}} />
 				<button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
-				{loaded ? <SynthTrackControls id={id} /> : null}
+				{loaded ? <TrackControls id={id} /> : null}
 			</div>
 		</div>
 	)

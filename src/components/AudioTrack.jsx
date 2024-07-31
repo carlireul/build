@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import * as Tone from "tone";
 import Peaks from 'peaks.js';
 
-import AudioTrackControls from './AudioTrackControls';
+import TrackControls from './TrackControls';
 
 import useTrack from './useTrack';
 
@@ -142,11 +142,10 @@ function AudioTrack({id, addTab, deleteTrack}){
 					};
 
 					const options = {
-						overview: {
+						zoomview: {
 							container: containerRef.current,
 							waveformColor: "#74C0FC",
-							playheadColor: 'white',
-							playheadWidth: 5,
+							playheadColor: 'transparent',
 						},
 						player: peaksPlayer,
 						webAudio: {
@@ -200,13 +199,13 @@ function AudioTrack({id, addTab, deleteTrack}){
 				<div className="track-timeline-audio" ref={containerRef}></div>
 				<div className="track-controls">
 					{loaded ? <>
-						<button className="track-title" onClick={() => addTab({ id: id, title: title, content: <AudioTrackControls id={id} /> })}>
+						<button className="track-title" onClick={() => addTab({ id: id, title: title, content: <TrackControls id={id} /> })}>
 							<i className="fa-solid fa-file-audio"></i>
 						</button> <input type="text" value={title} onChange={(e) => {
 							trackContext.rename(e.target.value)
 							setTitle(e.target.value)
 						}} /> <button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
-						<AudioTrackControls id={id} />
+						<TrackControls id={id} />
 					</>
 						: "Loading Audio.."}
 				</div>

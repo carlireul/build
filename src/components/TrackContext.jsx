@@ -21,10 +21,8 @@ const TrackProvider = ({id, children}) => {
           if (idData.tracks.includes(track.id)) {
             if (track.type == "synth") tracks[track.id] = { ...track }
             else if (track.type == "audio") tracks[track.id] = { ...track, source: URL.createObjectURL(track.file) }
-          }
-          //  else{
-          //   console.log("not included", track)
-          // }
+            else if (track.type == "sampler") tracks[track.id] = { ...track }
+          } 
         }
 
       })

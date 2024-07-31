@@ -4,9 +4,9 @@ import { getBeat } from '../services/helpers'
 
 import * as Tone from "tone"
 
-const Sequencer = ({id}) => {
+const Sequencer = ({id, type}) => {
 
-  const trackContext = useTrack(id, "synth");
+  const trackContext = useTrack(id, type);
 
   const [drawIndex, setDrawIndex] = useState(0)
 
