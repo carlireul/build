@@ -45,14 +45,14 @@
 	position: relative;
 }
 
-#progress {
+/* #progress {
 	width: 2px;
 	height: 100%;
 	left: 0%;
 	position: absolute;
 	background-color: red;
 	z-index:100;
-}
+} */
 
 .track-title {
 	text-decoration: underline;

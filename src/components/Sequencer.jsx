@@ -24,8 +24,8 @@ const Sequencer = ({id, type}) => {
 
   return trackContext.notes.map((note, noteIndex) => {
     return (
-    <div className="note-row" key={note}>
-      <span className="note-name">{note}</span>
+    <div className="note-row" key={`${note}${noteIndex}`}>
+        <span className="note-name">{note.split("_")[0]}</span>
       {trackContext.steps[noteIndex].map((step, stepIndex) => {
         let buttonClass = "sequencer-button"
         if(step){

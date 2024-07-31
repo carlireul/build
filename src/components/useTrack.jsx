@@ -48,8 +48,14 @@ const useTrack = (id, type) => {
 		setState(newState);	}
 
 	const getNotes = () => {
-		const notes = Scale.get(state[id].notes.scale).notes
-		return notes.map(note => `${note}${state[id].notes.octave}`)
+		if(type == "synth"){
+			const notes = Scale.get(state[id].notes.scale).notes
+			return notes.map(note => `${note}${state[id].notes.octave}`)
+
+		} else if (type == "sampler"){
+			return Object.keys(state[id].instruments)
+
+		}
 	}
 
 	const getSteps = (subdivision) => {
@@ -57,7 +63,15 @@ const useTrack = (id, type) => {
 	}
 
 	const changeSubdivision = (value) => {
-		const newState = { ...state, [id]: { ...state[id], notes: { ...state[id].notes, subdivision: parseInt(value) }, steps: getSteps(parseInt(value)) } }
+		let newState;
+		if(type ==="synth"){
+
+			newState = { ...state, [id]: { ...state[id], notes: { ...state[id].notes, subdivision: parseInt(value) }, steps: getSteps(parseInt(value)) } }
+
+		} else if (type === "sampler"){
+			newState = { ...state, [id]: { ...state[id], subdivision: parseInt(value), steps: getSteps(parseInt(value)) } }
+		}
+		console.log(newState)
 		setState(newState);
 	}
 
@@ -176,7 +190,7 @@ const useTrack = (id, type) => {
 				subdivision: state[id].subdivision,
 				steps: state[id].steps,
 				instruments: state[id].instruments,
-				notes: Object.keys(state[id].instruments),
+				notes: getNotes(),
 			}
 		} else if (type == "controls"){
 			return {

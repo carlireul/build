@@ -1,7 +1,7 @@
 import hihat_digital from "./hihat-digital.wav";
 import tom_acoustic01 from "./tom-acoustic01.wav";
 import snare_vinyl01 from "./snare-vinyl01.wav";
-import perc_chirpy from "./perc-chirpy.wav";
+import perc_electro from "./perc-chirpy.wav";
 import kick_oldschool from "./kick-oldschool.wav";
 import openhat_tight from "./openhat-tight.wav";
 import snare_dist02 from "./snare-dist02.wav";
@@ -16,7 +16,7 @@ import openhat_acoustic01 from "./openhat-acoustic01.wav";
 import shaker_analog from "./shaker-analog.wav";
 import hihat_analog from "./hihat-analog.wav";
 import tom_fm from "./tom-fm.wav";
-import kick_electro01 from "./kick-electro01.wav";
+import kick_electro from "./kick-electro01.wav";
 import perc_short from "./perc-short.wav";
 import perc_hollow from "./perc-hollow.wav";
 import hihat_acoustic02 from "./hihat-acoustic02.wav";
@@ -26,7 +26,7 @@ import perc_metal from "./perc-metal.wav";
 import cowbell_808 from "./cowbell-808.wav";
 import kick_classic from "./kick-classic.wav";
 import tom_analog from "./tom-analog.wav";
-import clap_slapper from "./clap-slapper.wav";
+import clap_electro from "./clap-slapper.wav";
 import perc_nasty from "./perc-nasty.wav";
 import snare_vinyl02 from "./snare-vinyl02.wav";
 import hihat_ring from "./hihat-ring.wav";
@@ -38,9 +38,9 @@ import kick_stomp from "./kick-stomp.wav";
 import snare_dist03 from "./snare-dist03.wav";
 import hihat_808 from "./hihat-808.wav";
 import kick_deep from "./kick-deep.wav";
-import kick_dry from "./kick-dry.wav";
+import kick_analog from "./kick-analog.wav";
 import snare_block from "./snare-block.wav";
-import perc_weirdo from "./perc-weirdo.wav";
+import perc_electro02 from "./perc-weirdo.wav";
 import snare_acoustic01 from "./snare-acoustic01.wav";
 import snare_lofi02 from "./snare-lofi02.wav";
 import kick_808 from "./kick-808.wav";
@@ -61,12 +61,12 @@ import tom_808 from "./tom-808.wav";
 import hihat_reso from "./hihat-reso.wav";
 import perc_tambo from "./perc-tambo.wav";
 import snare_smasher from "./snare-smasher.wav";
-import tom_chiptune from "./tom-chiptune.wav";
+import tom_electro from "./tom-chiptune.wav";
 import perc_808 from "./perc-808.wav";
 import snare_lofi01 from "./snare-lofi01.wav";
 import tom_lofi from "./tom-lofi.wav";
 import kick_big from "./kick-big.wav";
-import perc_laser from "./perc-laser.wav";
+import perc_electro01 from "./perc-laser.wav";
 import kick_tape from "./kick-tape.wav";
 import kick_tron from "./kick-tron.wav";
 import crash_acoustic from "./crash-acoustic.wav";
@@ -88,7 +88,7 @@ import tom_acoustic02 from "./tom-acoustic02.wav";
 import shaker_suckup from "./shaker-suckup.wav";
 import kick_newwave from "./kick-newwave.wav";
 import openhat_slick from "./openhat-slick.wav";
-import kick_electro02 from "./kick-electro02.wav";
+import kick_02electro from "./kick-electro02.wav";
 import snare_pinch from "./snare-pinch.wav";
 import clap_tape from "./clap-tape.wav";
 import hihat_acoustic01 from "./hihat-acoustic01.wav";
@@ -102,7 +102,7 @@ export {
   hihat_digital,
   tom_acoustic01,
   snare_vinyl01,
-  perc_chirpy,
+  perc_electro,
   kick_oldschool,
   openhat_tight,
   snare_dist02,
@@ -117,7 +117,7 @@ export {
   shaker_analog,
   hihat_analog,
   tom_fm,
-  kick_electro01,
+  kick_electro,
   perc_short,
   perc_hollow,
   hihat_acoustic02,
@@ -127,7 +127,7 @@ export {
   cowbell_808,
   kick_classic,
   tom_analog,
-  clap_slapper,
+  clap_electro,
   perc_nasty,
   snare_vinyl02,
   hihat_ring,
@@ -139,9 +139,9 @@ export {
   snare_dist03,
   hihat_808,
   kick_deep,
-  kick_dry,
+  kick_analog,
   snare_block,
-  perc_weirdo,
+  perc_electro02,
   snare_acoustic01,
   snare_lofi02,
   kick_808,
@@ -162,12 +162,12 @@ export {
   hihat_reso,
   perc_tambo,
   snare_smasher,
-  tom_chiptune,
+  tom_electro,
   perc_808,
   snare_lofi01,
   tom_lofi,
   kick_big,
-  perc_laser,
+  perc_electro01,
   kick_tape,
   kick_tron,
   crash_acoustic,
@@ -189,7 +189,7 @@ export {
   shaker_suckup,
   kick_newwave,
   openhat_slick,
-  kick_electro02,
+  kick_02electro,
   snare_pinch,
   clap_tape,
   hihat_acoustic01,

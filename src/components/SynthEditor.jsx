@@ -3,29 +3,6 @@ import useTrack from './useTrack';
 function SynthEditor({id}){
 
 	const trackContext = useTrack(id, "synth")
-	
-	// const save = () => {
-	// 	const params = {
-	// 		synth: {
-	// 			envelope: {
-	// 				attack: attack,
-	// 				decay: decay,
-	// 				sustain: sustain,
-	// 				release: release,
-	// 			},
-	// 			oscillator: {
-	// 				type: waveType
-	// 			},
-	// 		},
-	// 		filter: {
-	// 			frequency: cutoff,
-	// 			type: filterType,
-	// 		}
-	// 	}
-
-		// TODO: save logic. hook up to controls
-
-	// }
 
 	return(
 		<>

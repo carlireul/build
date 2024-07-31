@@ -57,9 +57,34 @@ const useTrackDB = () => {
 
 	const addNewSampler = async (stateID, pack) => {
 		const id = uniqid()
-		const sample_data = await db.samples.where("pack").equals(pack).toArray()
-		console.log("usetrackdb sampledata", sample_data)
+		const instruments = {}
+		
+		if(pack === "random"){
+			const keys = ["kick", "clap", "hihat", "openhat", "snare", "tom", "crash"]
+			const extras = ["perc", "ride", "shaker"]
+			keys.push(extras[Math.floor(Math.random() * extras.length)])
 
+			for(const key of keys){
+				const i = await db.samples.where("sample_type").equals(key).toArray()
+				instruments[key] = i[Math.floor(Math.random() * i.length)].source
+			}
+
+		} else {
+
+			const sample_data = await db.samples.where("pack").startsWith(pack).toArray()
+			let counter = 1;
+			
+			for (const sample of sample_data) {
+				if ([sample.sample_type] in instruments){
+					instruments[`${sample.sample_type}_${counter}`] = sample.source
+					counter +=1;
+				} else {
+
+					instruments[sample.sample_type] = sample.source
+				}
+			}
+		}
+		
 		const newSampler = {
 			id: id,
 			type: "sampler",
@@ -68,16 +93,10 @@ const useTrackDB = () => {
 				...defaultControls
 			},
 			subdivision: 8,
-			steps: new Array(sample_data.length).fill(null).map(() => new Array(8).fill(false))
+			instruments: instruments,
+			steps: new Array(Object.keys(instruments).length).fill(null).map(() => new Array(8).fill(false)),
 		}
 
-		const instruments = {}
-
-		for (const sample of sample_data) {
-			instruments[sample.sample_type] = sample.source
-		}
-
-		newSampler.instruments = instruments
 		console.log("usetrackdb newsampler", newSampler)
 
 		const newState = {

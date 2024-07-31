@@ -19,26 +19,26 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 	// DB
 
 	const trackDB = useTrackDB()
-	// console.log(savedState)
 
 	// UI state
 
 	const [visible, setVisible] = useState(false)
 	const [activeTabs, setActiveTabs] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null);
+	const [selectedPack, setSelectedPack] = useState("808")
 	const [name, setName] = useState(savedState.name)
 
-	useEffect(() => {
-		document.querySelector("#progress").style = `left: 0%`;
-		const interval = setInterval(() => {
-			const progress = (Tone.getTransport().progress);
-			document.querySelector("#progress").style = `left: ${progress}%`;
-		}, 16);
+	// useEffect(() => { // progress bar update
+	// 	document.querySelector("#progress").style = `left: 0%`;
+	// 	const interval = setInterval(() => {
+	// 		const progress = (Tone.getTransport().progress);
+	// 		document.querySelector("#progress").style = `left: ${progress}%`;
+	// 	}, 16);
 
-		return () => {
-			clearInterval(interval)
-		}
-	})
+	// 	return () => {
+	// 		clearInterval(interval)
+	// 	}
+	// })
 
 	// Tone setup
 
@@ -124,7 +124,14 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 								: "Loading"}
 
 						<button onClick={() => trackDB.addNewSynth(savedState.id)}>+ Synth</button>
-						<button onClick={() => trackDB.addNewSampler(savedState.id, "808")}>+ Drums</button>
+						<select value={selectedPack} onChange={(e) => setSelectedPack(e.target.value)}>
+							<option value="808">808</option>
+							<option value="acoustic">Acoustic</option>
+							<option value="analog">Analog</option>
+							<option value="electro">Electro</option>
+							<option value="random">Random</option>
+						</select>
+						<button onClick={() => trackDB.addNewSampler(savedState.id, selectedPack)}>+ Drums</button>
 							
 						<FileUpload
 							onFileSelectSuccess={(file) => setSelectedFile(file)}

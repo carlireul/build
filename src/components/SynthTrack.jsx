@@ -54,7 +54,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	useEffect(() => {
 		const schedule = (time) => { // useRef if need to edit (note length etc)
 
-			console.log(getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
+			// console.log(getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
 
 			synth.current.triggerAttackRelease(
 				notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)], // plays notes in notesArray at the current beat index
@@ -91,7 +91,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		controls.current.volume.value = trackContext.vol;
 		controls.current.pan.value = trackContext.pan;
 		controls.current.mute = trackContext.muted;
-		console.log(trackContext.vol, controls.current, synth.current)
 
 	}, [trackContext.solod, trackContext.vol, trackContext.pan, trackContext.muted])
 
@@ -125,7 +124,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	return(
 		<div className="track-container"> 
 			<div className="track-timeline-synth">
-			<div className="clip-container">
+			{/* <div className="clip-container">
 					{trackContext.notes.map((note, noteIndex) => {
 						return (
 							<div className="timeline-note-row" key={note}>
@@ -149,7 +148,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 							</div>
 						);
 					})}
-			</div>
+			</div> */}
 			
 
 			</div>
