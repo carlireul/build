@@ -120,6 +120,29 @@ const useTrack = (id, type) => {
 		setState(newState)
 	}
 
+	const getEffectNames = () => {
+		return Object.keys(state[id].effects)
+	}
+
+
+	const toggleEffect = (effect) => {
+		const newState = { ...state, [id]: { ...state[id], effects: { ...state[id].effects, [effect]: { ...state[id].effects[effect], enabled: !state[id].effects[effect].enabled }}}}
+		console.log("toggled effect", newState[id].effects)
+		setState(newState)
+
+	}
+
+	const modifyEffect = (name, value) => {
+		const effect = name.split("-")[0]
+		const option = name.split("-")[1]
+
+		const newState = { ...state, [id]: { ...state[id], effects: { ...state[id].effects, [effect]: { ...state[id].effects[effect], options: {...state[id].effects[effect].options, [option]: parseFloat(value) } } } } }
+		console.log(newState[id].effects[effect].options)
+		setState(newState)
+
+	}
+
+	
 	// console.log("track", state)
 
 	if (type === "synth") {
@@ -155,7 +178,8 @@ const useTrack = (id, type) => {
 			envelope: state[id].synth.envelope,
 			oscillator: state[id].synth.oscillator,
 			filter: state[id].synth.filter,
-			steps: state[id].steps
+			steps: state[id].steps,
+			effects: state[id].effects,
 		}
 	} else if (type === "audio") {
 		return {
@@ -171,6 +195,7 @@ const useTrack = (id, type) => {
 			vol: state[id].controls.vol,
 			pan: state[id].controls.pan,
 			solod: state[id].controls.solod,
+			effects: state[id].effects,
 		}
 	} else if (type === "sampler"){
 		return {
@@ -191,6 +216,8 @@ const useTrack = (id, type) => {
 				steps: state[id].steps,
 				instruments: state[id].instruments,
 				notes: getNotes(),
+				effects: state[id].effects,
+				filter: state[id].filter,
 			}
 		} else if (type == "controls"){
 			return {
@@ -204,10 +231,18 @@ const useTrack = (id, type) => {
 				pan: state[id].controls.pan,
 				solod: state[id].controls.solod,
 			}
+		} else if (type === "effects"){
+			return {
+				chorus: state[id].effects.chorus,
+				distortion: state[id].effects.distortion,
+				phaser: state[id].effects.phaser,
+				reverb: state[id].effects.reverb,
+				delay: state[id].effects.delay,
+				effects: getEffectNames(),
+				toggleEffect: toggleEffect,
+				modifyEffect: modifyEffect
+			}
 		}
-
-	
-
 	
 
 };

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getBeat } from '../services/helpers'
+import { getBeat, createEffect } from '../services/helpers'
 
 import * as Tone from "tone";
 
@@ -13,18 +13,44 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 
 	const [loaded, setLoaded] = useState(false)
 	const [title, setTitle] = useState(trackContext.name ? trackContext.name : "Untitled")
+	const [activeEffects, setActiveEffects] = useState({
+		chorus: trackContext.effects.chorus.enabled,
+		distortion: trackContext.effects.distortion.enabled,
+		delay: trackContext.effects.delay.enabled,
+		phaser: trackContext.effects.phaser.enabled,
+		reverb: trackContext.effects.reverb.enabled,
+	})
+
+	console.log(activeEffects)
 
 	const synth = useRef();
 	const filter = useRef();
 	const controls = useRef();
+	const effectNodes = useRef({
+		chorus: null,
+		distortion: null,
+		delay: null,
+		phaser: null,
+		reverb: null,
+	})
 	const notesArray = useRef(new Array(trackContext.subdivision).fill(null).map(() => []))
 	const playSchedule = useRef(0)
 
-	useEffect(() => { // set up: controls, filter, polysynth, transport schedule
+	
 
-		controls.current = new Tone.Channel(trackContext.vol, trackContext.pan).toDestination();
-		filter.current = new Tone.AutoFilter({wet: trackContext.filter.wet}).connect(controls.current)
-		synth.current = new Tone.PolySynth().connect(filter.current);
+	useEffect(() => { // set up: controls, effects, filter, polysynth, transport schedule
+
+		controls.current = new Tone.Channel(trackContext.vol, trackContext.pan);
+		filter.current = new Tone.AutoFilter({wet: trackContext.filter.wet});
+
+		for(const [effect, enabled] of Object.entries(activeEffects)){
+			if(enabled){
+				console.log(effect, enabled)
+				effectNodes.current[effect] = createEffect(effect, trackContext.effects[effect].options)
+			}
+		}
+
+		synth.current = new Tone.PolySynth().chain(...Object.values(effectNodes.current).filter(e => e !== null) , filter.current, controls.current, Tone.getDestination());
 
 		synth.current.set({
 			envelope: {
@@ -43,10 +69,13 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		return () => { // cleanup
 			controls.current.disconnect()
 			filter.current.disconnect()
+			Object.values(effectNodes.current).forEach(effect => {if(effect) {effect.disconnect()}})
 			synth.current.disconnect()
 			controls.current.dispose()
 			filter.current.dispose()
+			Object.values(effectNodes.current).forEach(effect => { if (effect) { effect.dispose() } })
 			synth.current.dispose()
+			console.log("disposed everything")
 		}
 
 		}, [])
@@ -120,6 +149,45 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		}
 	}
 	useEffect(updateSynth, [trackContext.envelope, trackContext.filter, trackContext.oscillator])
+
+	const updateEffect = (effect) => {
+		console.log("update effect")
+		if(effectNodes.current[effect]){
+			effectNodes.current[effect].set(trackContext.effects[effect].options)
+		} 
+		
+		const newActiveEffects = {...activeEffects}
+		newActiveEffects[effect] = trackContext.effects[effect].enabled
+		setActiveEffects(newActiveEffects)
+
+
+	}
+	useEffect(() => { updateEffect("chorus") }, [trackContext.effects.chorus])
+	useEffect(() => { updateEffect("distortion") }, [trackContext.effects.distortion])
+	useEffect(() => { updateEffect("phaser") }, [trackContext.effects.phaser])
+	useEffect(() => { updateEffect("delay") }, [trackContext.effects.delay])
+	useEffect(() => { updateEffect("reverb") }, [trackContext.effects.reverb])
+	// other effects
+
+	useEffect(() => {
+
+		for (const [effect, enabled] of Object.entries(activeEffects)) {
+			if (enabled && !effectNodes.current[effect]) {
+				console.log("created", effect)
+				effectNodes.current[effect] = createEffect(effect, trackContext.effects[effect].options)
+			} if (!enabled && effectNodes.current[effect]){
+					effectNodes.current[effect].disconnect()
+					effectNodes.current[effect].dispose()
+					effectNodes.current[effect] = null;
+				console.log("disposed", effect)
+			}
+		}
+		console.log(effectNodes.current)
+
+		synth.current.disconnect()
+		synth.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, Tone.getDestination());
+
+	}, [activeEffects])
 
 	return(
 		<div className="track-container"> 

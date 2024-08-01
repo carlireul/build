@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { TrackContext } from "./TrackContext";
-import { presets } from '../data/synths';
+import { presets, defaultSteps, defaultControls, defaultEffects } from '../data/synths';
 import db from '../data/db';
 import uniqid from "uniqid";
 
@@ -21,13 +21,6 @@ const useTrackDB = () => {
 		return Object.keys(state).filter(key => state[key].type == "sampler")
 	}
 
-	const defaultControls = {
-		muted: false,
-		vol: -8,
-		solod: false,
-		pan: 0,
-	}
-
 	const addNewSynth = async (stateID) => {
 		const id = uniqid()
 
@@ -38,7 +31,11 @@ const useTrackDB = () => {
 			controls: {
 				...defaultControls
 			},
-			steps: new Array(7).fill(null).map(() => new Array(8).fill(false))
+			steps: defaultSteps,
+			effects: {
+				...defaultEffects
+
+			}
 		}
 
 		const newState = {
@@ -95,6 +92,14 @@ const useTrackDB = () => {
 			subdivision: 8,
 			instruments: instruments,
 			steps: new Array(Object.keys(instruments).length).fill(null).map(() => new Array(8).fill(false)),
+			effects: {
+				...defaultEffects
+			},
+			filter: {
+				wet: 0,
+				cutoff: 0,
+				type: "highpass",
+			},
 		}
 
 		console.log("usetrackdb newsampler", newSampler)
@@ -126,6 +131,10 @@ const useTrackDB = () => {
 			controls: {
 				...defaultControls
 			},
+			effects: {
+				...defaultEffects
+
+			}
 		}
 
 		console.log(newAudio)

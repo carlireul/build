@@ -1,5 +1,6 @@
 import TrackControls from './TrackControls'
 import Sequencer from './Sequencer'
+import EffectEditor from './EffectEditor';
 
 import useTrack from './useTrack';
 
@@ -22,7 +23,7 @@ const SamplerTab = ({ id }) => {
 
 			</div>
 		<div id="sampler-bottom-container">
-			<div>effects</div>
+			<div><EffectEditor id={id} /></div>
 			<div>clips</div>
 		</div>
 	</>

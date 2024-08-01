@@ -37,6 +37,50 @@ const defaultSteps = new Array(7)
   .fill(null)
   .map(() => new Array(8).fill(false));
 
+const defaultEffects = {
+    chorus: {
+      enabled: false,
+      options: {
+        wet: 1,
+        frequency: 4,
+        delayTime: 2,
+        depth: 0.5,
+        feedback: 0,
+      },
+    },
+    reverb: {
+      enabled: false,
+      options: {
+        wet: 1,
+        decay: 1,
+      },
+    },
+    delay: {
+      enabled: false,
+      options: {
+        wet: 1,
+        delayTime: "8n",
+        feedback: 0,
+      },
+    },
+    phaser: {
+      enabled: false,
+      options: {
+        wet: 1,
+        frequency: 15,
+        octaves: 5,
+        baseFrequency: 1000,
+      },
+    },
+    distortion: {
+      enabled: false,
+      options: {
+        wet: 1,
+        distortion: 0.2,
+      },
+    },
+}
+
 const presets = [
   {
     name: "Basic Sine",
@@ -89,4 +133,4 @@ const presets = [
   },
 ];
 
-export {defaultControls, defaultSteps, presets, newSynth}
+export {defaultControls, defaultEffects, defaultSteps, presets, newSynth}

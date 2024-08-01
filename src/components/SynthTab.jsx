@@ -1,6 +1,7 @@
 import SynthEditor from './SynthEditor'
 import TrackControls from './TrackControls'
 import Sequencer from './Sequencer'
+import EffectEditor from './EffectEditor';
 
 import useTrack from './useTrack';
 
@@ -12,6 +13,7 @@ const SynthTab = ({id}) => {
 		<div id="synth-container">
 			<div id="editor-container">
 				<SynthEditor id={id} />
+				
 			</div>
 			<div id="sequencer-container">
 				<TrackControls id={id} />
@@ -34,11 +36,11 @@ const SynthTab = ({id}) => {
 				<button className="octave-button" onClick={trackContext.decreaseOctave}>-</button>
 
 				<Sequencer id={id} type="synth"/>
-
+					
 			</div>
 		</div>
 		<div id="synth-bottom-container">
-			<div>effects</div>
+			<div><EffectEditor id={id} /></div>
 			<div>clips</div>
 		</div>
 	</>

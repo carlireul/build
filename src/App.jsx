@@ -4,7 +4,7 @@ import DAW from './components/DAW.jsx';
 import { TrackProvider } from './components/TrackContext.jsx';
 import { useLiveQuery } from "dexie-react-hooks";
 import db from './data/db.js';
-import { defaultControls, defaultSteps, presets } from './data/synths.js';
+import { defaultControls, defaultSteps, presets, defaultEffects } from './data/synths.js';
 import uniqid from "uniqid";
 
 function App() { 
@@ -24,6 +24,9 @@ function App() {
       id: trackID,
       controls: {
         ...defaultControls
+      },
+      effects : {
+        ...defaultEffects
       },
       steps: defaultSteps
     }
