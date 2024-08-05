@@ -3,6 +3,7 @@ import { TrackContext } from "./TrackContext";
 import { presets, defaultSteps, defaultControls, defaultEffects } from '../data/synths';
 import db from '../data/db';
 import uniqid from "uniqid";
+import { toTitleCase } from '../services/helpers';
 
 const useTrackDB = () => {
 	const [state, setState] = useContext(TrackContext);
@@ -85,7 +86,7 @@ const useTrackDB = () => {
 		const newSampler = {
 			id: id,
 			type: "sampler",
-			name: pack,
+			name: toTitleCase(pack),
 			controls: {
 				...defaultControls
 			},
@@ -125,7 +126,7 @@ const useTrackDB = () => {
 		const newAudio = {
 			id: id,
 			type: "audio",
-			name: file.name, // strip extension
+			name: file.name.split(".")[0],
 			file: file,
 			source: URL.createObjectURL(file),
 			controls: {

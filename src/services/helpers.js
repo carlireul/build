@@ -65,4 +65,14 @@ const getBeat = (position, count) => {
   }
 };
 
-export { getBeat, createEffect };
+// music theory helpers
+
+const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+// misc helpers
+
+const toTitleCase = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+export { toTitleCase, getBeat, createEffect, notes };

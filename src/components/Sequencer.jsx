@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useTrack from './useTrack';
-import { getBeat } from '../services/helpers'
+import { getBeat, toTitleCase } from '../services/helpers'
 
 import * as Tone from "tone"
 
@@ -23,9 +23,9 @@ const Sequencer = ({id, type}) => {
   }, [trackContext.subdivision])
 
   return trackContext.notes.map((note, noteIndex) => {
-    return (
-    <div className="note-row" key={`${note}${noteIndex}`}>
-        <span className="note-name">{note.split("_")[0]}</span>
+    return (<>
+    <div className="note-row" key={`${note}${noteIndex}-row`}>
+        <span key={`${note}${noteIndex}`} className="note-name">{toTitleCase(note.split("_")[0])}</span>
       {trackContext.steps[noteIndex].map((step, stepIndex) => {
         let buttonClass = "sequencer-button"
         if(step){
@@ -41,11 +41,12 @@ const Sequencer = ({id, type}) => {
             className={buttonClass}
             key={`${noteIndex}${stepIndex}`}
             onClick={() => trackContext.toggleNote(noteIndex, stepIndex)}
-          >
+            >
           </button>
         );
       })}
     </div>
+            </>
     );
   });
  

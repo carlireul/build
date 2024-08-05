@@ -47,16 +47,47 @@ const GlobalControls = ({savedState}) => {
 	}
 
 	return (
-		<>
-		<div className="playhead">
+		<div id="global-controls" className="row row-cols-lg-auto g-2 align-items-center">
+			<div className="col-12">
+				<button className="track-button" onClick={() => { handlePlay() }}>
+					{playing ?
+						<i className="fa-solid fa-pause"></i>
+						: <i className="fa-solid fa-play"></i>
+					}
+				</button>
+			</div>
+			<div className="col-12">
+				<button className="track-button" onClick={handleStop}><i className="fa-solid fa-stop"></i></button>
+			</div>
+			<div className="col-12">
+				<div className="row row-cols-lg-auto g-2 align-items-center">
+					<div className="col-12">
+						<i className={volStyle}></i>
+					</div>
+					<div className="col-12">
+						<input type="range" id="vol" className="form-range" name="vol" min="-20" max="20" value={vol} onChange={changeVol}></input>
+					</div>
+				</div>
+			</div>
+			<div className="col-12">
+				<div className="row row-cols-lg-auto g-2 align-items-center">
+					<div className="col-12">
+						<b>{bpm} BPM</b>
+					</div>
+					<div className="col-12">
+						<input type="range" id="bpm" className="form-range" name="bpm" min="40" max="200" value={bpm} onChange={changeBpm}></input> 
+					</div>
+				</div>
+			</div>
+			
 
+			
+
+			
+
+			
 		</div>
-		<div className="global-controls">
-				<button onClick={() => { handlePlay() }}>{playing ? <i className="fa-solid fa-pause"></i> : <i className="fa-solid fa-play"></i>}</button> <button onClick={handleStop}><i className="fa-solid fa-stop"></i></button>
-				<i className={volStyle}></i> <input type="range" id="vol" name="vol" min="-20" max="20" value={vol} onChange={changeVol}></input>
-		BPM: {bpm} <input type="range" id="bpm" name="bpm" min="40" max="200" value={bpm} onChange={changeBpm}></input>
-		</div>
-		</>
+
 	)
 }
 

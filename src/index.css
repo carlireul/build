@@ -3,10 +3,6 @@
   line-height: 1.5;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -35,6 +31,14 @@ h1 {
 #root {
   margin: 0 auto;
   padding: 2rem;
+  height: 100%;
+}
+
+html,
+body,
+#app,
+#app>div {
+  height: 100%
 }
 
 button {
@@ -54,67 +58,4 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}
-
-body {
-  background: #1e1e21;
-}
-
-.buttons {
-  display: flex;
-  padding: 0.35em 0 0.5em;
-}
-
-.buttons button,
-.buttons select {
-  margin: 5px;
-  outline: none;
-  background: #36363c;
-  color: white;
-  padding: 1em;
-  font-size: 12px;
-  letter-spacing: 1px;
-  border-radius: 4px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  border: 2px solid transparent;
-}
-
-.buttons button.active,
-.buttons select.active {
-  color: #0087ff;
-  border: 2px solid #0087ff;
-}
-
-.buttons .select-wrapper {
-  position: relative;
-}
-
-.buttons .select-wrapper span {
-  position: absolute;
-  color: white;
-  top: -10px;
-  left: 8px;
-  font-size: 9px;
-  letter-spacing: 1px;
-  opacity: 0.3;
-}
-
-.buttons select {
-  position: relative;
-  height: 42px;
-  min-width: 50px;
 }

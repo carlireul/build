@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { TrackContext } from "./TrackContext";
-import { Scale } from "tonal"; 
+import { Note, Scale } from "tonal"; 
 import { audio } from '../data/audio';
 import db from '../data/db';
 
@@ -49,7 +49,7 @@ const useTrack = (id, type) => {
 
 	const getNotes = () => {
 		if(type == "synth"){
-			const notes = Scale.get(state[id].notes.scale).notes
+			const notes = Scale.get(state[id].notes.scale).notes.map(Note.simplify)
 			return notes.map(note => `${note}${state[id].notes.octave}`)
 
 		} else if (type == "sampler"){

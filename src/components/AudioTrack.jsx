@@ -4,6 +4,7 @@ import * as Tone from "tone";
 import Peaks from 'peaks.js';
 
 import TrackControls from './TrackControls';
+import Renamable from './Renamable';
 
 import useTrack from './useTrack';
 
@@ -11,7 +12,6 @@ function AudioTrack({id, addTab, deleteTrack}){
 	const trackContext = useTrack(id, "audio")
 
 	const [loaded, setLoaded] = useState(false);
-	const [title, setTitle] = useState(trackContext.name)
 
 	const controls = useRef();
 	const peaks = useRef();
@@ -194,25 +194,30 @@ function AudioTrack({id, addTab, deleteTrack}){
 	}
 
 	return (
-    <>
-			<div className="track-container">
-				<div className="track-timeline-audio" ref={containerRef}></div>
-				<div className="track-controls">
-					{loaded ? <>
-						<button className="track-title" onClick={() => addTab({ id: id, title: title, content: <TrackControls id={id} /> })}>
-							<i className="fa-solid fa-file-audio"></i>
-						</button> <input type="text" value={title} onChange={(e) => {
-							trackContext.rename(e.target.value)
-							setTitle(e.target.value)
-						}} /> <button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
-						<TrackControls id={id} />
-					</>
-						: "Loading Audio.."}
+		<div className="track-container">
+			<div className="track-timeline-audio" ref={containerRef}></div>
+			<div className="track-controls">
+				<div className="row row-cols-lg-auto g-1 align-items-center">
+					<button className="track-button" onClick={() => {
+						if(loaded){
+							addTab({
+								id: id,
+								title: trackContext.name,
+								content: <TrackControls id={id} />
+							})
+						}
+					}
+					}>
+					<i className="fa-solid fa-file-audio"></i>
+					</button>
+					<Renamable name={trackContext.name ? trackContext.name : "Untitled"} handler={trackContext.rename}>
+						<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+					</Renamable>
+
 				</div>
-				
+				{loaded ? <TrackControls id={id} /> : "Loading Audio.."}
 			</div>
-	
-	</>
+		</div>
 	)
 }
 

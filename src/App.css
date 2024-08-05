@@ -1,3 +1,7 @@
+#root {
+	height:100%;
+}
+
 #app-container {
 	display: grid;
 	grid-auto-columns: 1fr;
@@ -68,14 +72,15 @@
 	border-color: transparent;
 }
 
-.close-track-button{
-	padding: 0px 5px;
+.track-button { 
+	padding: 4px 8px;
 	background: transparent;
+	border:transparent;
 }
 
-.track-tab-button { 
-	padding: 0px 5px;
-	background: transparent;
+.track-button:hover {
+	background: #74C0FC;
+	border: transparent;
 }
 
 .track-container {
@@ -90,14 +95,14 @@
 }
 
 .sequencer-button {
-	background:#fff;
+	background:#74C0FC;
 	padding: 20px;
 	margin: 2px;
 	border: transparent;
 }
 
 .sequencer-active {
-	background: #74C0FC;
+	background: #fcb874;
 }
 
 .sequencer-playing {
@@ -111,7 +116,10 @@
 }
 
 .note-name { 
-	width: 35px;
+	width: 3rem;
+	font-weight: bold;
+	color:#fcb874;
+	text-align:center;
 }
 
 .track-timeline-audio {
@@ -127,6 +135,11 @@
 .clip-container {
 	background-color: #fff;
 
+}
+
+.scroll-menu {
+	max-height: 15rem;
+	overflow-y: scroll;
 }
 
 .timeline-note-row {
@@ -153,9 +166,13 @@
 	padding: 0;
 }
 
+.form-range {
+	max-width:10rem;
+}
+
 .react-tabs__tab {
 	display: inline-block;
-	background: #1a1a1a;
+	background: transparent;
 	border: 1px solid transparent;
 	border-bottom: none;
 	border-radius: 5px 5px 0 0;
@@ -199,4 +216,5 @@
 
 .react-tabs__tab-panel--selected {
 	display: block;
+	width:auto;
 }

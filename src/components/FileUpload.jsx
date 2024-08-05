@@ -10,7 +10,7 @@ const FileUpload = ({onFileSelectSuccess, onFileSelectError}) => {
 
 	return (
 		<span className="file-uploader">
-			<input type="file" id="audiofile" onChange={handleFileInput} />
+			<input className="form-control" type="file" id="audiofile" onChange={handleFileInput} />
 		</span>
 				)
 

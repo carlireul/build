@@ -14,6 +14,7 @@ import SynthTrack from './SynthTrack'
 import AudioTrack from './AudioTrack'
 import SamplerTrack from './SamplerTrack.jsx'
 import FileUpload from './FileUpload.jsx';
+import Renamable from './Renamable.jsx';
 
 const DAW = ({ savedState, deleteProject, changeProject }) => {
 	// DB
@@ -25,20 +26,8 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 	const [visible, setVisible] = useState(false)
 	const [activeTabs, setActiveTabs] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null);
-	const [selectedPack, setSelectedPack] = useState("808")
 	const [name, setName] = useState(savedState.name)
-
-	// useEffect(() => { // progress bar update
-	// 	document.querySelector("#progress").style = `left: 0%`;
-	// 	const interval = setInterval(() => {
-	// 		const progress = (Tone.getTransport().progress);
-	// 		document.querySelector("#progress").style = `left: ${progress}%`;
-	// 	}, 16);
-
-	// 	return () => {
-	// 		clearInterval(interval)
-	// 	}
-	// })
+	const [displayTextEdit, setDisplayTextEdit] = useState(false)
 
 	// Tone setup
 
@@ -123,23 +112,6 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 							)
 								: "Loading"}
 
-						<button onClick={() => trackDB.addNewSynth(savedState.id)}>+ Synth</button>
-						<select value={selectedPack} onChange={(e) => setSelectedPack(e.target.value)}>
-							<option value="808">808</option>
-							<option value="acoustic">Acoustic</option>
-							<option value="analog">Analog</option>
-							<option value="electro">Electro</option>
-							<option value="random">Random</option>
-						</select>
-						<button onClick={() => trackDB.addNewSampler(savedState.id, selectedPack)}>+ Drums</button>
-							
-						<FileUpload
-							onFileSelectSuccess={(file) => setSelectedFile(file)}
-							onFileSelectError={({ error }) => alert(error)}
-						/>
-						<button onClick={uploadAudio}>+ Audio</button>
-
-
 						</ div>
 					</TabPanel>
 					{activeTabs.map(tab =>
@@ -164,37 +136,68 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 
 	return(
 		<>
-			<button id="start-button" style={visible ? { display: 'none' } : null} onClick={handleClick}><i className="fa-solid fa-music"></i> Start</button>
+			<button id="start-button" className="btn btn-primary" style={visible ? { display: 'none' } : null} onClick={handleClick}><i className="fa-solid fa-music"></i> Start</button>
 
-			<div id="app-container" style={visible ? null : { display: 'none' }}>
-				<div id="top-container">
+			<div className="container h-100" style={visible ? null : { display: 'none' }}>
+				<div className="row">
 					{generateTabs()}
 				</div>
-				<div id="bottom-container">
-					<div>
+				<div className=" row mt-auto">
+					<div className="col-7">
 						<GlobalControls savedState={savedState} />
+						<div className="row row-cols-lg-auto g-2 align-items-center">
+
+						<button className="btn btn-secondary" onClick={() => trackDB.addNewSynth(savedState.id)}>Add Synth</button>
+
+						<div className="dropup">
+							<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+								Add Drumkit
+							</button>
+							<ul className="dropdown-menu">
+								<li><a className="dropdown-item" onClick={() => trackDB.addNewSampler(savedState.id, "808")}>808</a></li>
+								<li><a className="dropdown-item" onClick={() => trackDB.addNewSampler(savedState.id, "acoustic")}>Acoustic</a></li>
+								<li><a className="dropdown-item" onClick={() => trackDB.addNewSampler(savedState.id, "analog")}>Analog</a></li>
+								<li><a className="dropdown-item" onClick={() => trackDB.addNewSampler(savedState.id, "electro")}>Electro</a></li>
+								<li><a className="dropdown-item" onClick={() => trackDB.addNewSampler(savedState.id, "random")}>Random</a></li>
+							</ul>
+						</div>
+						<FileUpload
+							onFileSelectSuccess={(file) => setSelectedFile(file)}
+							onFileSelectError={({ error }) => alert(error)}
+						/>
+						{ selectedFile ? <button className="btn btn-secondary" onClick={uploadAudio}>+</button> : null }
+						</div>
 						
 					</div>
-					<div>
+					<div className="col-3">
 						tips
 					</div>
-					<div>
-						settings
-						<input type="text" value={name} onChange={e => setName(e.target.value)}/>
-						<span>Projects</span>
-						<button onClick={changeProject}>Open...</button>
-						<button onClick={() => {
-							const newState = {
-								id: savedState.id,
-								bpm: parseInt(Tone.getTransport().bpm.value),
-								vol: parseInt(Tone.getDestination().volume.value),
-								trackEnd: trackLength,
-								name: name,
-							}
+					<div className="col-2">
+						<div className="row g-1 pb-2 align-items-center">
+							<Renamable name={name} handler={setName} />
+						</div>
+						<div className="row">
+							<div className="dropup">
+									<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+										Project Options
+									</button>
+									<ul className="dropdown-menu">
+										<li><a className="dropdown-item" onClick={() => {
+											const newState = {
+												id: savedState.id,
+												bpm: parseInt(Tone.getTransport().bpm.value),
+												vol: parseInt(Tone.getDestination().volume.value),
+												trackEnd: trackLength,
+												name: name,
+											}
 
-							trackDB.save(newState)
-						}}>Save</button>
-						<button onClick={deleteProject}>Delete</button>
+											trackDB.save(newState)
+										}}>Save</a></li>
+										<li><a className="dropdown-item" onClick={changeProject}>Open...</a></li>
+										<li><a className="dropdown-item" onClick={deleteProject}>Delete</a></li>
+									</ul>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

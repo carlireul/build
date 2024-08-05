@@ -67,15 +67,19 @@ function App() {
         <DAW savedState={projects.find(project => project.id == selectedProject)} deleteProject={() => deleteProject(selectedProject)} changeProject={changeProject}/>
       </TrackProvider> 
       : 
-      <>
-      <select name="" id="project-select" onChange={(e) => setSelectedProject(e.target.value)}>
-        <option value="" disabled selected>Choose a project...</option>
-        {projects.map(project => {
-          return <option key={project.id} value={project.id}>{project.name}</option>
-        })}
-      </select>
-      <button onClick={newProject}>New Project</button>
-      </>
+        <div className="btn-group">
+          <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            Open Project...
+          </button>
+          <ul className="dropdown-menu">
+            {projects.map(project => {
+              return <li key={project.id}><a className="dropdown-item" onClick={() => setSelectedProject(project.id)}>{project.name}</a></li> 
+            })}
+            <li><hr className="dropdown-divider" /></li>
+            <li><a className="dropdown-item" onClick={newProject}>New Project</a></li>
+          </ul>
+        </div>
+
        }
     
   </>

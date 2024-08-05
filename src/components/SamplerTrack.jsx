@@ -6,13 +6,14 @@ import * as Tone from "tone";
 import useTrack from './useTrack'
 import TrackControls from './TrackControls';
 import SamplerTab from './SamplerTab';
+import Renamable from './Renamable'
 
 const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 	const trackContext = useTrack(id, "sampler")
 
 	const [loaded, setLoaded] = useState(false)
-	const [title, setTitle] = useState(trackContext.name ? trackContext.name : "Untitled")
+	
 	const [activeEffects, setActiveEffects] = useState({
 		chorus: trackContext.effects.chorus.enabled,
 		distortion: trackContext.effects.distortion.enabled,
@@ -160,19 +161,23 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 		<div className="track-container">
 			<div className="track-timeline-synth">
 			</div>
-			<div className="track-controls">
-				<button className="track-tab-button" onClick={() => addTab({
-					id: id,
-					title: title,
-					content: <SamplerTab id={id} />
-				})
-				}>
-					<i className="fa-solid fa-wave-square"></i>
-				</button> <input type="text" value={title} onChange={(e) => {
-					trackContext.rename(e.target.value)
-					setTitle(e.target.value)
-				}} />
-				<button className="close-track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+
+			<div className="container row-cols-lg-auto track-controls">
+				<div className="row row-cols-lg-auto g-1 align-items-center">
+					<button className="track-button" onClick={() => addTab({
+						id: id,
+						title: trackContext.name,
+						content: <SamplerTab id={id} />
+					})
+					}>
+						<i className="fa-solid fa-drum"></i>
+					</button>
+
+					<Renamable name={trackContext.name ? trackContext.name : "Untitled"} handler={trackContext.rename}>
+						<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+					</Renamable>
+
+				</div>
 				{loaded ? <TrackControls id={id} /> : null}
 			</div>
 		</div>

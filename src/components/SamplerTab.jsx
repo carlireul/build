@@ -8,25 +8,31 @@ const SamplerTab = ({ id }) => {
 
 	const trackContext = useTrack(id, "sampler")
 
-	return <>
+	return <div id="synth-container">
+		
 			<div id="sequencer-container">
-				<TrackControls id={id} />
-				<span>
-					<select value={trackContext.subdivision} onChange={(e) => trackContext.changeSubdivision(e.target.value)}>
-						<option value="4">4</option>
-						<option value="8">8</option>
-						<option value="16">16</option>
-					</select>
-				</span>
-
+				<TrackControls id={id}>
+				<div className="dropdown">
+					<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						{trackContext.subdivision}
+					</button>
+					<ul className="dropdown-menu">
+						<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(4)}>4</a></li>
+						<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(8)}>8</a></li>
+						<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(16)}>16</a></li>
+						
+					</ul>
+				</div>
+				</TrackControls>
 				<Sequencer id={id} type="sampler"/>
+				
 
 			</div>
-		<div id="sampler-bottom-container">
-			<div><EffectEditor id={id} /></div>
-			<div>clips</div>
-		</div>
-	</>
+			<div id="editor-container">
+
+				<EffectEditor id={id} />
+			</div>
+	</div>
 }
 
 export default SamplerTab
