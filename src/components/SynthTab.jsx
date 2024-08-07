@@ -15,7 +15,7 @@ const SynthTab = ({id}) => {
 			return <li key={scale}><a className="dropdown-item" onClick={() => trackContext.changeScale(scale)}>{scale}</a></li>
 		})
 
-		console.log(scaleSelects)
+		// console.log(scaleSelects)
 	
 
 	return <>

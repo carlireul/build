@@ -11,6 +11,7 @@ import Renamable from './Renamable'
 const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 	const trackContext = useTrack(id, "sampler")
+	console.log(trackContext)
 
 	const [loaded, setLoaded] = useState(false)
 	

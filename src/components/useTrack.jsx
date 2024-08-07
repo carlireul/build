@@ -3,13 +3,15 @@ import { TrackContext } from "./TrackContext";
 import { Note, Scale } from "tonal"; 
 import { audio } from '../data/audio';
 import db from '../data/db';
+import uniqid from "uniqid";
+
+import audioBufferToBlob from 'audiobuffer-to-blob';
 
 const useTrack = (id, type) => {
 	const [state, setState] = useContext(TrackContext);
 
 	const mute = () => {
 		const newState = { ...state, [id]: { ...state[id], controls: { ...state[id].controls, muted: !state[id].controls.muted } } }
-		console.log("muted")
 		console.log(newState)
 		setState(newState);
 	}
@@ -53,6 +55,7 @@ const useTrack = (id, type) => {
 			return notes.map(note => `${note}${state[id].notes.octave}`)
 
 		} else if (type == "sampler"){
+			console.log("getnotes", Object.keys(state[id].instruments))
 			return Object.keys(state[id].instruments)
 
 		}
@@ -115,6 +118,61 @@ const useTrack = (id, type) => {
 		setState({...state, [id]: {...state[id], steps: newSteps}})
 	}
 
+	// const getClipIDs = () => {
+	// 	return Object.keys(state[id].clips)
+	// }
+
+	// const getClipSources = (clipID) => {
+	// 	if(clipID === "all"){
+
+	// 		const sources = {}
+	// 		for (let [key, value] of Object.entries(state[id].clips)){
+	// 			sources[key] = value.source
+	// 		}
+	// 		return sources
+	// 	} else {
+	// 		return state[id].clips[clipID].source
+	// 	}
+		
+
+	// }
+
+	// const addClip = (clip) => {
+	// 	const file = audioBufferToBlob(clip)
+
+	// 	const newClip = {
+	// 		file: file,
+	// 		source: URL.createObjectURL(file),
+	// 		enabled: false,
+	// 		position: "0:0:0"
+	// 	}
+
+	// 	const newClips = { ...state[id].clips, [uniqid()]: {...newClip}}
+	// 	const newState = {... state, [id]: {...state[id], clips: newClips}}
+	// 	setState(newState)
+	// }
+
+	// const toggleClip = (clipID) => {
+	// 	const newClips = { ...state[id].clips, [clipID]: { ...state[id].clips[clipID], enabled: !state[id].clips[clipID].enabled } }
+	// 	const newState = { ...state, [id]: { ...state[id], clips: newClips } }
+	// 	setState(newState)
+	// }
+
+	// const changeClipPosition = (clipID, newPosition) => {
+	// 	const newClips = { ...state[id].clips, [clipID]: { ...state[id].clips[clipID], position: newPosition } }
+	// 	const newState = { ...state, [id]: { ...state[id], clips: newClips } }
+	// 	setState(newState)
+	// }
+
+	// const deleteClip = (clipID) => {
+	// 	const newClips = state[id].clips
+	// 	delete newClips[clipID]
+
+	// 	const newState = { ...state, [id]: { ...state[id], clips: newClips } }
+	// 	setState(newState)
+
+	// }
+	
 	const rename = (value) => {
 		const newState = {... state, [id]: {...state[id], name: value}}
 		setState(newState)
@@ -166,6 +224,11 @@ const useTrack = (id, type) => {
 			toggleNote,
 			changeSubdivision,
 			rename,
+			// addClip,
+			// deleteClip,
+			// getClipSources,
+			// toggleClip,
+			// changeClipPosition,
 			name: state[id].name,
 			muted: state[id].controls.muted,
 			vol: state[id].controls.vol,
@@ -180,6 +243,8 @@ const useTrack = (id, type) => {
 			filter: state[id].synth.filter,
 			steps: state[id].steps,
 			effects: state[id].effects,
+			// clips: state[id].clips,
+			// clipIDs: getClipIDs(),
 		}
 	} else if (type === "audio") {
 		return {
@@ -199,37 +264,44 @@ const useTrack = (id, type) => {
 		}
 	} else if (type === "sampler"){
 		return {
-				mute,
-				changeVol,
-				changePan,
-				centrePan,
-				toggleSolo,
-				changeSubdivision,
-				rename,
-				toggleNote,
-				name: state[id].name,
-				muted: state[id].controls.muted,
-				vol: state[id].controls.vol,
-				pan: state[id].controls.pan,
-				solod: state[id].controls.solod,
-				subdivision: state[id].subdivision,
-				steps: state[id].steps,
-				instruments: state[id].instruments,
-				notes: getNotes(),
-				effects: state[id].effects,
-				filter: state[id].filter,
+			mute,
+			changeVol,
+			changePan,
+			centrePan,
+			toggleSolo,
+			changeSubdivision,
+			rename,
+			toggleNote,
+			// addClip,
+			// deleteClip,
+			// getClipSources,
+			// toggleClip,
+			// changeClipPosition,
+			name: state[id].name,
+			muted: state[id].controls.muted,
+			vol: state[id].controls.vol,
+			pan: state[id].controls.pan,
+			solod: state[id].controls.solod,
+			subdivision: state[id].subdivision,
+			steps: state[id].steps,
+			instruments: state[id].instruments,
+			notes: getNotes(),
+			effects: state[id].effects,
+			filter: state[id].filter,
+			// clips: state[id].clips,
+			// clipIDs: getClipIDs(),
 			}
 		} else if (type == "controls"){
 			return {
-				mute,
-				changeVol,
-				changePan,
-				centrePan,
-				toggleSolo,
-				muted: state[id].controls.muted,
-				vol: state[id].controls.vol,
-				pan: state[id].controls.pan,
-				solod: state[id].controls.solod,
+			mute,
+			changeVol,
+			changePan,
+			centrePan,
+			toggleSolo,
+			muted: state[id].controls.muted,
+			vol: state[id].controls.vol,
+			pan: state[id].controls.pan,
+			solod: state[id].controls.solod,
 			}
 		} else if (type === "effects"){
 			return {

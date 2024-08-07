@@ -27,7 +27,6 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 	const [activeTabs, setActiveTabs] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [name, setName] = useState(savedState.name)
-	const [displayTextEdit, setDisplayTextEdit] = useState(false)
 
 	// Tone setup
 
@@ -39,7 +38,7 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 		Tone.start()
 		Tone.getTransport().loop = true;
 		Tone.getTransport().loopStart = 0;
-		Tone.getTransport().loopEnd = trackLength
+		Tone.getTransport().loopEnd = "8:0:0"
 		setVisible(true)
 	}
 
@@ -76,7 +75,7 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 				}
 			}}>
 				<TabList>
-					<Tab>Timeline</Tab>
+					<Tab>Overview</Tab>
 					{activeTabs.map(tab =>
 						<Tab key={`tab${tab.id}`}>
 							{tab.title}

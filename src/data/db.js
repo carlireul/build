@@ -88,6 +88,7 @@ db.on("populate", (transaction) => {
       },
     },
     steps: new Array(7).fill(null).map(() => new Array(8).fill(false)),
+    clips: {}
   });
 
   transaction.states.add({
@@ -113,17 +114,19 @@ db.on("populate", (transaction) => {
     };
 
     s.push(newSample)
+    console.log(newSample)
   }
 
   transaction.samples.bulkAdd(s)
+  console.log(s)
 
 })
 
 db.open()
   .then(function (db) {
     console.log("Opened database successfully")
+    console.log(db.states.toArray())
 	console.log(db.tracks.toArray())
-  console.log(db.states.toArray())
   console.log(db.samples.toArray()) 
   })
   .catch(function (err) {

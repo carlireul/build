@@ -25,7 +25,7 @@ function AudioTrack({id, addTab, deleteTrack}){
 				return response.arrayBuffer();
 			})
 			.then(function (buffer) {
-				console.log(buffer)
+				// console.log(buffer)
 				return audioContext.decodeAudioData(buffer);
 			});
 	}

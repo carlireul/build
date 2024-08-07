@@ -19,7 +19,17 @@ const TrackProvider = ({id, children}) => {
 
         for (const track of data) {
           if (idData.tracks.includes(track.id)) {
-            if (track.type == "synth") tracks[track.id] = { ...track }
+            if (track.type == "synth") {
+              // const clips = {}
+              // if (track.clips){
+              //   for (const [key, value] of Object.entries(track.clips)){
+              //     clips[key] = { ...clips[key], source: URL.createObjectURL(value.file) }
+              //   }
+              // }
+              tracks[track.id] = { ...track, 
+                // clips: {...clips} 
+              }
+            }
             else if (track.type == "audio") tracks[track.id] = { ...track, source: URL.createObjectURL(track.file) }
             else if (track.type == "sampler") tracks[track.id] = { ...track }
           } 

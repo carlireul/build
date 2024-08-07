@@ -36,7 +36,8 @@ const useTrackDB = () => {
 			effects: {
 				...defaultEffects
 
-			}
+			},
+			// clips: {}
 		}
 
 		const newState = {
@@ -101,6 +102,7 @@ const useTrackDB = () => {
 				cutoff: 0,
 				type: "highpass",
 			},
+			// clips: {}
 		}
 
 		console.log("usetrackdb newsampler", newSampler)

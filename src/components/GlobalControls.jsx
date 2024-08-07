@@ -8,6 +8,8 @@ const GlobalControls = ({savedState}) => {
 	const [vol, setVol] = useState(savedState.vol)
 	const [volStyle, setVolStyle] = useState("fa-solid fa-volume-low")
 
+	const [isRecording, setIsRecording] = useState(false)
+
 	Tone.getTransport().bpm.value = bpm;
 	Tone.getDestination().volume.value = vol;
 
@@ -46,6 +48,40 @@ const GlobalControls = ({savedState}) => {
 		setPlaying(false);
 	}
 
+	const record = () => {
+		if(playing){
+			console.log("Cannot record while playing")
+		} else {
+			
+			const recorder = new Tone.Recorder()
+			Tone.getDestination().connect(recorder)
+			
+			const seconds = Tone.Time(savedState.trackEnd).toSeconds() * 1000
+
+			Tone.getTransport().position = "0:0:0"
+			Tone.getTransport().loop = false;
+
+			recorder.start()
+			setIsRecording(true)
+
+			handlePlay()
+
+			setTimeout(async () => {
+				const recording = await recorder.stop();
+				setIsRecording(false)
+				Tone.getTransport().loop = true;
+				const url = URL.createObjectURL(recording);
+				const anchor = document.createElement("a");
+				anchor.download = "recording.webm";
+				anchor.href = url;
+				anchor.click();
+				recorder.dispose()
+			}, seconds);
+
+		}
+		
+	}
+
 	return (
 		<div id="global-controls" className="row row-cols-lg-auto g-2 align-items-center">
 			<div className="col-12">
@@ -79,7 +115,9 @@ const GlobalControls = ({savedState}) => {
 					</div>
 				</div>
 			</div>
-			
+			<div className="col-12">
+				<button className="btn btn-secondary" onClick={record}>{isRecording ? "Recording..." : "Record"}</button>
+			</div>
 
 			
 

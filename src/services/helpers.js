@@ -24,7 +24,7 @@ const createEffect = (type, options) => {
   }
 
   effect.set(options);
-  console.log(effect);
+  // console.log(effect);
 
   return effect;
 };
