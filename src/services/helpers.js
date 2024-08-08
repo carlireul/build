@@ -1,4 +1,35 @@
 import * as Tone from "tone";
+import coreURL from "@ffmpeg/core?url"
+import wasmURL from "@ffmpeg/core/wasm?url"
+import { FFmpeg } from '@ffmpeg/ffmpeg' 
+
+// file helpers
+
+async function blobToUint8Array(blob) {
+  const arrayBuffer = await new Response(blob).arrayBuffer();
+  var uint8View = new Uint8Array(arrayBuffer);
+  return uint8View;
+}
+
+async function convertWebmToMp3(webmBlob) {
+  const ffmpeg = new FFmpeg();
+  await ffmpeg.load({ coreURL, wasmURL });
+
+  const inputName = "input.webm";
+  const outputName = "output.mp3";
+
+  await ffmpeg.writeFile(
+    inputName,
+   await blobToUint8Array(webmBlob)
+  );
+
+  await ffmpeg.exec(["-i", inputName, outputName]);
+
+  const outputData = await ffmpeg.readFile(outputName);
+  const outputBlob = new Blob([outputData.buffer], { type: "audio/mp3" });
+
+  return outputBlob;
+}
 
 // tone helpers
 
@@ -75,4 +106,4 @@ const toTitleCase = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-export { toTitleCase, getBeat, createEffect, notes };
+export { convertWebmToMp3, toTitleCase, getBeat, createEffect, notes };

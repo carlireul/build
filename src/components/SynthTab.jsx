@@ -2,12 +2,13 @@ import SynthEditor from './SynthEditor'
 import TrackControls from './TrackControls'
 import Sequencer from './Sequencer'
 import EffectEditor from './EffectEditor';
+import Visualizer from './Visualizer';
 
 import { notes } from '../services/helpers';
 
 import useTrack from './useTrack';
 
-const SynthTab = ({id}) => {
+const SynthTab = ({id, meter}) => {
 
 	const trackContext = useTrack(id, "synth")
 	const scales = notes.flatMap(note => [`${note} major`, `${note} minor`])
@@ -23,9 +24,7 @@ const SynthTab = ({id}) => {
 			<div id="sequencer-container">
 				<TrackControls id={id}>
 
-					<button className="track-button" onClick={trackContext.increaseOctave}>+</button>
-					<i className="fa-solid fa-music"></i>
-					<button className="track-button" onClick={trackContext.decreaseOctave}>-</button>
+					
 					<div className="dropdown">
 						<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 							{trackContext.subdivision}
@@ -37,6 +36,7 @@ const SynthTab = ({id}) => {
 
 						</ul>
 					</div>
+					
 					<div className="dropdown">
 						<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 							{trackContext.scale}
@@ -45,6 +45,16 @@ const SynthTab = ({id}) => {
 							{scaleSelects}
 						</ul>
 					</div>
+
+					<button className="track-button" onClick={trackContext.increaseOctave}>+</button>
+					<a
+						data-tooltip-id="tooltip"
+						data-tooltip-content="Change Octave"
+					>
+						<i className="fa-solid fa-music"></i>
+
+					</a>
+					<button className="track-button" onClick={trackContext.decreaseOctave}>-</button>
 
 
 				</TrackControls>
@@ -58,12 +68,9 @@ const SynthTab = ({id}) => {
 				<EffectEditor id={id} />
 			
 			</div>
-			
+			<div><Visualizer meter={meter} /></div>
 		</div>
-		<div id="synth-bottom-container">
-			
-			<div>clips</div>
-		</div>
+		
 	</>
 }
 

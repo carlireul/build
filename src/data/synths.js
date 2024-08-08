@@ -17,6 +17,7 @@ const newSynth = () => {
     filter: {
       wet: 0,
       cutoff: 0,
+      rate: "8n",
       type: "highpass",
     },
     },
@@ -98,6 +99,7 @@ const presets = [
       filter: {
         wet: 0,
         cutoff: 0,
+        rate: "8n",
         type: "highpass",
       },
     },
@@ -122,6 +124,7 @@ const presets = [
       filter: {
         wet: 0,
         cutoff: 0,
+        rate: "8n",
         type: "highpass",
       },
     },

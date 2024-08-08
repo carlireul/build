@@ -34,15 +34,19 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		phaser: null,
 		reverb: null,
 	})
+	const meter = useRef()
 	// const clipPlayer = useRef()
 	const notesArray = useRef(new Array(trackContext.subdivision).fill(null).map(() => []))
 	const playSchedule = useRef(0)
 
 
 	useEffect(() => { // set up: controls, effects, filter, polysynth, clip player, transport schedule
+		
+		meter.current = new Tone.Meter()
+		meter.current.set({normalRange: true, smoothing: 0.8})
 
 		controls.current = new Tone.Channel(trackContext.vol, trackContext.pan);
-		filter.current = new Tone.AutoFilter({wet: trackContext.filter.wet});
+		filter.current = new Tone.AutoFilter({ wet: trackContext.filter.wet, baseFrequency: trackContext.filter.frequency, frequency: trackContext.filter.rate}).start();
 
 		for(const [effect, enabled] of Object.entries(activeEffects)){
 			if(enabled){
@@ -51,7 +55,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			}
 		}
 
-		synth.current = new Tone.PolySynth().chain(...Object.values(effectNodes.current).filter(e => e !== null) , filter.current, controls.current, Tone.getDestination());
+		synth.current = new Tone.PolySynth().chain(...Object.values(effectNodes.current).filter(e => e !== null) , filter.current, controls.current, meter.current, Tone.getDestination());
 
 		synth.current.set({
 			envelope: {
@@ -72,7 +76,11 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		// console.log(clipPlayer.current)
 		setLoaded(true)
 
+		
+
 		return () => { // cleanup
+			meter.current.disconnect()
+			meter.current.dispose()
 			controls.current.disconnect()
 			filter.current.disconnect()
 			Object.values(effectNodes.current).forEach(effect => {if(effect) {effect.disconnect()}})
@@ -91,7 +99,9 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	useEffect(() => {
 		const schedule = (time) => { // useRef if need to edit (note length etc)
 
-			console.log(time, Tone.getTransport().position, getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
+			// console.log(time, Tone.getTransport().position, getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
+
+			// console.log(meter.current.getValue())
 			
 			synth.current.triggerAttackRelease(
 				notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)], // plays notes in notesArray at the current beat index
@@ -165,10 +175,14 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			filter.current.set({
 				wet: trackContext.filter.wet,
 				baseFrequency: trackContext.filter.cutoff,
-				filter: {
-					type: trackContext.filter.type,
-				},
+				frequency: trackContext.filter.rate,
 			})
+
+			filter.current.filter.set({
+				type: trackContext.filter.type,
+			},
+			)
+
 		}
 	}
 	useEffect(updateSynth, [trackContext.envelope, trackContext.filter, trackContext.oscillator])
@@ -190,7 +204,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	useEffect(() => { updateEffect("phaser") }, [trackContext.effects.phaser])
 	useEffect(() => { updateEffect("delay") }, [trackContext.effects.delay])
 	useEffect(() => { updateEffect("reverb") }, [trackContext.effects.reverb])
-	// other effects
 
 	useEffect(() => {
 
@@ -278,17 +291,26 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			</div>
 			<div className="container track-controls">
 				<div className="row row-cols-lg-auto g-1 align-items-center">
+					<a
+						data-tooltip-id="tooltip"
+						data-tooltip-content="Open Editor"
+					>
 					<button className="track-button" onClick={() => addTab({
 						id: id,
 						title: trackContext.name,
-						content: <SynthTab id={id} />
+						content: <SynthTab id={id} meter={meter} />
 					})
 					}>
-						<i className="fa-solid fa-wave-square"></i>
+							<i className="fa-solid fa-wave-square"></i>
 					</button>
+						</a>
 
 					<Renamable name={trackContext.name ? trackContext.name : "Untitled"} handler={trackContext.rename}>
-						<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+						<a
+							data-tooltip-id="tooltip"
+							data-tooltip-content="Delete Track"
+						><button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button></a>
+						
 					</Renamable>
 						
 				</div>

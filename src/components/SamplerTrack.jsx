@@ -11,7 +11,6 @@ import Renamable from './Renamable'
 const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 	const trackContext = useTrack(id, "sampler")
-	console.log(trackContext)
 
 	const [loaded, setLoaded] = useState(false)
 	
@@ -43,7 +42,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 		for (const [effect, enabled] of Object.entries(activeEffects)) {
 			if (enabled) {
-				console.log(effect, enabled)
+				// console.log(effect, enabled)
 				effectNodes.current[effect] = createEffect(effect, trackContext.effects[effect].options)
 			}
 		}
@@ -80,7 +79,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 		const schedule = (time) => { // useRef if need to edit (note length etc)
 
-			console.log(getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
+			// console.log(getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
 
 			triggerAttack(notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)], time)
 		
@@ -108,7 +107,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 			})
 		})
 
-		console.log(notesArray.current)
+		// console.log(notesArray.current)
 
 	}, [trackContext.steps, trackContext.subdivision])
 
@@ -120,7 +119,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 	}, [trackContext.solod, trackContext.vol, trackContext.pan, trackContext.muted])
 
 	const updateEffect = (effect) => {
-		console.log("update effect")
+		// console.log("update effect")
 		if (effectNodes.current[effect]) {
 			effectNodes.current[effect].set(trackContext.effects[effect].options)
 		}
@@ -142,16 +141,16 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 		for (const [effect, enabled] of Object.entries(activeEffects)) {
 			if (enabled && !effectNodes.current[effect]) {
-				console.log("created", effect)
+				// console.log("created", effect)
 				effectNodes.current[effect] = createEffect(effect, trackContext.effects[effect].options)
 			} if (!enabled && effectNodes.current[effect]) {
 				effectNodes.current[effect].disconnect()
 				effectNodes.current[effect].dispose()
 				effectNodes.current[effect] = null;
-				console.log("disposed", effect)
+				// console.log("disposed", effect)
 			}
 		}
-		console.log(effectNodes.current)
+		// console.log(effectNodes.current)
 
 		sampler.current.disconnect()
 		sampler.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, Tone.getDestination());
@@ -165,17 +164,27 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 
 			<div className="container row-cols-lg-auto track-controls">
 				<div className="row row-cols-lg-auto g-1 align-items-center">
+					<a
+						data-tooltip-id="tooltip"
+						data-tooltip-content="Open Editor"
+					>
 					<button className="track-button" onClick={() => addTab({
 						id: id,
 						title: trackContext.name,
 						content: <SamplerTab id={id} />
 					})
 					}>
-						<i className="fa-solid fa-drum"></i>
+							<i className="fa-solid fa-drum"></i>
 					</button>
+							</a>
 
 					<Renamable name={trackContext.name ? trackContext.name : "Untitled"} handler={trackContext.rename}>
-						<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+						<a
+							data-tooltip-id="tooltip"
+							data-tooltip-content="Delete Track"
+						>
+							<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+							</a>
 					</Renamable>
 
 				</div>

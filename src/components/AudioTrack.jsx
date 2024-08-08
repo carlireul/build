@@ -19,9 +19,11 @@ function AudioTrack({id, addTab, deleteTrack}){
 	const containerRef = useRef();
 
 	function fetchAndDecode(audioContext, url) {
+		console.log(url)
 		// Load audio file into an AudioBuffer
 		return fetch(url)
 			.then(function (response) {
+				console.log(response)
 				return response.arrayBuffer();
 			})
 			.then(function (buffer) {
@@ -92,7 +94,6 @@ function AudioTrack({id, addTab, deleteTrack}){
 
 							// this.playbackSchedule = Tone.getTransport().scheduleRepeat(time => {
 							// 	this.eventEmitter.emit('player.timeupdate', this.getCurrentTime())
-							// 	console.log("hi")
 							// }, "0.25", "0:0:0")
 
 							Tone.getTransport().start();
@@ -198,6 +199,10 @@ function AudioTrack({id, addTab, deleteTrack}){
 			<div className="track-timeline-audio" ref={containerRef}></div>
 			<div className="track-controls">
 				<div className="row row-cols-lg-auto g-1 align-items-center">
+					<a
+						data-tooltip-id="tooltip"
+						data-tooltip-content="Open Editor"
+					>
 					<button className="track-button" onClick={() => {
 						if(loaded){
 							addTab({
@@ -208,10 +213,15 @@ function AudioTrack({id, addTab, deleteTrack}){
 						}
 					}
 					}>
-					<i className="fa-solid fa-file-audio"></i>
+							<i className="fa-solid fa-file-audio"></i>
 					</button>
+						</a>
 					<Renamable name={trackContext.name ? trackContext.name : "Untitled"} handler={trackContext.rename}>
-						<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button>
+						<a
+							data-tooltip-id="tooltip"
+							data-tooltip-content="Delete Track"
+						>
+							<button className="track-button" onClick={() => deleteTrack(id)}> <i className="fa-solid fa-xmark"></i></button></a>
 					</Renamable>
 
 				</div>

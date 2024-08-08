@@ -4,6 +4,7 @@ import { presets } from '../data/synths.js';
 
 
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Tooltip } from 'react-tooltip';
 
 import * as Tone from "tone"
 
@@ -15,6 +16,7 @@ import AudioTrack from './AudioTrack'
 import SamplerTrack from './SamplerTrack.jsx'
 import FileUpload from './FileUpload.jsx';
 import Renamable from './Renamable.jsx';
+import Visualizer from './Visualizer.jsx';
 
 const DAW = ({ savedState, deleteProject, changeProject }) => {
 	// DB
@@ -27,6 +29,7 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 	const [activeTabs, setActiveTabs] = useState([])
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [name, setName] = useState(savedState.name)
+	const [tooltipsEnabled, setTooltipsEnabled] = useState(true)
 
 	// Tone setup
 
@@ -60,7 +63,6 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 		trackDB.deleteTrack(id, savedState.id)
 		closeTab(id)
 	}
-
 
 	// Tab management
 
@@ -169,7 +171,22 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 						
 					</div>
 					<div className="col-3">
-						tips
+						<div className="form-check">
+							<input className="form-check-input" checked={tooltipsEnabled} type="checkbox" value="" id="tooltipcheckbox" onChange={() => setTooltipsEnabled((prev) => !prev)} />
+							<label className="form-check-label" htmlFor="tooltipcheckbox">
+									Show tooltips
+								</label>
+						</div>
+
+						{ tooltipsEnabled ? <Tooltip
+							id="tooltip"
+							style={{ backgroundColor: "#74C0FC", color: "#fff" }}
+							render={({ content }) => (
+								<span>
+									{content}
+								</span>
+							)}
+						/> : null }
 					</div>
 					<div className="col-2">
 						<div className="row g-1 pb-2 align-items-center">

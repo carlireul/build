@@ -50,7 +50,6 @@ const useTrackDB = () => {
 			db.tracks.add(newSynth)
 			db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
 		})
-		console.log("success!")
 
 	}
 
@@ -105,8 +104,6 @@ const useTrackDB = () => {
 			// clips: {}
 		}
 
-		console.log("usetrackdb newsampler", newSampler)
-
 		const newState = {
 			...state, [id]: { ...newSampler, }
 		}
@@ -118,7 +115,6 @@ const useTrackDB = () => {
 			db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
 		}).catch(console.error)
 
-		console.log("success!")
 	}
 
 	const addNewAudio = async (file, stateID) => {
@@ -140,9 +136,6 @@ const useTrackDB = () => {
 			}
 		}
 
-		console.log(newAudio)
-
-
 		const newState = {
 			...state, [id]: { ...newAudio, }
 		}
@@ -153,7 +146,6 @@ const useTrackDB = () => {
 			db.tracks.add(newAudio)
 			db.states.where("id").equals(stateID).modify(x => x.tracks.push(id))
 		})
-		console.log("success!")
 	}
 
 	const deleteTrack = async (id, stateID) => {
@@ -170,7 +162,6 @@ const useTrackDB = () => {
 			db.states.update(stateID, { tracks: newTracks })
 		})
 
-		console.log("delete success")
 	}
 
 	const save = async (newState) => {
@@ -182,7 +173,6 @@ const useTrackDB = () => {
 			})
 			db.tracks.bulkPut(Object.values(state))
 		})
-		console.log("saved")
 
 	}
 

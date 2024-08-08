@@ -1,5 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
+import Renamable from './Renamable';
 import * as Tone from "tone";
+import { convertWebmToMp3 } from '../services/helpers';
 
 const GlobalControls = ({savedState}) => {
 	
@@ -13,8 +15,8 @@ const GlobalControls = ({savedState}) => {
 	Tone.getTransport().bpm.value = bpm;
 	Tone.getDestination().volume.value = vol;
 
-	const changeBpm = (event) => {
-		setBpm(event.target.value)
+	const changeBpm = (value) => {
+		setBpm(value)
 	}
 
 	const changeVol = (event) => {
@@ -56,26 +58,27 @@ const GlobalControls = ({savedState}) => {
 			const recorder = new Tone.Recorder()
 			Tone.getDestination().connect(recorder)
 			
-			const seconds = Tone.Time(savedState.trackEnd).toSeconds() * 1000
+			const seconds = (Tone.Time(savedState.trackEnd).toSeconds() * 1000) * 4
 
 			Tone.getTransport().position = "0:0:0"
 			Tone.getTransport().loop = false;
 
 			recorder.start()
-			setIsRecording(true)
-
 			handlePlay()
+			setIsRecording(true)
 
 			setTimeout(async () => {
 				const recording = await recorder.stop();
 				setIsRecording(false)
 				Tone.getTransport().loop = true;
-				const url = URL.createObjectURL(recording);
+				const mp3 = await convertWebmToMp3(recording)
+				const url = URL.createObjectURL(mp3);
 				const anchor = document.createElement("a");
-				anchor.download = "recording.webm";
+				anchor.download = `${savedState.name}.mp3`;
 				anchor.href = url;
 				anchor.click();
 				recorder.dispose()
+				handlePlay()
 			}, seconds);
 
 		}
@@ -108,10 +111,14 @@ const GlobalControls = ({savedState}) => {
 			<div className="col-12">
 				<div className="row row-cols-lg-auto g-2 align-items-center">
 					<div className="col-12">
-						<b>{bpm} BPM</b>
+						<Renamable name={bpm} handler={changeBpm} number={true} range={[40, 200]} />
+						<a
+							data-tooltip-id="tooltip"
+							data-tooltip-content="Beats Per Minute"
+						>&nbsp;BPM</a>
 					</div>
 					<div className="col-12">
-						<input type="range" id="bpm" className="form-range" name="bpm" min="40" max="200" value={bpm} onChange={changeBpm}></input> 
+						<input type="range" id="bpm" className="form-range" name="bpm" min="40" max="200" value={bpm} onChange={(e) => changeBpm(e.target.value)}></input> 
 					</div>
 				</div>
 			</div>

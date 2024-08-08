@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ffmpeg/core": "^0.12.6",
+    "@ffmpeg/ffmpeg": "^0.12.10",
     "audiobuffer-to-blob": "^1.0.2",
     "dexie": "^4.0.8",
     "dexie-react-hooks": "^1.1.7",
@@ -18,6 +20,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-tabs": "^6.0.2",
+    "react-tooltip": "^5.28.0",
     "tonal": "^6.0.1",
     "tone": "^15.0.4",
     "uniqid": "^5.4.0",

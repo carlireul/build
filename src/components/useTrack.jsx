@@ -1,18 +1,13 @@
 import { useContext } from 'react';
 import { TrackContext } from "./TrackContext";
 import { Note, Scale } from "tonal"; 
-import { audio } from '../data/audio';
-import db from '../data/db';
-import uniqid from "uniqid";
 
-import audioBufferToBlob from 'audiobuffer-to-blob';
 
 const useTrack = (id, type) => {
 	const [state, setState] = useContext(TrackContext);
 
 	const mute = () => {
 		const newState = { ...state, [id]: { ...state[id], controls: { ...state[id].controls, muted: !state[id].controls.muted } } }
-		console.log(newState)
 		setState(newState);
 	}
 
@@ -55,7 +50,6 @@ const useTrack = (id, type) => {
 			return notes.map(note => `${note}${state[id].notes.octave}`)
 
 		} else if (type == "sampler"){
-			console.log("getnotes", Object.keys(state[id].instruments))
 			return Object.keys(state[id].instruments)
 
 		}
@@ -74,7 +68,6 @@ const useTrack = (id, type) => {
 		} else if (type === "sampler"){
 			newState = { ...state, [id]: { ...state[id], subdivision: parseInt(value), steps: getSteps(parseInt(value)) } }
 		}
-		console.log(newState)
 		setState(newState);
 	}
 
@@ -102,6 +95,11 @@ const useTrack = (id, type) => {
 	const changeFilterType = (value) => {
 		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, filter: { ...state[id].synth.filter, type: value } } } }
 		setState(newState);	}
+
+	const changeFilterRate = (value) => {
+		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, filter: { ...state[id].synth.filter, rate: value } } } }
+		setState(newState);
+	}
 
 	const changeCutoff = (value) => {
 		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, filter: { ...state[id].synth.filter, cutoff: parseFloat(value) } } } }
@@ -185,7 +183,7 @@ const useTrack = (id, type) => {
 
 	const toggleEffect = (effect) => {
 		const newState = { ...state, [id]: { ...state[id], effects: { ...state[id].effects, [effect]: { ...state[id].effects[effect], enabled: !state[id].effects[effect].enabled }}}}
-		console.log("toggled effect", newState[id].effects)
+		// console.log("toggled effect", newState[id].effects)
 		setState(newState)
 
 	}
@@ -195,11 +193,9 @@ const useTrack = (id, type) => {
 		const option = name.split("-")[1]
 
 		const newState = { ...state, [id]: { ...state[id], effects: { ...state[id].effects, [effect]: { ...state[id].effects[effect], options: {...state[id].effects[effect].options, [option]: parseFloat(value) } } } } }
-		console.log(newState[id].effects[effect].options)
+		// console.log(newState[id].effects[effect].options)
 		setState(newState)
-
 	}
-
 	
 	// console.log("track", state)
 
@@ -220,6 +216,7 @@ const useTrack = (id, type) => {
 			toggleFilter,
 			changeFilterType,
 			changeCutoff,
+			changeFilterRate,
 			changeWaveType,
 			toggleNote,
 			changeSubdivision,
