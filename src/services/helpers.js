@@ -33,6 +33,26 @@ async function convertWebmToMp3(webmBlob) {
 
 // tone helpers
 
+const togglePlay = () => {
+  if (Tone.getContext().state === "suspended") {
+    Tone.start();
+  }
+
+  if (
+    Tone.getTransport().state === "stopped" ||
+    Tone.getTransport().state === "paused"
+  ) {
+    Tone.getTransport().start();
+  } else if (Tone.getTransport().state === "started") {
+    Tone.getTransport().pause();
+  }
+};
+
+const playbackStop = () => {
+  Tone.getTransport().stop();
+  Tone.getTransport().position = "0:0:0";
+};
+
 const createEffect = (type, options) => {
   let effect;
 
@@ -106,4 +126,12 @@ const toTitleCase = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
-export { convertWebmToMp3, toTitleCase, getBeat, createEffect, notes };
+export {
+  togglePlay,
+  playbackStop,
+  convertWebmToMp3,
+  toTitleCase,
+  getBeat,
+  createEffect,
+  notes,
+};

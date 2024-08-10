@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import './App.css'
+import * as Tone from "tone";
 import DAW from './components/DAW.jsx';
 import { TrackProvider } from './components/TrackContext.jsx';
 import { useLiveQuery } from "dexie-react-hooks";
@@ -73,7 +74,9 @@ function App() {
           </button>
           <ul className="dropdown-menu">
             {projects.map(project => {
-              return <li key={project.id}><a className="dropdown-item" onClick={() => setSelectedProject(project.id)}>{project.name}</a></li> 
+              return <li key={project.id}><a className="dropdown-item" onClick={() => {
+                Tone.start()
+                setSelectedProject(project.id)}}>{project.name}</a></li> 
             })}
             <li><hr className="dropdown-divider" /></li>
             <li><a className="dropdown-item" onClick={newProject}>New Project</a></li>

@@ -71,6 +71,11 @@ const useTrack = (id, type) => {
 		setState(newState);
 	}
 
+	const changeEnvelope = (envelope) => {
+		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, envelope: envelope } } }
+		setState(newState);
+	}
+
 	const changeAttack = (value) => {
 		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, envelope: { ...state[id].synth.envelope, attack: parseFloat(value) } } } }
 		setState(newState);	}
@@ -209,6 +214,7 @@ const useTrack = (id, type) => {
 			increaseOctave,
 			decreaseOctave,
 			changeScale,
+			changeEnvelope,
 			changeAttack,
 			changeDecay,
 			changeSustain,

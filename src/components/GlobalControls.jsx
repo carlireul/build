@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import Renamable from './Renamable';
 import * as Tone from "tone";
-import { convertWebmToMp3 } from '../services/helpers';
+import { convertWebmToMp3, togglePlay, playbackStop } from '../services/helpers';
 
 const GlobalControls = ({savedState}) => {
 	
@@ -31,22 +31,12 @@ const GlobalControls = ({savedState}) => {
 	}
 
 	const handlePlay = () => {
-		if (Tone.getContext().state === "suspended") {
-			Tone.start()
-		}
-
-		if (!playing) {
-			Tone.getTransport().start();
-			setPlaying(true);
-		} else {
-			Tone.getTransport().pause();
-			setPlaying(false);
-		}
+		togglePlay()
+		setPlaying(prev => !prev)
 	}
 
 	const handleStop = () => {
-		Tone.getTransport().stop();
-		Tone.getTransport().position = "0:0:0"
+		playbackStop()
 		setPlaying(false);
 	}
 
@@ -78,7 +68,7 @@ const GlobalControls = ({savedState}) => {
 				anchor.href = url;
 				anchor.click();
 				recorder.dispose()
-				handlePlay()
+				handleStop()
 			}, seconds);
 
 		}

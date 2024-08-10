@@ -8,7 +8,6 @@ const Visualizer = ({meter}) => {
 
 	useEffect(() => {
 
-
 		const canvas = canvasRef.current
 		const context = canvas.getContext('2d')
 		let frameCount = 0
