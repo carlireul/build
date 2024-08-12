@@ -52,9 +52,7 @@ const WaveTutorial = () => {
 	useEffect(() => {
 		if (sineWavesGenerator.current){
 			sineWavesGenerator.current.waves[0].amplitude = (parseInt(amplitude) + 13) * 3
-			console.log("frequency", 1 / parseInt(frequency) )
 			sineWavesGenerator.current.waves[0].wavelength = (1 / parseInt(frequency)) * 30
-			console.log(sineWavesGenerator.current.waves[0].wavelength)
 		}
 
 	}, [amplitude, frequency])

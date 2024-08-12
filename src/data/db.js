@@ -33,7 +33,8 @@ db.version(14).stores({
         wet: 0,
         cutoff: 0,
         type: "highpass",
-        rate: "8n",
+        rate: 0,
+        rolloff: -12,
       },
     },
     notes: {
@@ -146,7 +147,8 @@ db.on("populate", (transaction) => {
         wet: 0,
         cutoff: 0,
         type: "highpass",
-        rate: "8n",
+        rate: 0,
+        rolloff: -12,
       },
     },
     notes: {

@@ -180,6 +180,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 
 			filter.current.filter.set({
 				type: trackContext.filter.type,
+				rolloff: trackContext.filter.rolloff,
 			},
 			)
 

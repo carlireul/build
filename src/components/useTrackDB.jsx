@@ -96,10 +96,14 @@ const useTrackDB = () => {
 			effects: {
 				...defaultEffects
 			},
-			filter: {
-				wet: 0,
-				cutoff: 0,
-				type: "highpass",
+			synth: {
+				filter: {
+					wet: 0,
+					cutoff: 0,
+					type: "highpass",
+					rate: 0,
+					rolloff: -12,
+				}
 			},
 			// clips: {}
 		}

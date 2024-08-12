@@ -106,9 +106,19 @@ const useTrack = (id, type) => {
 		setState(newState);
 	}
 
+	const changeFilter = (filter) => {
+		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, filter: filter } } }
+		setState(newState);
+	}
+
 	const changeCutoff = (value) => {
 		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, filter: { ...state[id].synth.filter, cutoff: parseFloat(value) } } } }
 		setState(newState);	}
+
+	const changeRollOff = (value) => {
+		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, filter: { ...state[id].synth.filter, rolloff: value } } } }
+		setState(newState);
+	}
 
 	const changeWaveType = (value) => {
 		const newState = { ...state, [id]: { ...state[id], synth: { ...state[id].synth, oscillator: { ...state[id].synth.oscillator, type: value } } } }
@@ -223,6 +233,8 @@ const useTrack = (id, type) => {
 			changeFilterType,
 			changeCutoff,
 			changeFilterRate,
+			changeRollOff,
+			changeFilter,
 			changeWaveType,
 			toggleNote,
 			changeSubdivision,
@@ -275,6 +287,12 @@ const useTrack = (id, type) => {
 			changeSubdivision,
 			rename,
 			toggleNote,
+			toggleFilter,
+			changeFilterType,
+			changeCutoff,
+			changeFilterRate,
+			changeRollOff,
+			changeFilter,
 			// addClip,
 			// deleteClip,
 			// getClipSources,
@@ -290,7 +308,7 @@ const useTrack = (id, type) => {
 			instruments: state[id].instruments,
 			notes: getNotes(),
 			effects: state[id].effects,
-			filter: state[id].filter,
+			filter: state[id].synth.filter,
 			// clips: state[id].clips,
 			// clipIDs: getClipIDs(),
 			}
@@ -316,6 +334,16 @@ const useTrack = (id, type) => {
 				effects: getEffectNames(),
 				toggleEffect: toggleEffect,
 				modifyEffect: modifyEffect
+			}
+		} else if (type === "filterTutorial"){
+			return {
+				toggleFilter,
+				changeFilterType,
+				changeCutoff,
+				changeFilterRate,
+				changeRollOff,
+				changeFilter,
+				filter: state[id].synth.filter
 			}
 		}
 	

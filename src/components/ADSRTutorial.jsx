@@ -19,7 +19,6 @@ const ADSRTutorial = ({id}) => {
 	const [showText, setShowText] = useState(true)
 
 	const canvasRef = useRef(null)
-	const animationFrameId = useRef(null)
 
 	const handleShow = () =>{
 		setOldEnvelope(trackContext.envelope)
@@ -77,12 +76,6 @@ const ADSRTutorial = ({id}) => {
 	}, [show, trackContext.envelope])
 
 
-	const handleClose = () => {
-		window.cancelAnimationFrame(animationFrameId.current)
-		setShow(false)
-
-	};
-
 	const reset = () => {
 		trackContext.changeEnvelope(oldEnvelope)
 	}
@@ -93,7 +86,7 @@ const ADSRTutorial = ({id}) => {
 			<i className="fa-solid fa-magnifying-glass"></i>
       </Button>
 	
-		<Modal size="lg" show={show} onHide={handleClose}>
+		<Modal size="lg" show={show} onHide={() => {setShow(false)}}>
 			<Modal.Header>
 				<div className="container">
 					<div className="row row-cols-auto justify-content-between">

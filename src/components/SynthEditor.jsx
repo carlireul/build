@@ -3,6 +3,7 @@ import { toTitleCase, togglePlay } from '../services/helpers';
 import Renamable from './Renamable';
 import ADSRTutorial from './ADSRTutorial';
 import WaveTutorial from './WaveTutorial';
+import FilterTutorial from './FilterTutorial';
 
 function SynthEditor({id}){
 
@@ -82,8 +83,10 @@ function SynthEditor({id}){
 			<div className="row pt-3">
 			<div className="col-auto">
 
-			<button className="btn btn-primary" onClick={trackContext.toggleFilter}>{trackContext.filter.wet == 1 ? "Disable" : "Enable"} Filter</button>
+			<button className="btn btn-primary" onClick={trackContext.toggleFilter}>{trackContext.filter.wet == 1 ? "Disable" : "Enable"} Filter</button> 
 			</div>
+				<div className="col-auto"><FilterTutorial id={id} /></div>
+				
 
 			</div>
 			
@@ -113,6 +116,18 @@ function SynthEditor({id}){
 						</ul>
 					</div>
 			</div>
+				<div className="col-auto">
+					<div className="dropdown">
+						<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Rolloff: {trackContext.filter.rolloff}
+						</button>
+						<ul className="dropdown-menu">
+							<li><a className="dropdown-item" onClick={() => trackContext.changeRollOff(-12)}>-12</a></li>
+							<li><a className="dropdown-item" onClick={() => trackContext.changeRollOff(-24)}>-24</a></li>
+						</ul>
+					</div>
+
+				</div>
 			<div className="col-auto">
 					<div className="dropdown">
 						<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -128,6 +143,8 @@ function SynthEditor({id}){
 						</ul>
 					</div>
 			</div>
+			
+				
 			</div>
 
 			

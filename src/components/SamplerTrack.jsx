@@ -135,7 +135,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 	useEffect(() => { updateEffect("phaser") }, [trackContext.effects.phaser])
 	useEffect(() => { updateEffect("delay") }, [trackContext.effects.delay])
 	useEffect(() => { updateEffect("reverb") }, [trackContext.effects.reverb])
-	// other effects
+	
 
 	useEffect(() => {
 
@@ -156,6 +156,21 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 		sampler.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, Tone.getDestination());
 
 	}, [activeEffects])
+
+	useEffect(() => {
+		filter.current.set({
+			wet: trackContext.filter.wet,
+			baseFrequency: trackContext.filter.cutoff,
+			frequency: trackContext.filter.rate,
+		})
+		console.log(trackContext.filter.rate)
+
+		filter.current.filter.set({
+			type: trackContext.filter.type,
+			rolloff: trackContext.filter.rolloff,
+		},
+		)
+	}, [trackContext.filter])
 
 	return (
 		<div className="track-container">
