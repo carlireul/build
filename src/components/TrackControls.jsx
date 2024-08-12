@@ -19,11 +19,16 @@ const TrackControls = ({ id, children }) => {
 	return <>
 		{/* <div className="container">
 			<div className="col"> */}
-				<div className="row row-cols-lg-auto g-2 align-items-center">
+				<div className="row row-cols-lg-auto g-1 align-items-center">
 					<button className="track-button" onClick={trackContext.toggleSolo}>{trackContext.solod ? <i className="fa-solid fa-headphones" style={{color: "#74C0FC"}}></i> : <i className="fa-solid fa-headphones"></i>}</button>
 					<button className="track-button" onClick={trackContext.mute}>{trackContext.muted ? <i className="fa-solid fa-volume-xmark" style={{ color: "#74C0FC" }}></i> : <i className="fa-solid fa-volume-xmark"></i>}</button>
 					<i className={volStyle}></i>  <input className="form-range w-25" type="range" id="vol" name="vol" min="-20" max="20" value={trackContext.vol} onChange={(e) => trackContext.changeVol(e.target.value)}></input>
-					<button className="track-button" onClick={() => trackContext.centrePan()}><i className="fa-solid fa-left-right"></i></button> <input className="form-range w-25" type="range" id="pan" name="pan" min="-1" max="1" step="0.1" value={trackContext.pan} onChange={(e) => trackContext.changePan(e.target.value)}></input>
+					<a data-tooltip-id="tooltip" data-tooltip-content="Stereo Pan (click to centre)" >
+						<button className="track-button" onClick={() => trackContext.centrePan()}>
+							<i className="fa-solid fa-left-right"></i>
+						</button>
+					</a>
+					<input className="form-range w-25" type="range" id="pan" name="pan" min="-1" max="1" step="0.1" value={trackContext.pan} onChange={(e) => trackContext.changePan(e.target.value)}></input>
 					{children}
 				</div>
 			{/* </div>

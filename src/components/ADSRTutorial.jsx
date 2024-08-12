@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react'
-import { togglePlay } from '../services/helpers';
 import useTrack from './useTrack';
 import Renamable from './Renamable';
 
@@ -44,10 +43,10 @@ const ADSRTutorial = ({id}) => {
 			const context = canvas.getContext('2d')
 
 			const width = {
-				attack: (canvas.width / 4) * trackContext.envelope.attack,
-				decay: (canvas.width / 4) * trackContext.envelope.decay,
+				attack: (canvas.width / 4) * (trackContext.envelope.attack / 2),
+				decay: (canvas.width / 4) * (trackContext.envelope.decay /2),
 				sustain: (canvas.width / 4),
-				release: (canvas.width / 4) * trackContext.envelope.release,
+				release: (canvas.width / 4) * (trackContext.envelope.release / 5),
 			}
 
 			const draw = (ctx) => {
@@ -95,6 +94,25 @@ const ADSRTutorial = ({id}) => {
       </Button>
 	
 		<Modal size="lg" show={show} onHide={handleClose}>
+			<Modal.Header>
+				<div className="container">
+					<div className="row row-cols-auto justify-content-between">
+						<div className="col">
+
+					<h2>ADSR Envelope</h2>
+						</div>
+						<div className="col">
+							<div className="row row-cols-auto">
+								<button className="track-button" onClick={trackContext.toggleSolo}>{trackContext.solod ? <i className="fa-solid fa-headphones" style={{ color: "#74C0FC" }}></i> : <i className="fa-solid fa-headphones"></i>}</button>
+								<button className="btn btn-secondary" onClick={() => setShowText(prev => !prev)}>{showText ? "Hide" : "Show"} Text</button>
+								<Button variant="secondary" onClick={reset}>Reset</Button>
+								<Button variant="secondary" onClick={() => setShow(prev => !prev)}>X</Button>
+						</div>
+						
+						</div>
+					</div>
+				</div>
+			</Modal.Header>
 
         <Modal.Body>
 		<canvas height="200" width="600" ref={canvasRef} />
@@ -102,20 +120,20 @@ const ADSRTutorial = ({id}) => {
 		<div className="container">
 		<div className="row">
 						<div className="col">Attack 
-							<Renamable number={true} range={[0, 1]} step={0.05} name={trackContext.envelope.attack} handler={trackContext.changeAttack} />
-							<input className="form-range" type="range" id="attack" name="attack" min="0" max="1" step="0.05" value={trackContext.envelope.attack} onChange={(e) => trackContext.changeAttack(e.target.value)}></input></div>
+							<Renamable number={true} range={[0, 2]} step={0.05} name={trackContext.envelope.attack} handler={trackContext.changeAttack} />
+							<input className="form-range" type="range" id="attack" name="attack" min="0" max="2" step="0.05" value={trackContext.envelope.attack} onChange={(e) => trackContext.changeAttack(e.target.value)}></input></div>
 
 						<div className="col">Decay 
-							<Renamable number={true} range={[0.1, 1]} step={0.05} name={trackContext.envelope.decay} handler={trackContext.changeDecay} />
-							<input className="form-range" type="range" id="decay" name="decay" min="0.1" max="1" step="0.05" value={trackContext.envelope.decay} onChange={(e) => trackContext.changeDecay(e.target.value)}></input></div>
+							<Renamable number={true} range={[0.1, 2]} step={0.05} name={trackContext.envelope.decay} handler={trackContext.changeDecay} />
+							<input className="form-range" type="range" id="decay" name="decay" min="0.1" max="2" step="0.05" value={trackContext.envelope.decay} onChange={(e) => trackContext.changeDecay(e.target.value)}></input></div>
  
 						<div className="col">Sustain 
 							<Renamable number={true} range={[0, 1]} step={0.05} name={trackContext.envelope.sustain} handler={trackContext.changeSustain} />
 							<input className="form-range" type="range" id="sustain" name="sustain" min="0" max="1" step="0.05" value={trackContext.envelope.sustain} onChange={(e) => trackContext.changeSustain(e.target.value)}></input></div>
 
 						<div className="col">Release 
-							<Renamable number={true} range={[0, 1]} step={0.05} name={trackContext.envelope.release} handler={trackContext.changeRelease} />
-							<input className="form-range" type="range" id="release" name="release" min="0" max="1" step="0.05" value={trackContext.envelope.release} onChange={(e) => trackContext.changeRelease(e.target.value)}></input></div>
+							<Renamable number={true} range={[0, 5]} step={0.05} name={trackContext.envelope.release} handler={trackContext.changeRelease} />
+							<input className="form-range" type="range" id="release" name="release" min="0" max="5" step="0.05" value={trackContext.envelope.release} onChange={(e) => trackContext.changeRelease(e.target.value)}></input></div>
 		</div>
 		
 		
@@ -140,12 +158,6 @@ const ADSRTutorial = ({id}) => {
 		
         </Modal.Body>
 
-        <Modal.Footer>
-				<button className="track-button" onClick={trackContext.toggleSolo}>{trackContext.solod ? <i className="fa-solid fa-headphones" style={{ color: "#74C0FC" }}></i> : <i className="fa-solid fa-headphones"></i>}</button>
-				<button className="btn btn-secondary" onClick={() => setShowText(prev => !prev)}>{showText ? "Hide" : "Show"} Text</button>
-				<Button variant="secondary" onClick={reset}>Reset</Button>
-				<Button variant="secondary" onClick={() => setShow(prev => !prev)}>X</Button>
-        </Modal.Footer>
 	</Modal>
     </div>
 	

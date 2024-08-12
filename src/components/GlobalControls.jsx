@@ -76,43 +76,42 @@ const GlobalControls = ({savedState}) => {
 	}
 
 	return (
-		<div id="global-controls" className="row row-cols-lg-auto g-2 align-items-center">
-			<div className="col-12">
+		<div id="global-controls" className="row align-items-center g-1">
+			<div className="col-1">
 				<button className="track-button" onClick={() => { handlePlay() }}>
 					{playing ?
 						<i className="fa-solid fa-pause"></i>
 						: <i className="fa-solid fa-play"></i>
 					}
 				</button>
-			</div>
-			<div className="col-12">
 				<button className="track-button" onClick={handleStop}><i className="fa-solid fa-stop"></i></button>
 			</div>
-			<div className="col-12">
+			<div className="col-3">
 				<div className="row row-cols-lg-auto g-2 align-items-center">
-					<div className="col-12">
+					<div className="col">
 						<i className={volStyle}></i>
 					</div>
-					<div className="col-12">
-						<input type="range" id="vol" className="form-range" name="vol" min="-20" max="20" value={vol} onChange={changeVol}></input>
+					<div className="col">
+						<input type="range" id="vol" className="form-range w-75" name="vol" min="-20" max="20" value={vol} onChange={changeVol}></input>
 					</div>
 				</div>
 			</div>
-			<div className="col-12">
-				<div className="row row-cols-lg-auto g-2 align-items-center">
-					<div className="col-12">
-						<Renamable name={bpm} handler={changeBpm} number={true} range={[40, 200]} />
-						<a
-							data-tooltip-id="tooltip"
-							data-tooltip-content="Beats Per Minute"
-						>&nbsp;BPM</a>
-					</div>
-					<div className="col-12">
-						<input type="range" id="bpm" className="form-range" name="bpm" min="40" max="200" value={bpm} onChange={(e) => changeBpm(e.target.value)}></input> 
+			<div className="col-4">
+				<div className="row row-cols-lg-auto g-1 align-items-center">
+					
+						<Renamable name={bpm} handler={changeBpm} number={true} range={[40, 200]} >
+							<a
+								data-tooltip-id="tooltip"
+								data-tooltip-content="Beats Per Minute"
+							>&nbsp;BPM</a>
+						</Renamable>
+					
+					<div className="col">
+						<input type="range" id="bpm" className="form-range w-75" name="bpm" min="40" max="200" value={bpm} onChange={(e) => changeBpm(e.target.value)}></input> 
 					</div>
 				</div>
 			</div>
-			<div className="col-12">
+			<div className="col">
 				<button className="btn btn-secondary" onClick={record}>{isRecording ? "Recording..." : "Record"}</button>
 			</div>
 

@@ -16,7 +16,7 @@ import AudioTrack from './AudioTrack'
 import SamplerTrack from './SamplerTrack.jsx'
 import FileUpload from './FileUpload.jsx';
 import Renamable from './Renamable.jsx';
-import Visualizer from './Visualizer.jsx';
+import Modal from 'react-bootstrap/Modal';
 
 const DAW = ({ savedState, deleteProject, changeProject }) => {
 	// DB
@@ -30,6 +30,7 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [name, setName] = useState(savedState.name)
 	const [tooltipsEnabled, setTooltipsEnabled] = useState(true)
+	const [showTutorial, setShowTutorial] = useState(false)
 
 	// Tone setup
 
@@ -171,6 +172,33 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 						
 					</div>
 					<div className="col-3">
+						<button className="btn btn-info" onClick={() => setShowTutorial(true)}><i className="fa-solid fa-magnifying-glass"></i> Tutorial</button>
+						<Modal size="lg" show={showTutorial} onHide={() => setShowTutorial(false)}>
+							<Modal.Header>
+								<h3>Tutorial</h3>
+							</Modal.Header>
+							<Modal.Body>
+							<p>
+								Welcome to (app name)! This is a beginner-friendly app for exploring electronic music production. You can create and learn about synthesizers, drum patterns and audio effects.
+							</p>
+							(image of track overview with short explainer)
+							<p>
+								You can add as many synthesiser and drum tracks as you like and play them at the same time. Click the wave or drum icon next to the track name to open an editor tab with more controls and the sequencer, where you can place notes on a timeline.
+							</p>
+							(image of sequenceer with short explainer)
+							<p>
+								You can create multiple projects and save your progress, and when you're finished you can record your song and download an MP3 file.
+							</p>
+							<p>
+									Check out the other tutorials by clicking the <button className="btn btn-info" ><i className="fa-solid fa-magnifying-glass"></i></button> buttons.
+							</p>
+
+							</Modal.Body>
+
+							<Modal.Footer>
+								<button className="btn btn-secondary" onClick={() => setShowTutorial(false)}>X</button>
+							</Modal.Footer>
+						</Modal>
 						<div className="form-check">
 							<input className="form-check-input" checked={tooltipsEnabled} type="checkbox" value="" id="tooltipcheckbox" onChange={() => setTooltipsEnabled((prev) => !prev)} />
 							<label className="form-check-label" htmlFor="tooltipcheckbox">
@@ -187,6 +215,9 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 								</span>
 							)}
 						/> : null }
+
+							
+						
 					</div>
 					<div className="col-2">
 						<div className="row g-1 pb-2 align-items-center">

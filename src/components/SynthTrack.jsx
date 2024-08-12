@@ -279,7 +279,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	// }
 
 	return(
-		<div className="track-container pb-2"> 
+		<div className="track-container"> 
 			<div className="track-timeline-synth">
 				{/* <div className="clip-container">
 					{trackContext.clipIDs.map((key) => {
