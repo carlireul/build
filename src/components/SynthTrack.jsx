@@ -14,6 +14,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	const trackContext = useTrack(id, "synth");
 
 	const [loaded, setLoaded] = useState(false)
+	const [drawIndex, setDrawIndex] = useState(0)
 
 	const [activeEffects, setActiveEffects] = useState({
 		distortion: trackContext.effects.distortion.enabled,
@@ -35,7 +36,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	const meter = useRef()
 	// const clipPlayer = useRef()
 	const notesArray = useRef(new Array(trackContext.subdivision).fill(null).map(() => []))
-	const playSchedule = useRef(0)
 
 
 	useEffect(() => { // set up: controls, effects, filter, polysynth, clip player, transport schedule
@@ -100,19 +100,23 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			// console.log(time, Tone.getTransport().position, getBeat(Tone.getTransport().position, trackContext.subdivision), notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)])
 
 			// console.log(meter.current.getValue())
-			
 			synth.current.triggerAttackRelease(
 				notesArray.current[getBeat(Tone.getTransport().position, trackContext.subdivision)], // plays notes in notesArray at the current beat index
 				`${trackContext.subdivision}n`, // duration of note
 				time) // callback function keeps time
 		}
 
-		playSchedule.current = Tone.getTransport().scheduleRepeat(schedule,
+		const playSchedule = Tone.getTransport().scheduleRepeat(schedule,
 			`${trackContext.subdivision}n`, // repetition interval
 			"0:0:0") // start time
 
+		const drawSchedule = Tone.getTransport().scheduleRepeat(() => {
+			setDrawIndex(getBeat(Tone.getTransport().position, 16))
+		}, "16n", "0:0:0")
+
 		return () => {
-			Tone.getTransport().clear(playSchedule.current)
+			Tone.getTransport().clear(playSchedule)
+			Tone.getTransport().clear(drawSchedule)
 		}
 
 	}, [trackContext.subdivision])
@@ -276,16 +280,59 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 
 	// }
 
+	const [buttons, setButtons] = useState()
+
+	useEffect(() => {
+
+		const arr = []
+
+		for(let i = 0; i < 16; i++){
+			let buttonClass = "timeline-button"
+
+			if (i % 4 == 0) {
+				buttonClass += " sequencer-beat"
+			}
+			if(trackContext.subdivision == 16){
+				if(notesArray.current[i].length > 0){
+					buttonClass += " sequencer-active"
+				}
+			}
+			else if (trackContext.subdivision == 8 && i % 2 == 0){
+				if (notesArray.current[i /2].length > 0) {
+					buttonClass += " sequencer-active"
+				}
+			} else if (trackContext.subdivision == 4 && i % 4 == 0) {
+				if (notesArray.current[i / 4].length > 0) {
+					buttonClass += " sequencer-active"
+				}
+			}
+
+			arr.push(buttonClass)
+		}
+
+		setButtons(arr)
+
+	}, [trackContext.subdivision, trackContext.steps])
+
 	return(
 		<div className="track-container"> 
 			<div className="track-timeline-synth">
-				{/* <div className="clip-container">
-					{trackContext.clipIDs.map((key) => {
-						return <div key={key}>
-							<button className="btn btn-secondary"  onClick={() => trackContext.toggleClip(key)}>{trackContext.clips[key].enabled ? "Disable" : "Enable"}</button> <button onClick={() => trackContext.changeClipPosition(key, "2:0:0")}>Change to 2:0:0</button>
-						</div>
-					})}
-				</div> */}
+				<div className="container">
+					<div className="d-flex flex-row  justify-content-evenly	">
+
+				{buttons ? buttons.map((button, index) => {
+					let buttonClass = button
+					if(index == drawIndex){
+						buttonClass += " sequencer-playing"
+					}
+					return <div className="flex-fill" key={`${index}-visual`}>
+						<button className={buttonClass} disabled></button>
+					</div>
+
+				}) : null}
+
+					</div>
+				</div>
 			</div>
 			<div className="container track-controls">
 				<div className="row row-cols-lg-auto g-1 align-items-center">

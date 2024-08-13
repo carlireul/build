@@ -20,54 +20,67 @@ const SynthTab = ({id, meter}) => {
 	
 
 	return <>
-		<div id="synth-container">
-			<div id="sequencer-container">
-				<TrackControls id={id}>
+		<div className="container">
+			<div className="row g-5 justify-content-evenly">
+				<div className="col-7">
+					<div className="row-cols-1">
+						<div className="row">
+							<TrackControls id={id}>
 
-					
-					<div className="dropdown">
-						<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-							{trackContext.subdivision}
-						</button>
-						<ul className="dropdown-menu">
-							<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(4)}>4</a></li>
-							<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(8)}>8</a></li>
-							<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(16)}>16</a></li>
 
-						</ul>
+								<div className="dropdown">
+									<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+										{trackContext.subdivision}
+									</button>
+									<ul className="dropdown-menu">
+										<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(4)}>4</a></li>
+										<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(8)}>8</a></li>
+										<li><a className="dropdown-item" onClick={() => trackContext.changeSubdivision(16)}>16</a></li>
+
+									</ul>
+								</div>
+
+								<div className="dropdown">
+									<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+										{trackContext.scale}
+									</button>
+									<ul className="dropdown-menu scroll-menu">
+										{scaleSelects}
+									</ul>
+								</div>
+
+								<button className="track-button" onClick={trackContext.increaseOctave}>+</button>
+								<a
+									data-tooltip-id="tooltip"
+									data-tooltip-content="Change Octave"
+								>
+									<i className="fa-solid fa-music"></i>
+
+								</a>
+								<button className="track-button" onClick={trackContext.decreaseOctave}>-</button>
+
+
+							</TrackControls>
+						</div>
+
+
+						<div className="row pt-3">
+							<Sequencer id={id} type="synth" />
+
+						</div>
+
 					</div>
-					
-					<div className="dropdown">
-						<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-							{trackContext.scale}
-						</button>
-						<ul className="dropdown-menu scroll-menu">
-							{scaleSelects}
-						</ul>
+				</div>
+
+				<div className="col-5">
+					<div className="row-cols-1">
+						<SynthEditor id={id} />
+						<EffectEditor id={id} />
+
 					</div>
-
-					<button className="track-button" onClick={trackContext.increaseOctave}>+</button>
-					<a
-						data-tooltip-id="tooltip"
-						data-tooltip-content="Change Octave"
-					>
-						<i className="fa-solid fa-music"></i>
-
-					</a>
-					<button className="track-button" onClick={trackContext.decreaseOctave}>-</button>
-
-
-				</TrackControls>
-
-
-				<Sequencer id={id} type="synth" />
-
+				</div>	
 			</div>
-			<div id="editor-container">
-				<SynthEditor id={id} />
-				<EffectEditor id={id} />
 			
-			</div>
 			<div><Visualizer meter={meter} /></div>
 		</div>
 		

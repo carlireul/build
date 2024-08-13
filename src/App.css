@@ -100,6 +100,17 @@
 	padding: 20px;
 	margin: 2px;
 	border: transparent;
+	width: 80%;
+}
+
+.timeline-button {
+	background: #74c1fc7b;
+	border: transparent;
+	height: 100%;
+}
+
+.timeline-button:hover{
+	cursor:default;
 }
 
 
@@ -113,6 +124,10 @@
 }
 .sequencer-active {
 	background: #fcb874;
+}
+
+.sequencer-beat.sequencer-active {
+	background: #ef9134;
 }
 
 .note-row {

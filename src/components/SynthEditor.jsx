@@ -11,7 +11,7 @@ function SynthEditor({id}){
 	
 
 	return(
-		<div className="container pb-3">
+		<div className="col pb-3">
 			<div className="row justify-content-md-left g-2 pb-3">
 				<div className="col-5">
 					<div className="dropdown">

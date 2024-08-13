@@ -36,6 +36,10 @@ const DAW = ({ savedState, deleteProject, changeProject }) => {
 
 	const [trackLength, setTrackLength] = useState(savedState.trackEnd)	
 
+	useEffect(() => {
+		Tone.getTransport().position = "0:0:0"
+	}, [])
+
 	// Handlers
 
 	const handleClick = () => { // Start button
