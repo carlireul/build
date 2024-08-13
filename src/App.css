@@ -96,19 +96,23 @@
 }
 
 .sequencer-button {
-	background:#74C0FC;
+	background: #74c1fc7b;
 	padding: 20px;
 	margin: 2px;
 	border: transparent;
 }
 
-.sequencer-active {
-	background: #fcb874;
-}
 
 .sequencer-playing {
 	filter: brightness(75%);
+}
 
+.sequencer-beat {
+	background: #74C0FC;
+	
+}
+.sequencer-active {
+	background: #fcb874;
 }
 
 .note-row {

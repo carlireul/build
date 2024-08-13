@@ -57,9 +57,6 @@ const createEffect = (type, options) => {
   let effect;
 
   switch (type) {
-    case "chorus":
-      effect = new Tone.Chorus();
-      break;
     case "distortion":
       effect = new Tone.Distortion();
       break;

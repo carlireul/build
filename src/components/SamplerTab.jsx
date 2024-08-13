@@ -6,6 +6,7 @@ import Renamable from './Renamable';
 import FilterTutorial from './FilterTutorial';
 
 import useTrack from './useTrack';
+import DrumTutorial from './DrumTutorial';
 
 const SamplerTab = ({ id }) => {
 
@@ -26,14 +27,15 @@ const SamplerTab = ({ id }) => {
 						
 					</ul>
 				</div>
+				<DrumTutorial id={id} />
 				</TrackControls>
 				<Sequencer id={id} type="sampler"/>
 				
 
 			</div>
 			<div id="editor-container">
-				<EffectEditor id={id} />
-				<div className="container">
+				
+				<div className="container pb-3">
 				<div className="row pt-3">
 					<div className="col-auto">
 
@@ -101,6 +103,7 @@ const SamplerTab = ({ id }) => {
 
 				</div>
 				</div>
+			<EffectEditor id={id} />
 			</div>
 	</div>
 }

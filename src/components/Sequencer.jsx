@@ -32,6 +32,10 @@ const Sequencer = ({id, type}) => {
           buttonClass += " sequencer-active"
         }
 
+        if(stepIndex % (trackContext.subdivision / 4) == 0){
+          buttonClass += " sequencer-beat"
+        }
+
         if (drawIndex == stepIndex){
           buttonClass += " sequencer-playing"
         }

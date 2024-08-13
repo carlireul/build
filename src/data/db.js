@@ -49,16 +49,7 @@ db.version(14).stores({
       pan: 0,
     },
     effects: {
-      chorus: {
-        enabled: false,
-        options: {
-          wet: 1,
-          frequency: 4,
-          delayTime: 2,
-          depth: 0.5,
-          feedback: 0,
-        },
-      },
+
       reverb: {
         enabled: false,
         options: {
@@ -163,16 +154,6 @@ db.on("populate", (transaction) => {
       pan: 0,
     },
     effects: {
-      chorus: {
-        enabled: false,
-        options: {
-          wet: 1,
-          frequency: 4,
-          delayTime: 2,
-          depth: 0.5,
-          feedback: 0,
-        },
-      },
       reverb: {
         enabled: false,
         options: {

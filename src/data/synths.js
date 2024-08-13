@@ -1,5 +1,3 @@
-import uniqid from "uniqid";
-
 const defaultControls = { muted: false, vol: -8, solod: false, pan: 0 };
 
 const defaultSteps = new Array(7)
@@ -7,16 +5,6 @@ const defaultSteps = new Array(7)
   .map(() => new Array(8).fill(false));
 
 const defaultEffects = {
-    chorus: {
-      enabled: false,
-      options: {
-        wet: 1,
-        frequency: 4,
-        delayTime: 2,
-        depth: 0.5,
-        feedback: 0,
-      },
-    },
     reverb: {
       enabled: false,
       options: {
@@ -52,7 +40,7 @@ const defaultEffects = {
 
 const presets = [
   {
-    name: "Basic Sine",
+    name: "Synth",
     type: "synth",
     synth: {
       envelope: {

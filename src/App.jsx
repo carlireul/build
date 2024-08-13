@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 import './App.css'
 import * as Tone from "tone";
 import DAW from './components/DAW.jsx';
@@ -18,11 +18,12 @@ function App() {
 
   const newProject = async () => {
     const projectID = uniqid()
-    const trackID = uniqid()
+    const synthID = uniqid()
+    const samplerID = uniqid()
     
     const synth = {
       ...presets[0],
-      id: trackID,
+      id: synthID,
       controls: {
         ...defaultControls
       },
@@ -32,6 +33,44 @@ function App() {
       steps: defaultSteps
     }
 
+    const instruments = {}
+    let counter = 0;
+    const sample_data = await db.samples.where("pack").equals("808").toArray()
+    for (const sample of sample_data) {
+      if ([sample.sample_type] in instruments) {
+        instruments[`${sample.sample_type}_${counter}`] = sample.source
+        counter += 1;
+      } else {
+
+        instruments[sample.sample_type] = sample.source
+      }
+    }
+
+    const sampler = {
+      id: samplerID,
+      type: "sampler",
+      name: "Drums",
+      controls: {
+        ...defaultControls
+      },
+      subdivision: 8,
+      instruments: instruments,
+      steps: new Array(Object.keys(instruments).length).fill(null).map(() => new Array(8).fill(false)),
+      effects: {
+        ...defaultEffects
+      },
+      synth: {
+        filter: {
+          wet: 0,
+          cutoff: 0,
+          type: "highpass",
+          rate: 0,
+          rolloff: -12,
+        }
+      },
+      // clips: {}
+    }
+
     const newProject = {
       id: projectID,
       bpm: 120,
@@ -39,11 +78,12 @@ function App() {
       position: "0:0:0",
       trackEnd: "1:0:0",
       name: `Untitled Project ${projects.length + 1}`,
-      tracks: [trackID]
+      tracks: [synthID, samplerID]
     }
 
     await db.transaction('rw', db.states, db.tracks, () => {
       db.tracks.add(synth)
+      db.tracks.add(sampler)
       db.states.add(newProject)
     })
 

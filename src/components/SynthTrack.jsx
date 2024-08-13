@@ -16,7 +16,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	const [loaded, setLoaded] = useState(false)
 
 	const [activeEffects, setActiveEffects] = useState({
-		chorus: trackContext.effects.chorus.enabled,
 		distortion: trackContext.effects.distortion.enabled,
 		delay: trackContext.effects.delay.enabled,
 		phaser: trackContext.effects.phaser.enabled,
@@ -28,7 +27,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	const filter = useRef();
 	const controls = useRef();
 	const effectNodes = useRef({
-		chorus: null,
 		distortion: null,
 		delay: null,
 		phaser: null,
@@ -200,7 +198,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 
 
 	}
-	useEffect(() => { updateEffect("chorus") }, [trackContext.effects.chorus])
 	useEffect(() => { updateEffect("distortion") }, [trackContext.effects.distortion])
 	useEffect(() => { updateEffect("phaser") }, [trackContext.effects.phaser])
 	useEffect(() => { updateEffect("delay") }, [trackContext.effects.delay])

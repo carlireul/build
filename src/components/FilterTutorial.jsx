@@ -185,14 +185,14 @@ const FilterTutorial = ({id}) => {
 				{ showText ? 
 					<div>
 						<p>Filters are used to cut out certain frequencies of a sound.</p>
-						<p>A <b>highpass</b> filter only lets through frequencies <b>above</b> the cutoff. A <b>lowpass</b> filter only lets through frequencies <b>below</b> the cutoff. The graph above shows what frequencies are let through the filter.</p>
+						<p>A <b>highpass</b> filter only lets through frequencies <b>above</b> the cutoff. A <b>lowpass</b> filter only lets through frequencies <b>below</b> the cutoff. The graph above shows what frequencies are let through the filter. Frequencies outside the curve are filtered out.</p>
 						<p>You can change the <b>rolloff</b> (measured in dB) to control how quickly the sound tapers off at the cutoff point.</p>
 						<p>An Autofilter is a filter hooked up to an LFO (<b>low-frequency oscillator</b>). The LFO modulates frequencies around the cutoff point to create a wobbly effect. The rate of this filter's LFO is synced to the beat of the track. The animation shows the rate of the LFO sine wave.</p>
 						<p><b>Tips:</b>
 							<ul>
 								<li>You can use the filter on all wave types, but it will have a less pronounced effect on sine waves.</li>
 								<li>Play around with extreme cutoff values and different LFO rates and see how it affects the sound.</li>
-								<p>You can use a filter on drums and audio files too, but the LFO has no effect.</p>
+								<li>You can use a filter on drums and audio files too, but the LFO has no effect.</li>
 							</ul>
 						</p>
 					</div>

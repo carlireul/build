@@ -206,9 +206,14 @@ const useTrack = (id, type) => {
 	const modifyEffect = (name, value) => {
 		const effect = name.split("-")[0]
 		const option = name.split("-")[1]
+		let change = parseFloat(value);
+		
+		if(option == "delayTime"){
+			change = value
+		}
 
-		const newState = { ...state, [id]: { ...state[id], effects: { ...state[id].effects, [effect]: { ...state[id].effects[effect], options: {...state[id].effects[effect].options, [option]: parseFloat(value) } } } } }
-		// console.log(newState[id].effects[effect].options)
+		const newState = { ...state, [id]: { ...state[id], effects: { ...state[id].effects, [effect]: { ...state[id].effects[effect], options: {...state[id].effects[effect].options, [option]: change } } } } }
+		console.log(newState[id].effects[effect].options)
 		setState(newState)
 	}
 	
@@ -326,7 +331,6 @@ const useTrack = (id, type) => {
 			}
 		} else if (type === "effects"){
 			return {
-				chorus: state[id].effects.chorus,
 				distortion: state[id].effects.distortion,
 				phaser: state[id].effects.phaser,
 				reverb: state[id].effects.reverb,
