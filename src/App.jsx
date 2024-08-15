@@ -97,6 +97,7 @@ function App() {
   }
 
   const changeProject = () => {
+    Tone.getTransport().stop()
     setSelectedProject(null)
   }
 

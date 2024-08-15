@@ -28,21 +28,7 @@ const EffectEditor = ({id}) => {
 					<div className="row justify-content-around">
 					Feedback: <input className="form-range w-50" type="range" id="delay-feedback" name="delay-feedback" min="0" max="1" step="0.1" value={trackContext.delay.options.feedback} onChange={(e) => trackContext.modifyEffect(e.target.name, e.target.value)} />
 					</div>
-					<div className="row pt-2">
-						<div className="dropdown">
-							<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-								Delay: {trackContext.delay.options.delayTime}
-							</button>
-							<ul className="dropdown-menu">
-								<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "4n")}>4n</a></li>
-								<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "8n")}>8n</a></li>
-								<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "16n")}>16n</a></li>
-								<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "32n")}>32n</a></li>
-
-							</ul>
-						</div>
-
-				</div>
+					
 				</>
 			)
 		case "eq":
@@ -104,15 +90,16 @@ const EffectEditor = ({id}) => {
 							<div className="col col-auto">
 								Cutoff
 							</div>
-							<div className="col col-4">
+							<div className="col col-4 ">
 								<input className="form-range" type="range" id="cutoff" name="cutoff" min="0" max="2000" step="1" value={trackContext.filter.cutoff} onChange={(e) => trackContext.changeCutoff(e.target.value)}></input>
+								
 							</div>
+							<div className="col col-2 text-info-emphasis"><b>{trackContext.filter.cutoff}</b></div>
 
-							<Renamable number={true} range={[0, 2000]} step={1} name={trackContext.filter.cutoff} handler={trackContext.changeCutoff} />
 
-							<div className='col col-auto'>
+							<div className='col col-1'>
 							<div className="dropdown">
-								<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+								<button className="btn  btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 									Rolloff: {trackContext.filter.rolloff}
 								</button>
 								<ul className="dropdown-menu">
@@ -126,7 +113,7 @@ const EffectEditor = ({id}) => {
 
 
 			</div>
-			<div className="row">
+			<div className="row justify-content-between">
 					<div className="col-auto">
 						<div className="dropdown">
 							<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -189,7 +176,25 @@ const EffectEditor = ({id}) => {
 								</div>
 								{effectOptions(effect)}
 							</div>
-							<div className="col-auto gy-2">
+							<div className="col-auto">
+								{effect == "delay" ?
+										<div className="row pb-2">
+											<div className="dropdown pb-0">
+												<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+													Delay: {trackContext.delay.options.delayTime}
+												</button>
+												<ul className="dropdown-menu">
+													<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "4n")}>4n</a></li>
+													<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "8n")}>8n</a></li>
+													<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "16n")}>16n</a></li>
+													<li><a className="dropdown-item" onClick={() => trackContext.modifyEffect("delay-delayTime", "32n")}>32n</a></li>
+
+												</ul>
+											</div>
+
+										</div>
+										: 
+										null}
 								<EffectTutorial></EffectTutorial>
 							</div>
 							</div>

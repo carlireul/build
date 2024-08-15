@@ -74,14 +74,13 @@ const SynthTab = ({id, meter}) => {
 
 				<div className="col-4">
 					<div className="row-cols-1">
-						<SynthEditor id={id} />
+						<SynthEditor id={id} meter={meter}/>
 						<EffectEditor id={id} />
 
 					</div>
 				</div>	
 			</div>
 			
-			<div><Visualizer meter={meter} /></div>
 		</div>
 		
 	</>

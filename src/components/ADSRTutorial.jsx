@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import useTrack from './useTrack';
 import Renamable from './Renamable';
+import Visualizer from './Visualizer';
 
 import attackImgFile from '../data/img/attack.png'
 import decayImgFile from '../data/img/decay.png'
@@ -10,7 +11,7 @@ import releaseImgFile from '../data/img/release.png'
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
-const ADSRTutorial = ({id}) => {
+const ADSRTutorial = ({id, meter}) => {
 
 	const trackContext = useTrack(id, "synth")
 	const [oldEnvelope, setOldEnvelope] = useState(trackContext.envelope)
@@ -109,6 +110,7 @@ const ADSRTutorial = ({id}) => {
 
         <Modal.Body>
 		<canvas height="200" width="600" ref={canvasRef} />
+		<Visualizer meter={meter} />
           
 		<div className="container">
 		<div className="row">
@@ -142,7 +144,7 @@ const ADSRTutorial = ({id}) => {
 				<ul>
 				<li>It's easier to hear the different ADSR stages when the note is held for longer. Try a quarter note.</li>
 				<li>Play around with extreme values and see how it affects the sound.</li>
-				<li>Notice how different envelopes affect the amplitude visualizer.</li>	
+				<li>Notice how different envelopes affect the amplitude visualizer on the right.</li>	
 				</ul>
 				</p>
 			</>

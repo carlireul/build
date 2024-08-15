@@ -5,7 +5,7 @@ import ADSRTutorial from './ADSRTutorial';
 import WaveTutorial from './WaveTutorial';
 import FilterTutorial from './FilterTutorial';
 
-function SynthEditor({id}){
+function SynthEditor({id, meter}){
 
 	const trackContext = useTrack(id, "synth")
 	
@@ -42,8 +42,8 @@ function SynthEditor({id}){
 				<Renamable number={true} range={[0, 2]} step={0.05} name={trackContext.envelope.attack} handler={trackContext.changeAttack} />
 					
 					
-				<div className="col align-self-end">
-					<ADSRTutorial id={id} />
+				<div className="col col-4 ms-auto">
+					<ADSRTutorial id={id} meter={meter} />
 				</div>
 				
 			</div>

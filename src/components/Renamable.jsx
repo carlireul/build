@@ -9,16 +9,16 @@ const Renamable = ({children, name, handler, number, range, step}) => {
 	return <>
 		{ displayTextEdit ?
 		<>
-		<div className="col-auto">
+		<div className="col-sm">
 			{ number ?
-				<input ref={ref} className="form-control" type="number" min={range[0]} max={range[1]} step={step} defaultValue={name} onChange={e => { 
+						<input ref={ref} className="form-control form-control-sm w-auto me-0" type="number" min={range[0]} max={range[1]} step={step} defaultValue={name} onChange={e => { 
 					setText(e.target.value)
 }} />
 			:
-				<input ref={ref} className="form-control" type="text" value={text} onChange={e => { setText(e.target.value) }} />
+						<input ref={ref} className="form-control form-control-sm" type="text" value={text} onChange={e => { setText(e.target.value) }} />
 			}
 		</div>
-		<div className="col-2">
+		<div className="col-sm">
 			<button className="track-button" onClick={(e) => {
 				if (ref.current.validity.valid) {
 					handler(text)
