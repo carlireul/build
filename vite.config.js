@@ -8,7 +8,6 @@ export default defineConfig({
     react(),
     VitePWA({
       includeAssets: ["pwa-192x192.png", "pwa-512x512.png"],
-      injectRegister: "auto",
 
       manifest: {
         name: "loopbox",
@@ -31,15 +30,14 @@ export default defineConfig({
       },
 
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,wav,mp3,jpg}"],
+        globPatterns: ["**/*.{js,css,html,png,wav,mp3,jpg}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
 
       devOptions: {
-        enabled: false,
+        enabled: true,
         navigateFallback: "index.html",
-        suppressWarnings: true,
         type: "module",
       },
     }),

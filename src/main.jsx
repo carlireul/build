@@ -6,7 +6,7 @@ import PWABadge from './PWABadge.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <App />
     <PWABadge />
+    <App />
   </React.StrictMode>,
 )

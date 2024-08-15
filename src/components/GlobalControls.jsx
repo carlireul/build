@@ -11,6 +11,7 @@ const GlobalControls = ({savedState}) => {
 	const [volStyle, setVolStyle] = useState("fa-solid fa-volume-low")
 
 	const [isRecording, setIsRecording] = useState(false)
+	const [recordLength, setRecordLength] = useState(4)
 
 	Tone.getTransport().bpm.value = bpm;
 	Tone.getDestination().volume.value = vol;
@@ -31,8 +32,8 @@ const GlobalControls = ({savedState}) => {
 	}
 
 	const handlePlay = () => {
-		togglePlay()
-		setPlaying(prev => !prev)
+			togglePlay()
+			setPlaying(prev => !prev)
 	}
 
 	const handleStop = () => {
@@ -41,14 +42,16 @@ const GlobalControls = ({savedState}) => {
 	}
 
 	const record = () => {
-		if(playing){
-			console.log("Cannot record while playing")
-		} else {
+		if(!isRecording){
 			
+			if(playing){
+				handleStop()
+			}
+
 			const recorder = new Tone.Recorder()
 			Tone.getDestination().connect(recorder)
-			
-			const seconds = (Tone.Time(savedState.trackEnd).toSeconds() * 1000) * 4
+
+			const seconds = (Tone.Time(savedState.trackEnd).toSeconds() * 1000) * recordLength
 
 			Tone.getTransport().position = "0:0:0"
 			Tone.getTransport().loop = false;
@@ -60,6 +63,7 @@ const GlobalControls = ({savedState}) => {
 			setTimeout(async () => {
 				const recording = await recorder.stop();
 				setIsRecording(false)
+				handleStop()
 				Tone.getTransport().loop = true;
 				const mp3 = await convertWebmToMp3(recording)
 				const url = URL.createObjectURL(mp3);
@@ -68,10 +72,11 @@ const GlobalControls = ({savedState}) => {
 				anchor.href = url;
 				anchor.click();
 				recorder.dispose()
-				handleStop()
+
 			}, seconds);
 
 		}
+		
 		
 	}
 
@@ -111,8 +116,20 @@ const GlobalControls = ({savedState}) => {
 					</div>
 				</div>
 			</div>
-			<div className="col">
+			<div className="row row-cols-lg-auto col g-1">
 				<button className="btn btn-secondary" onClick={record}>{isRecording ? "Recording..." : "Record"}</button>
+				<div className="dropup">
+					<button className="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+						Length: {recordLength} {recordLength > 1 ? "Bars" : "Bar"}
+					</button>
+					<ul className="dropdown-menu">
+						<li><a className="dropdown-item" onClick={() => setRecordLength(1)}>1</a></li>
+						<li><a className="dropdown-item" onClick={() => setRecordLength(2)}>2</a></li>
+						<li><a className="dropdown-item" onClick={() => setRecordLength(4)}>4</a></li>
+						<li><a className="dropdown-item" onClick={() => setRecordLength(8)}>8</a></li>
+						<li><a className="dropdown-item" onClick={() => setRecordLength(16)}>16</a></li>
+					</ul>
+				</div>
 			</div>
 
 			

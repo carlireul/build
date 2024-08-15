@@ -88,7 +88,7 @@ const DrumTutorial = ({id}) => {
 	return (
 		<>
 			<button className="btn btn-info" onClick={setup}><i className="fa-solid fa-magnifying-glass" ></i></button>
-			<Modal size="lg" show={showTutorial} onHide={cleanup}>
+			<Modal scrollable={true} size="lg" show={showTutorial} onHide={cleanup}>
 				<Modal.Header>
 					<h3>Drums</h3>
 				</Modal.Header>

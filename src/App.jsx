@@ -108,7 +108,7 @@ function App() {
         <DAW savedState={projects.find(project => project.id == selectedProject)} deleteProject={() => deleteProject(selectedProject)} changeProject={changeProject}/>
       </TrackProvider> 
       : 
-        <div className="btn-group">
+        <div className="btn-group m-3">
           <button type="button" className="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             Open Project...
           </button>

@@ -86,7 +86,7 @@ const ADSRTutorial = ({id}) => {
 			<i className="fa-solid fa-magnifying-glass"></i>
       </Button>
 	
-		<Modal size="lg" show={show} onHide={() => {setShow(false)}}>
+		<Modal scrollable={true}  size="lg" show={show} onHide={() => {setShow(false)}}>
 			<Modal.Header>
 				<div className="container">
 					<div className="row row-cols-auto justify-content-between">

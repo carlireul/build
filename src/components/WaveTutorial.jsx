@@ -119,7 +119,7 @@ const WaveTutorial = () => {
 	return (
 		<>
 		<button className="btn btn-info" onClick={() => setShowTutorial(true)}><i className="fa-solid fa-magnifying-glass" ></i></button>
-		<Modal size="lg" show={showTutorial} onShow={setup} onHide={cleanup}>
+			<Modal scrollable={true}  size="lg" show={showTutorial} onShow={setup} onHide={cleanup}>
 			<Modal.Header>
 					<h3>Waves</h3>
 			</Modal.Header>

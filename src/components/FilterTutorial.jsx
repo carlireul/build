@@ -102,7 +102,7 @@ const FilterTutorial = ({id}) => {
 			<i className="fa-solid fa-magnifying-glass"></i>
 		</Button>
 
-		<Modal size="lg" show={show} onShow={setup} onHide={cleanup}>
+		<Modal scrollable={true} size="lg" show={show} onShow={setup} onHide={cleanup}>
 			<Modal.Header>
 				<div className="container">
 					<div className="row row-cols-auto justify-content-between">
