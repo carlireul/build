@@ -19,7 +19,6 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	const [activeEffects, setActiveEffects] = useState({
 		distortion: trackContext.effects.distortion.enabled,
 		delay: trackContext.effects.delay.enabled,
-		phaser: trackContext.effects.phaser.enabled,
 		reverb: trackContext.effects.reverb.enabled,
 	})
 
@@ -27,10 +26,10 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 	const synth = useRef();
 	const filter = useRef();
 	const controls = useRef();
+	const eq = useRef();
 	const effectNodes = useRef({
 		distortion: null,
 		delay: null,
-		phaser: null,
 		reverb: null,
 	})
 	const meter = useRef()
@@ -43,6 +42,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		meter.current = new Tone.Meter()
 		meter.current.set({normalRange: true, smoothing: 0.8})
 
+		eq.current = new Tone.EQ3(trackContext.effects.eq.options)
 		controls.current = new Tone.Channel(trackContext.vol, trackContext.pan);
 		filter.current = new Tone.AutoFilter({ wet: trackContext.filter.wet, baseFrequency: trackContext.filter.frequency, frequency: trackContext.filter.rate}).start();
 
@@ -53,7 +53,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 			}
 		}
 
-		synth.current = new Tone.PolySynth().chain(...Object.values(effectNodes.current).filter(e => e !== null) , filter.current, controls.current, meter.current, Tone.getDestination());
+		synth.current = new Tone.PolySynth().chain(...Object.values(effectNodes.current).filter(e => e !== null) , filter.current, controls.current, eq.current, meter.current, Tone.getDestination());
 
 		synth.current.set({
 			envelope: {
@@ -79,6 +79,8 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		return () => { // cleanup
 			meter.current.disconnect()
 			meter.current.dispose()
+			eq.current.disconnect()
+			eq.current.dispose()
 			controls.current.disconnect()
 			filter.current.disconnect()
 			Object.values(effectNodes.current).forEach(effect => {if(effect) {effect.disconnect()}})
@@ -203,9 +205,12 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 
 	}
 	useEffect(() => { updateEffect("distortion") }, [trackContext.effects.distortion])
-	useEffect(() => { updateEffect("phaser") }, [trackContext.effects.phaser])
 	useEffect(() => { updateEffect("delay") }, [trackContext.effects.delay])
 	useEffect(() => { updateEffect("reverb") }, [trackContext.effects.reverb])
+
+	useEffect(() => {
+		eq.current.set(trackContext.effects.eq.options)
+	}, [trackContext.effects.eq.options])
 
 	useEffect(() => {
 
@@ -223,7 +228,7 @@ const SynthTrack = ({id, addTab, deleteTrack}) => {
 		// console.log(effectNodes.current)
 
 		synth.current.disconnect()
-		synth.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, Tone.getDestination());
+		synth.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, eq.current, meter.current, Tone.getDestination());
 
 	}, [activeEffects])
 

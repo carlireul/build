@@ -49,35 +49,36 @@ db.version(14).stores({
       pan: 0,
     },
     effects: {
-
+      eq: {
+        enabled: false,
+        options: {
+          high: 0,
+          highFrequency: 2500,
+          low: 0,
+          lowFrequency: 400,
+          mid: 0,
+        },
+      },
       reverb: {
         enabled: false,
         options: {
-          wet: 1,
+          wet: 0.5,
           decay: 1,
         },
       },
       delay: {
         enabled: false,
         options: {
-          wet: 1,
+          wet: 0.5,
           delayTime: 0.1,
           feedback: 0,
         },
       },
-      phaser: {
-        enabled: false,
-        options: {
-          wet: 1,
-          frequency: 15,
-          octaves: 5,
-          baseFrequency: 1000,
-        },
-      },
+
       distortion: {
         enabled: false,
         options: {
-          wet: 1,
+          wet: 0.5,
           distortion: 0.2,
         },
       },
@@ -154,34 +155,36 @@ db.on("populate", (transaction) => {
       pan: 0,
     },
     effects: {
+      eq: {
+        enabled: false,
+        options: {
+          high: 0,
+          highFrequency: 2500,
+          low: 0,
+          lowFrequency: 400,
+          mid: 0,
+        },
+      },
       reverb: {
         enabled: false,
         options: {
-          wet: 1,
+          wet: 0.5,
           decay: 1,
         },
       },
       delay: {
         enabled: false,
         options: {
-          wet: 1,
+          wet: 0.5,
           delayTime: 0.1,
           feedback: 0,
         },
       },
-      phaser: {
-        enabled: false,
-        options: {
-          wet: 1,
-          frequency: 15,
-          octaves: 5,
-          baseFrequency: 1000,
-        },
-      },
+
       distortion: {
         enabled: false,
         options: {
-          wet: 1,
+          wet: 0.5,
           distortion: 0.2,
         },
       },

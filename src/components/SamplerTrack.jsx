@@ -18,17 +18,16 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 	const [activeEffects, setActiveEffects] = useState({
 		distortion: trackContext.effects.distortion.enabled,
 		delay: trackContext.effects.delay.enabled,
-		phaser: trackContext.effects.phaser.enabled,
 		reverb: trackContext.effects.reverb.enabled,
 	})
 
 	const sampler = useRef();
 	const filter = useRef();
 	const controls = useRef();
+	const eq = useRef();
 	const effectNodes = useRef({
 		distortion: null,
 		delay: null,
-		phaser: null,
 		reverb: null,
 	})
 	const notesArray = useRef(new Array(trackContext.subdivision).fill(null).map(() => []))
@@ -36,6 +35,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 	useEffect(() => { // set up: controls, transport schedule
 
 		controls.current = new Tone.Channel(trackContext.vol, trackContext.pan);
+		eq.current = new Tone.EQ3(trackContext.effects.eq.options)
 		filter.current = new Tone.AutoFilter({ wet: trackContext.filter.wet });
 
 		for (const [effect, enabled] of Object.entries(activeEffects)) {
@@ -46,18 +46,22 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 		}
 
 		sampler.current = new Tone.Players(trackContext.instruments, () => {
-			sampler.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, Tone.getDestination());
+			sampler.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, eq.current, Tone.getDestination());
 			setLoaded(true)
 			// console.log(sampler.current)
 		})
 
 		return () => {
-			sampler.current.disconnect()
-			sampler.current.dispose()
-			Object.values(effectNodes.current).forEach(effect => { if (effect) { effect.disconnect() } })
-			Object.values(effectNodes.current).forEach(effect => { if (effect) { effect.dispose() } })
 			controls.current.disconnect()
 			controls.current.dispose()
+			eq.current.disconnect()
+			eq.current.dispose()
+			filter.current.disconnect()
+			filter.current.dispose()
+			Object.values(effectNodes.current).forEach(effect => { if (effect) { effect.disconnect() } })
+			Object.values(effectNodes.current).forEach(effect => { if (effect) { effect.dispose() } })
+			sampler.current.disconnect()
+			sampler.current.dispose()
 		}
 	}, [])
 
@@ -131,10 +135,9 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 		newActiveEffects[effect] = trackContext.effects[effect].enabled
 		setActiveEffects(newActiveEffects)
 
-
 	}
+
 	useEffect(() => { updateEffect("distortion") }, [trackContext.effects.distortion])
-	useEffect(() => { updateEffect("phaser") }, [trackContext.effects.phaser])
 	useEffect(() => { updateEffect("delay") }, [trackContext.effects.delay])
 	useEffect(() => { updateEffect("reverb") }, [trackContext.effects.reverb])
 	
@@ -155,7 +158,7 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 		// console.log(effectNodes.current)
 
 		sampler.current.disconnect()
-		sampler.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, Tone.getDestination());
+		sampler.current.chain(...Object.values(effectNodes.current).filter(e => e !== null), filter.current, controls.current, eq.current, Tone.getDestination());
 
 	}, [activeEffects])
 
@@ -165,7 +168,6 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 			baseFrequency: trackContext.filter.cutoff,
 			frequency: trackContext.filter.rate,
 		})
-		console.log(trackContext.filter.rate)
 
 		filter.current.filter.set({
 			type: trackContext.filter.type,
@@ -173,6 +175,10 @@ const SamplerTrack = ({id, addTab, deleteTrack}) => {
 		},
 		)
 	}, [trackContext.filter])
+
+	useEffect(() => {
+		eq.current.set(trackContext.effects.eq.options)
+	}, [trackContext.effects.eq.options])
 
 	const [buttons, setButtons] = useState()
 

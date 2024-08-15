@@ -63,11 +63,11 @@ const createEffect = (type, options) => {
     case "delay":
       effect = new Tone.FeedbackDelay();
       break;
-    case "phaser":
-      effect = new Tone.Phaser();
-      break;
     case "reverb":
       effect = new Tone.Reverb();
+      break;
+    case "eq":
+      effect = new Tone.EQ3();
       break;
   }
 

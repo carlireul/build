@@ -24,8 +24,10 @@ const Sequencer = ({id, type}) => {
 
   return trackContext.notes.map((note, noteIndex) => {
     return (<>
-      <div className="d-flex flex-row  justify-content-evenly" key={`${note}${noteIndex}-row`}>
-        <span key={`${note}${noteIndex}`} className="note-name">{toTitleCase(note.split("_")[0])}</span>
+      <div className="d-flex flex-row gap-1 justify-content-evenly" key={`${note}${noteIndex}-row`}>
+        <div className="col-1">
+          <span className="note-name">{toTitleCase(note.split("_")[0])}</span>
+        </div>
       {trackContext.steps[noteIndex].map((step, stepIndex) => {
         let buttonClass = "sequencer-button"
         if(step){

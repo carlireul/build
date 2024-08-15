@@ -20,9 +20,9 @@ const SynthTab = ({id, meter}) => {
 	
 
 	return <>
-		<div className="container">
+		<div className="container w-100">
 			<div className="row g-5 justify-content-evenly">
-				<div className="col-7">
+				<div className="col-8">
 					<div className="row-cols-1">
 						<div className="row">
 							<TrackControls id={id}>
@@ -72,7 +72,7 @@ const SynthTab = ({id, meter}) => {
 					</div>
 				</div>
 
-				<div className="col-5">
+				<div className="col-4">
 					<div className="row-cols-1">
 						<SynthEditor id={id} />
 						<EffectEditor id={id} />

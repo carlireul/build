@@ -216,6 +216,21 @@ const useTrack = (id, type) => {
 		console.log(newState[id].effects[effect].options)
 		setState(newState)
 	}
+
+	const resetEQ = () => {
+		const newState = {
+			...state, [id]: {
+				...state[id], effects: {
+					...state[id].effects, eq: {
+						...state[id].effectseq, options: {
+							high: 0,
+							highFrequency: 2500,
+							low: 0,
+							lowFrequency: 400,
+							mid: 0,
+						} } } } }
+		setState(newState)
+	}
 	
 	// console.log("track", state)
 
@@ -332,12 +347,21 @@ const useTrack = (id, type) => {
 		} else if (type === "effects"){
 			return {
 				distortion: state[id].effects.distortion,
-				phaser: state[id].effects.phaser,
 				reverb: state[id].effects.reverb,
+				eq: state[id].effects.eq,
 				delay: state[id].effects.delay,
 				effects: getEffectNames(),
 				toggleEffect: toggleEffect,
-				modifyEffect: modifyEffect
+				modifyEffect: modifyEffect,
+				toggleFilter,
+				changeFilterType,
+				changeCutoff,
+				changeFilterRate,
+				changeRollOff,
+				changeFilter,
+				resetEQ,
+				changeWaveType,
+				filter: state[id].synth.filter,
 			}
 		} else if (type === "filterTutorial"){
 			return {

@@ -5,38 +5,39 @@ const defaultSteps = new Array(7)
   .map(() => new Array(8).fill(false));
 
 const defaultEffects = {
-    reverb: {
-      enabled: false,
-      options: {
-        wet: 1,
-        decay: 1,
-      },
+  reverb: {
+    enabled: false,
+    options: {
+      wet: 0.5,
+      decay: 1,
     },
-    delay: {
-      enabled: false,
-      options: {
-        wet: 1,
-        delayTime: "8n",
-        feedback: 0,
-      },
+  },
+  eq: {
+    enabled: false,
+    options: {
+      high: 0,
+      highFrequency: 2500,
+      low: 0,
+      lowFrequency: 400,
+      mid: 0,
+    }
+  },
+  delay: {
+    enabled: false,
+    options: {
+      wet: 0.5,
+      delayTime: "8n",
+      feedback: 0,
     },
-    phaser: {
-      enabled: false,
-      options: {
-        wet: 1,
-        frequency: 15,
-        octaves: 5,
-        baseFrequency: 1000,
-      },
+  },
+  distortion: {
+    enabled: false,
+    options: {
+      wet: 0.5,
+      distortion: 0.2,
     },
-    distortion: {
-      enabled: false,
-      options: {
-        wet: 1,
-        distortion: 0.2,
-      },
-    },
-}
+  },
+};
 
 const presets = [
   {
