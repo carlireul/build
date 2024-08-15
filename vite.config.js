@@ -7,23 +7,31 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: "prompt",
-      injectRegister: false,
-
-      pwaAssets: {
-        disabled: false,
-        config: true,
-      },
+      includeAssets: ["pwa-192x192.png", "pwa-512x512.png"],
+      injectRegister: "auto",
 
       manifest: {
-        name: "test",
-        short_name: "test",
-        description: "test",
-        theme_color: "#ffffff",
+        name: "loopbox",
+        short_name: "loopbox",
+        description:
+          "A free, beginner friendly groovebox for electronic music production.",
+        theme_color: "#74C0FC",
+        icons: [
+          {
+            src: "/android-chrome-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/android-chrome-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          },
+        ],
       },
 
       workbox: {
-        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+        globPatterns: ["**/*.{js,css,html,svg,png,wav,mp3,jpg}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
       },
