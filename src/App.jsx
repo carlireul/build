@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { injectSpeedInsights } from '@vercel/speed-insights';
+import { inject } from '@vercel/analytics';
 import './App.css'
 import * as Tone from "tone";
 import DAW from './components/DAW.jsx';
@@ -12,6 +13,7 @@ import uniqid from "uniqid";
 function App() { 
 
   injectSpeedInsights();
+  inject();
 
   // db.delete({ disableAutoOpen: false });
 
@@ -89,7 +91,7 @@ function App() {
       db.tracks.add(sampler)
       db.states.add(newProject)
     })
-
+    
     setSelectedProject(newProject.id)
 
   }
@@ -107,7 +109,7 @@ function App() {
   if(!projects) return null;
 
   return (<>
-      { selectedProject ?
+    {selectedProject && projects.find(project => project.id == selectedProject) ?
       <TrackProvider id={selectedProject}>
         <DAW savedState={projects.find(project => project.id == selectedProject)} deleteProject={() => deleteProject(selectedProject)} changeProject={changeProject}/>
       </TrackProvider> 
