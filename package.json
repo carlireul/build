@@ -12,6 +12,7 @@
   "dependencies": {
     "@ffmpeg/core": "^0.12.6",
     "@ffmpeg/ffmpeg": "^0.12.10",
+    "@vercel/speed-insights": "^1.0.12",
     "audiobuffer-to-blob": "^1.0.2",
     "bootstrap": "^5.3.3",
     "dexie": "^4.0.8",

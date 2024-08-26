@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { injectSpeedInsights } from '@vercel/speed-insights';
 import './App.css'
 import * as Tone from "tone";
 import DAW from './components/DAW.jsx';
@@ -9,6 +10,8 @@ import { defaultControls, defaultSteps, presets, defaultEffects } from './data/s
 import uniqid from "uniqid";
 
 function App() { 
+
+  injectSpeedInsights();
 
   // db.delete({ disableAutoOpen: false });
 
